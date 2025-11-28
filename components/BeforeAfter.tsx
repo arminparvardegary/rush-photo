@@ -30,25 +30,25 @@ export default function BeforeAfter() {
         {/* Before/After Slider */}
         <div className="max-w-4xl mx-auto">
           <div className="relative aspect-[16/10] rounded-3xl overflow-hidden shadow-2xl">
-            {/* Before Image (Amateur) */}
+            {/* Before Image (Professional) */}
             <div className="absolute inset-0">
               <img
-                src="https://images.unsplash.com/photo-1491637639811-60e2756cc1c7?w=1200&q=60"
-                alt="Before - Amateur photo"
-                className="w-full h-full object-cover filter grayscale brightness-75"
+                src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&q=90"
+                alt="After - Professional photo"
+                className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-l from-black/50 to-transparent" />
             </div>
 
-            {/* After Image (Professional) */}
+            {/* After Image (Amateur) */}
             <div 
               className="absolute inset-0 overflow-hidden"
               style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
             >
               <img
-                src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&q=90"
-                alt="After - Professional photo"
-                className="w-full h-full object-cover"
+                src="https://images.unsplash.com/photo-1491637639811-60e2756cc1c7?w=1200&q=60"
+                alt="Before - Amateur photo"
+                className="w-full h-full object-cover filter grayscale brightness-75"
               />
             </div>
 
@@ -63,11 +63,11 @@ export default function BeforeAfter() {
             </div>
 
             {/* Labels */}
-            <div className="absolute bottom-6 left-6 px-4 py-2 bg-black/50 backdrop-blur-sm rounded-full">
-              <span className="text-white/70 text-sm font-medium">Amateur</span>
-            </div>
-            <div className="absolute bottom-6 right-6 px-4 py-2 bg-[#E54A4A] rounded-full">
+            <div className="absolute bottom-6 left-6 px-4 py-2 bg-[#E54A4A] rounded-full">
               <span className="text-white text-sm font-semibold">Rush Photo</span>
+            </div>
+            <div className="absolute bottom-6 right-6 px-4 py-2 bg-black/50 backdrop-blur-sm rounded-full">
+              <span className="text-white/70 text-sm font-medium">Amateur</span>
             </div>
 
             {/* Invisible range input for interaction */}

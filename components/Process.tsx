@@ -4,15 +4,15 @@ import { Package, Palette, Camera, Zap } from "lucide-react";
 
 const steps = [
   {
-    icon: Package,
-    title: "Ship It",
-    description: "Send your product to us with prepaid return shipping.",
-    color: "#E54A4A",
-  },
-  {
     icon: Palette,
     title: "Pick Styles",
     description: "Choose from 4 unique photography styles.",
+    color: "#E54A4A",
+  },
+  {
+    icon: Package,
+    title: "Ship It",
+    description: "Send your product to us with prepaid return shipping.",
     color: "#ff7f7f",
   },
   {
