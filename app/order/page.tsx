@@ -34,26 +34,41 @@ const photoStyles = [
 const packages = [
   {
     id: "single",
-    name: "Single Style",
-    price: 99,
+    name: "Single",
+    price: 89,
     description: "1 photography style",
     stylesCount: 1,
   },
   {
-    id: "duo",
-    name: "Duo Pack",
-    price: 169,
+    id: "double",
+    name: "Double",
+    price: 159,
     description: "2 photography styles",
     stylesCount: 2,
   },
   {
+    id: "triple",
+    name: "Triple",
+    price: 219,
+    description: "3 photography styles",
+    stylesCount: 3,
+    popular: true,
+  },
+  {
+    id: "lifestyle",
+    name: "Lifestyle",
+    price: 149,
+    description: "Lifestyle photography only",
+    stylesCount: 1,
+    fixedStyle: "lifestyle",
+  },
+  {
     id: "complete",
-    name: "Complete Package",
+    name: "Complete",
     price: 280,
     originalPrice: 400,
     description: "All 4 photography styles",
     stylesCount: 4,
-    popular: true,
   },
 ];
 
@@ -78,6 +93,8 @@ export default function OrderPage() {
   useEffect(() => {
     if (selectedPackage === "complete") {
       setSelectedStyles(photoStyles.map(s => s.id));
+    } else if (selectedPackage === "lifestyle") {
+      setSelectedStyles(["lifestyle"]);
     } else {
       // Keep only the allowed number of styles
       setSelectedStyles(prev => prev.slice(0, maxStyles));
@@ -85,7 +102,7 @@ export default function OrderPage() {
   }, [selectedPackage, maxStyles]);
 
   const toggleStyle = (styleId: string) => {
-    if (selectedPackage === "complete") return; // Can't toggle for complete package
+    if (selectedPackage === "complete" || selectedPackage === "lifestyle") return; // Can't toggle for complete or lifestyle package
     
     if (selectedStyles.includes(styleId)) {
       setSelectedStyles(prev => prev.filter(s => s !== styleId));
@@ -100,7 +117,11 @@ export default function OrderPage() {
 
   const canProceed = () => {
     if (step === 1) return selectedPackage !== "";
-    if (step === 2) return selectedStyles.length === maxStyles;
+    if (step === 2) {
+      if (selectedPackage === "complete") return selectedStyles.length === 4;
+      if (selectedPackage === "lifestyle") return selectedStyles.includes("lifestyle");
+      return selectedStyles.length === maxStyles;
+    }
     if (step === 3) return formData.name && formData.email && formData.productName;
     return true;
   };
@@ -186,7 +207,7 @@ export default function OrderPage() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 max-w-6xl mx-auto">
               {packages.map((pkg) => (
                 <div
                   key={pkg.id}
@@ -231,26 +252,58 @@ export default function OrderPage() {
           <div className="animate-fadeIn">
             <div className="text-center mb-10">
               <h1 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-3">
-                {selectedPackage === "complete" ? "Your 4 Styles" : `Select ${maxStyles} Style${maxStyles > 1 ? 's' : ''}`}
+                {selectedPackage === "complete" 
+                  ? "Your 4 Styles" 
+                  : selectedPackage === "lifestyle"
+                    ? "Lifestyle Photography"
+                    : `Select ${maxStyles} Style${maxStyles > 1 ? 's' : ''}`}
               </h1>
               <p className="text-[#1a1a1a]/60">
                 {selectedPackage === "complete" 
                   ? "You get all 4 photography styles with the Complete Package" 
-                  : `Selected: ${selectedStyles.length}/${maxStyles}`}
+                  : selectedPackage === "lifestyle"
+                    ? "Your product in real-world scenarios"
+                    : `Selected: ${selectedStyles.length}/${maxStyles}`}
               </p>
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto">
               {photoStyles.map((style) => {
                 const isSelected = selectedStyles.includes(style.id);
-                const isDisabled = selectedPackage !== "complete" && !isSelected && selectedStyles.length >= maxStyles;
+                const isDisabled = (selectedPackage === "complete" || selectedPackage === "lifestyle") 
+                  ? false 
+                  : !isSelected && selectedStyles.length >= maxStyles;
+                const isFixed = selectedPackage === "complete" || selectedPackage === "lifestyle";
+                
+                // For lifestyle package, only show the lifestyle style as available
+                if (selectedPackage === "lifestyle" && style.id !== "lifestyle") {
+                  return (
+                    <div
+                      key={style.id}
+                      className="relative rounded-2xl overflow-hidden opacity-30 cursor-not-allowed"
+                    >
+                      <div className="aspect-[3/4]">
+                        <img
+                          src={style.image}
+                          alt={style.name}
+                          className="w-full h-full object-cover grayscale"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-4">
+                          <h3 className="text-lg font-bold text-white">{style.name}</h3>
+                          <p className="text-white/70 text-xs md:text-sm">{style.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
                 
                 return (
                   <div
                     key={style.id}
-                    onClick={() => !isDisabled && toggleStyle(style.id)}
+                    onClick={() => !isDisabled && !isFixed && toggleStyle(style.id)}
                     className={`relative rounded-2xl overflow-hidden transition-all duration-300 ${
-                      selectedPackage === "complete" ? 'cursor-default' : 'cursor-pointer'
+                      isFixed ? 'cursor-default' : 'cursor-pointer'
                     } ${
                       isSelected
                         ? 'ring-4 ring-[#E54A4A] shadow-xl'
