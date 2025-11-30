@@ -1,0 +1,20 @@
+{
+  "name": "Rush Photo - Professional Product Photography",
+  "short_name": "Rush Photo",
+  "description": "Professional product photography service with 4 unique styles. Ship your product, receive magazine-quality photos in days.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFAF5",
+  "theme_color": "#E54A4A",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "photography", "ecommerce"],
+  "lang": "en-US"
+}

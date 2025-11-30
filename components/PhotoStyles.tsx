@@ -8,7 +8,7 @@ const styles = [
     name: "Top Down",
     tagline: "Perfect flat-lays",
     description: "Bird's-eye view shots perfect for flat-lay compositions and showcasing product design from above.",
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&q=80",
     color: "#E54A4A",
   },
   {
@@ -16,7 +16,7 @@ const styles = [
     name: "Product",
     tagline: "Clean & crisp",
     description: "Clean, professional studio shots with perfect lighting that highlight every detail.",
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&q=80",
     color: "#ff7f7f",
   },
   {
