@@ -83,7 +83,7 @@ echo -e "${YELLOW}[6/8] Setting up application...${NC}"
 if [ ! -d "${APP_DIR}" ]; then
     echo -e "${RED}Directory ${APP_DIR} not found${NC}"
     echo -e "${YELLOW}Please clone the repository first:${NC}"
-    echo -e "${YELLOW}  git clone https://github.com/AbolDev/rush-photo.git ${APP_DIR}${NC}"
+    echo -e "${YELLOW}  git clone https://github.com/arminparvardegary/rush-photo.git ${APP_DIR}${NC}"
     exit 1
 fi
 
