@@ -1,8 +1,16 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Check, ArrowLeft, ArrowRight, Package, CreditCard, Camera, Shield, Clock, RefreshCw, AlertCircle, Lock, Sparkles, Info, CheckCircle2 } from "lucide-react";
+import { Check, ArrowLeft, ArrowRight, Package, CreditCard, Camera, Shield, Clock, RefreshCw, AlertCircle, Lock, Sparkles, Info, CheckCircle2, Copy, Mail, CheckCheck } from "lucide-react";
 import Link from "next/link";
+
+// Generate a unique tracking number
+function generateTrackingNumber(): string {
+  const prefix = "RP";
+  const timestamp = Date.now().toString(36).toUpperCase();
+  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `${prefix}-${timestamp}-${random}`;
+}
 
 const photoStyles = [
   {
@@ -113,6 +121,9 @@ export default function OrderPage() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [showSavedIndicator, setShowSavedIndicator] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [trackingNumber, setTrackingNumber] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   const currentPackage = packages.find(p => p.id === selectedPackage);
   const maxStyles = currentPackage?.stylesCount || 4;
@@ -279,10 +290,36 @@ export default function OrderPage() {
     setIsSubmitting(true);
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Generate tracking number
+    const newTrackingNumber = generateTrackingNumber();
+    setTrackingNumber(newTrackingNumber);
+    
+    // Simulate sending email
+    await new Promise(resolve => setTimeout(resolve, 500));
+    setEmailSent(true);
+    
     localStorage.removeItem('rushPhotoOrder');
     setIsSubmitting(false);
-    alert('Order submitted! We will contact you shortly with shipping instructions.');
-    window.location.href = '/';
+    setStep(5); // Go to confirmation step
+  };
+
+  const copyTrackingNumber = async () => {
+    try {
+      await navigator.clipboard.writeText(trackingNumber);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback for browsers that don't support clipboard API
+      const textArea = document.createElement("textarea");
+      textArea.value = trackingNumber;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   return (
@@ -356,9 +393,9 @@ export default function OrderPage() {
           ))}
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className={`grid ${step === 5 ? '' : 'lg:grid-cols-3'} gap-6 lg:gap-8`}>
           {/* Main Content */}
-          <div className="lg:col-span-2">
+          <div className={step === 5 ? 'max-w-2xl mx-auto w-full' : 'lg:col-span-2'}>
             {/* Step 1: Package Selection */}
             {step === 1 && (
               <div className="animate-fadeIn">
@@ -809,6 +846,144 @@ export default function OrderPage() {
               </div>
             )}
 
+            {/* Step 5: Order Confirmed */}
+            {step === 5 && (
+              <div className="animate-fadeIn">
+                {/* Success Header */}
+                <div className="text-center mb-8">
+                  <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-green-500/30">
+                    <CheckCheck className="w-10 h-10 text-white" />
+                  </div>
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-2">
+                    Order Confirmed!
+                  </h1>
+                  <p className="text-[#1a1a1a]/60 text-sm sm:text-base">
+                    Thank you for your order, {formData.name.split(' ')[0]}!
+                  </p>
+                </div>
+
+                {/* Tracking Number Card */}
+                <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg mb-6">
+                  <div className="text-center mb-6">
+                    <p className="text-sm text-[#1a1a1a]/60 mb-2">Your Tracking Number</p>
+                    <div className="flex items-center justify-center gap-3 flex-wrap">
+                      <code className="text-xl sm:text-2xl md:text-3xl font-mono font-bold text-[#E54A4A] bg-[#E54A4A]/5 px-4 py-2 rounded-xl">
+                        {trackingNumber}
+                      </code>
+                      <button
+                        onClick={copyTrackingNumber}
+                        className={`p-3 rounded-xl transition-all ${
+                          copied 
+                            ? 'bg-green-500 text-white' 
+                            : 'bg-[#1a1a1a]/5 text-[#1a1a1a]/60 hover:bg-[#E54A4A]/10 hover:text-[#E54A4A]'
+                        }`}
+                        title="Copy tracking number"
+                      >
+                        {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                      </button>
+                    </div>
+                    {copied && (
+                      <p className="text-green-600 text-sm mt-2 animate-fadeIn">
+                        Copied to clipboard!
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="border-t border-[#1a1a1a]/10 pt-6">
+                    <div className="flex items-center gap-3 text-green-600 mb-4">
+                      <Mail className="w-5 h-5" />
+                      <span className="text-sm font-medium">
+                        {emailSent ? 'Confirmation email sent!' : 'Sending confirmation email...'}
+                      </span>
+                    </div>
+                    <p className="text-sm text-[#1a1a1a]/60">
+                      We&apos;ve sent shipping instructions to <strong>{formData.email}</strong>
+                    </p>
+                  </div>
+                </div>
+
+                {/* Next Steps */}
+                <div className="bg-white p-6 rounded-2xl shadow-lg mb-6">
+                  <h3 className="font-bold text-[#1a1a1a] mb-4">Next Steps</h3>
+                  <div className="space-y-4">
+                    <div className="flex gap-4">
+                      <div className="w-8 h-8 rounded-full bg-[#E54A4A]/10 text-[#E54A4A] flex items-center justify-center font-bold text-sm flex-shrink-0">
+                        1
+                      </div>
+                      <div>
+                        <p className="font-medium text-[#1a1a1a]">Check Your Email</p>
+                        <p className="text-sm text-[#1a1a1a]/60">
+                          You&apos;ll receive detailed shipping instructions within a few minutes.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-4">
+                      <div className="w-8 h-8 rounded-full bg-[#E54A4A]/10 text-[#E54A4A] flex items-center justify-center font-bold text-sm flex-shrink-0">
+                        2
+                      </div>
+                      <div>
+                        <p className="font-medium text-[#1a1a1a]">Ship Your Product</p>
+                        <p className="text-sm text-[#1a1a1a]/60">
+                          Use the prepaid label in your email to ship your product to our studio.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-4">
+                      <div className="w-8 h-8 rounded-full bg-[#E54A4A]/10 text-[#E54A4A] flex items-center justify-center font-bold text-sm flex-shrink-0">
+                        3
+                      </div>
+                      <div>
+                        <p className="font-medium text-[#1a1a1a]">Track Your Order</p>
+                        <p className="text-sm text-[#1a1a1a]/60">
+                          Use your tracking number to check the status of your order anytime.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Order Details */}
+                <div className="bg-[#1a1a1a]/5 p-6 rounded-2xl mb-6">
+                  <h4 className="font-medium text-[#1a1a1a] mb-3">Order Details</h4>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-[#1a1a1a]/50">Package</p>
+                      <p className="font-medium text-[#1a1a1a]">{currentPackage?.name}</p>
+                    </div>
+                    <div>
+                      <p className="text-[#1a1a1a]/50">Total</p>
+                      <p className="font-medium text-[#E54A4A]">${currentPackage?.price}</p>
+                    </div>
+                    <div>
+                      <p className="text-[#1a1a1a]/50">Styles</p>
+                      <p className="font-medium text-[#1a1a1a]">{selectedStyles.length} styles</p>
+                    </div>
+                    <div>
+                      <p className="text-[#1a1a1a]/50">Est. Delivery</p>
+                      <p className="font-medium text-[#1a1a1a]">{currentPackage?.turnaround}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link
+                    href="/"
+                    className="flex-1 px-6 py-4 bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white font-semibold rounded-full text-center hover:shadow-lg transition-all"
+                  >
+                    Back to Home
+                  </Link>
+                  <button
+                    onClick={copyTrackingNumber}
+                    className="flex-1 px-6 py-4 bg-white text-[#1a1a1a] font-semibold rounded-full border-2 border-[#1a1a1a]/10 hover:border-[#E54A4A] hover:text-[#E54A4A] transition-all flex items-center justify-center gap-2"
+                  >
+                    <Copy className="w-4 h-4" />
+                    {copied ? 'Copied!' : 'Copy Tracking Number'}
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Navigation Buttons */}
             {step < 4 && (
               <div className="flex justify-between mt-6 sm:mt-8">
@@ -840,7 +1015,8 @@ export default function OrderPage() {
             )}
           </div>
 
-          {/* Sidebar - Order Summary */}
+          {/* Sidebar - Order Summary (hidden on step 5) */}
+          {step !== 5 && (
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg lg:sticky lg:top-24">
               <h3 className="font-bold text-[#1a1a1a] mb-4 text-sm sm:text-base">Order Summary</h3>
@@ -906,6 +1082,7 @@ export default function OrderPage() {
               </div>
             </div>
           </div>
+          )}
         </div>
       </div>
 
