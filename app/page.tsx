@@ -13,10 +13,12 @@ import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import FloatingCTA from "@/components/FloatingCTA";
 import QuickContact from "@/components/QuickContact";
+import GlobalEffects from "@/components/GlobalEffects";
 
 export default function Home() {
   return (
     <main className="relative min-h-screen">
+      <GlobalEffects />
       <Header />
       <Hero />
       <TrustBadges />
