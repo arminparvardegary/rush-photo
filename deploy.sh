@@ -1,10 +1,8 @@
 #!/bin/bash
-
-#######################################
-# Rush Photo - One-Click Deployment
-# Domain: rush.photos
-# Server: 159.203.122.182
-#######################################
+# ============================================
+# Rush Photo - Independent Deployment Script
+# Domain: rush.photos | Port: 3002
+# ============================================
 
 set -e
 
@@ -15,216 +13,91 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
+echo -e "${BLUE}╔════════════════════════════════════════╗${NC}"
+echo -e "${BLUE}║     📷 Rush Photo Deployment           ║${NC}"
+echo -e "${BLUE}║     Domain: rush.photos                ║${NC}"
+echo -e "${BLUE}║     Port: 3002                         ║${NC}"
+echo -e "${BLUE}╚════════════════════════════════════════╝${NC}"
+
+# Config
+PROJECT_NAME="rush-photo"
+CONTAINER_NAME="rush-photo-app"
+PROJECT_DIR="/root/rush-photo"
+PORT="3002"
 DOMAIN="rush.photos"
-EMAIL="admin@rush.photos"
-APP_DIR="/root/rush-photo"
-REPO_URL="https://github.com/arminparvardegary/rush-photo.git"
+NGINX_NETWORK="rush-box_rushbox-network"
 
-echo -e "${BLUE}"
-echo "╔═══════════════════════════════════════╗"
-echo "║     Rush Photo Deployment Script      ║"
-echo "║     Domain: ${DOMAIN}               ║"
-echo "╚═══════════════════════════════════════╝"
-echo -e "${NC}"
-
-# Check root
-if [ "$EUID" -ne 0 ]; then
-    echo -e "${RED}❌ Please run as root${NC}"
-    exit 1
+# Check if running on server
+if [ "$(pwd)" != "$PROJECT_DIR" ] && [ -d "$PROJECT_DIR" ]; then
+    cd $PROJECT_DIR
+    echo -e "${YELLOW}📂 Changed to: $PROJECT_DIR${NC}"
 fi
 
-# 1. Update System
-echo -e "\n${YELLOW}[1/7] 📦 Updating system...${NC}"
-apt update -qq && apt upgrade -y -qq
-apt install -y -qq git curl wget
+# 1. Pull latest code
+echo -e "${YELLOW}📥 Pulling latest code...${NC}"
+git pull origin main 2>/dev/null || echo "Not a git repo or no remote"
 
-# 2. Install Docker
-echo -e "\n${YELLOW}[2/7] 🐳 Installing Docker...${NC}"
-if ! command -v docker &> /dev/null; then
-    curl -fsSL https://get.docker.com | sh
-    systemctl enable docker
-    systemctl start docker
-    echo -e "${GREEN}✓ Docker installed${NC}"
-else
-    echo -e "${GREEN}✓ Docker already installed${NC}"
-fi
-
-# 3. Install Docker Compose
-echo -e "\n${YELLOW}[3/7] 🐳 Installing Docker Compose...${NC}"
-if ! docker compose version &> /dev/null; then
-    apt install -y -qq docker-compose-plugin
-    echo -e "${GREEN}✓ Docker Compose installed${NC}"
-else
-    echo -e "${GREEN}✓ Docker Compose already installed${NC}"
-fi
-
-# 4. Install Nginx & Certbot
-echo -e "\n${YELLOW}[4/7] 🌐 Installing Nginx & Certbot...${NC}"
-apt install -y -qq nginx certbot python3-certbot-nginx
-systemctl enable nginx
-echo -e "${GREEN}✓ Nginx & Certbot installed${NC}"
-
-# 5. Clone/Pull Repository
-echo -e "\n${YELLOW}[5/7] 📥 Setting up application...${NC}"
-if [ -d "${APP_DIR}" ]; then
-    cd ${APP_DIR}
-    git pull origin main
-    echo -e "${GREEN}✓ Repository updated${NC}"
-else
-    git clone ${REPO_URL} ${APP_DIR}
-    cd ${APP_DIR}
-    echo -e "${GREEN}✓ Repository cloned${NC}"
-fi
-
-# 6. Configure Nginx & SSL
-echo -e "\n${YELLOW}[6/7] 🔒 Configuring SSL...${NC}"
-
-# Create webroot for certbot
-mkdir -p /var/www/certbot
-
-# Initial nginx config (HTTP only for SSL challenge)
-cat > /etc/nginx/sites-available/${DOMAIN} << 'EOF'
-server {
-    listen 80;
-    listen [::]:80;
-    server_name rush.photos www.rush.photos;
-
-    location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-    }
-
-    location / {
-        return 200 'Setting up...';
-        add_header Content-Type text/plain;
-    }
-}
-EOF
-
-ln -sf /etc/nginx/sites-available/${DOMAIN} /etc/nginx/sites-enabled/
-rm -f /etc/nginx/sites-enabled/default
-nginx -t && systemctl reload nginx
-
-# Get SSL certificate
-if [ ! -f "/etc/letsencrypt/live/${DOMAIN}/fullchain.pem" ]; then
-    certbot certonly --webroot \
-        -w /var/www/certbot \
-        -d ${DOMAIN} \
-        -d www.${DOMAIN} \
-        --email ${EMAIL} \
-        --agree-tos \
-        --non-interactive
-    echo -e "${GREEN}✓ SSL certificate obtained${NC}"
-else
-    echo -e "${GREEN}✓ SSL certificate exists${NC}"
-fi
-
-# Full nginx config with SSL
-cat > /etc/nginx/sites-available/${DOMAIN} << 'EOF'
-upstream rush_app {
-    server 127.0.0.1:3000;
-    keepalive 64;
-}
-
-# HTTP -> HTTPS redirect
-server {
-    listen 80;
-    listen [::]:80;
-    server_name rush.photos www.rush.photos;
-
-    location /.well-known/acme-challenge/ {
-        root /var/www/certbot;
-    }
-
-    location / {
-        return 301 https://$server_name$request_uri;
-    }
-}
-
-# HTTPS
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-    server_name rush.photos www.rush.photos;
-
-    # SSL
-    ssl_certificate /etc/letsencrypt/live/rush.photos/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/rush.photos/privkey.pem;
-    ssl_session_timeout 1d;
-    ssl_session_cache shared:SSL:50m;
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
-    ssl_prefer_server_ciphers off;
-
-    # Security headers
-    add_header Strict-Transport-Security "max-age=63072000" always;
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-
-    # Gzip
-    gzip on;
-    gzip_vary on;
-    gzip_types text/plain text/css application/json application/javascript text/xml application/xml image/svg+xml;
-
-    # Proxy to Next.js
-    location / {
-        proxy_pass http://rush_app;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-    }
-
-    # Cache static files
-    location /_next/static {
-        proxy_pass http://rush_app;
-        add_header Cache-Control "public, max-age=31536000, immutable";
-    }
-}
-EOF
-
-nginx -t && systemctl reload nginx
-echo -e "${GREEN}✓ Nginx configured with SSL${NC}"
-
-# 7. Build & Start Docker
-echo -e "\n${YELLOW}[7/7] 🚀 Starting application...${NC}"
-cd ${APP_DIR}
+# 2. Stop existing container (if any)
+echo -e "${YELLOW}🛑 Stopping existing container...${NC}"
 docker compose down 2>/dev/null || true
-docker compose up -d --build
+docker stop $CONTAINER_NAME 2>/dev/null || true
+docker rm $CONTAINER_NAME 2>/dev/null || true
 
-# Setup SSL auto-renewal
-(crontab -l 2>/dev/null | grep -v certbot; echo "0 3 * * * certbot renew --quiet --post-hook 'systemctl reload nginx'") | crontab -
+# 3. Build and start
+echo -e "${YELLOW}🔨 Building and starting...${NC}"
+docker compose up --build -d
 
-# Setup Firewall
-ufw allow 22/tcp >/dev/null 2>&1
-ufw allow 80/tcp >/dev/null 2>&1
-ufw allow 443/tcp >/dev/null 2>&1
-ufw --force enable >/dev/null 2>&1
+# 4. Wait for container to be healthy
+echo -e "${YELLOW}⏳ Waiting for container to start...${NC}"
+sleep 5
 
-# Wait for app to start
-echo -e "\n${YELLOW}⏳ Waiting for app to start...${NC}"
-sleep 10
+# 5. Connect to nginx network (not needed since using host.docker.internal)
+# But keeping for consistency
+echo -e "${YELLOW}🔗 Network check...${NC}"
+# docker network connect $NGINX_NETWORK $CONTAINER_NAME 2>/dev/null || echo "Using host network"
 
-# Check if running
-if curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 | grep -q "200"; then
-    echo -e "${GREEN}✓ Application is running${NC}"
-else
-    echo -e "${YELLOW}⚠ App may still be starting, check logs: docker compose logs -f${NC}"
+# 6. Health check
+echo -e "${YELLOW}🏥 Running health check...${NC}"
+MAX_RETRIES=10
+RETRY=0
+while [ $RETRY -lt $MAX_RETRIES ]; do
+    if curl -s -o /dev/null -w "%{http_code}" http://localhost:$PORT | grep -q "200\|301\|302"; then
+        echo -e "${GREEN}✅ App is responding!${NC}"
+        break
+    fi
+    RETRY=$((RETRY + 1))
+    echo "Waiting... ($RETRY/$MAX_RETRIES)"
+    sleep 3
+done
+
+if [ $RETRY -eq $MAX_RETRIES ]; then
+    echo -e "${RED}⚠️  App might not be responding properly${NC}"
 fi
 
-echo -e "\n${GREEN}"
-echo "╔═══════════════════════════════════════╗"
-echo "║       🎉 Deployment Complete!         ║"
-echo "╠═══════════════════════════════════════╣"
-echo "║  Site: https://rush.photos            ║"
-echo "╚═══════════════════════════════════════╝"
-echo -e "${NC}"
+# 7. Check SSL (if nginx is running)
+if docker ps | grep -q "rushbox-nginx"; then
+    echo -e "${YELLOW}🔒 Checking SSL...${NC}"
+    if curl -s -o /dev/null -w "%{http_code}" https://$DOMAIN 2>/dev/null | grep -q "200\|301\|302"; then
+        echo -e "${GREEN}✅ SSL is working!${NC}"
+    else
+        echo -e "${YELLOW}⚠️  SSL might need setup. Run on server:${NC}"
+        echo "docker exec rushbox-certbot certbot certonly --webroot -w /var/www/certbot -d $DOMAIN -d www.$DOMAIN --email admin@$DOMAIN --agree-tos --no-eff-email"
+    fi
+fi
 
-echo -e "Commands:"
-echo -e "  ${YELLOW}docker compose logs -f${NC}     - View logs"
-echo -e "  ${YELLOW}docker compose restart${NC}    - Restart"
-echo -e "  ${YELLOW}docker compose up -d --build${NC} - Rebuild"
+# 8. Show status
 echo ""
+echo -e "${GREEN}════════════════════════════════════════${NC}"
+echo -e "${GREEN}✅ Deployment Complete!${NC}"
+echo -e "${GREEN}════════════════════════════════════════${NC}"
+echo ""
+echo "📋 Container Status:"
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | grep -E "$CONTAINER_NAME|NAMES"
+echo ""
+echo "🌐 URLs:"
+echo "   Local:  http://localhost:$PORT"
+echo "   Public: https://$DOMAIN"
+echo ""
+echo -e "${YELLOW}📌 This project runs independently from:${NC}"
+echo "   - rush-box (port 3000, rushboxes.com)"
+echo "   - rush-video (port 3001, rush.video)"
