@@ -472,7 +472,12 @@ export default function OrderPage() {
                       </div>
 
                       {/* Lifestyle availability indicator */}
-                      {pkg.allowedStyles?.includes("lifestyle") ? (
+                      {pkg.id === "lifestyle" ? (
+                        <div className="flex items-center gap-1 text-[10px] sm:text-xs text-green-600 mb-2 sm:mb-3">
+                          <Sparkles className="w-3 h-3" />
+                          <span>Premium style</span>
+                        </div>
+                      ) : pkg.allowedStyles?.includes("lifestyle") ? (
                         <div className="flex items-center gap-1 text-[10px] sm:text-xs text-green-600 mb-2 sm:mb-3">
                           <Sparkles className="w-3 h-3" />
                           <span>Includes Lifestyle</span>
