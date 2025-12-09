@@ -20,7 +20,6 @@ export default function Home() {
     <main className="relative min-h-screen">
       <GlobalEffects />
       <Header />
-      <Hero />
       <TrustBadges />
       <Marquee />
       <PhotoStyles />

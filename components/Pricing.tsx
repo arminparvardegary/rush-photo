@@ -389,12 +389,12 @@ export default function Pricing() {
       <div className="container relative z-10">
         {/* Header */}
         <Reveal>
-          <div className="text-center max-w-2xl mx-auto mb-12">
+        <div className="text-center max-w-2xl mx-auto mb-12">
             <motion.span 
               className="inline-block px-4 py-2 bg-[#E54A4A]/10 text-[#E54A4A] text-sm font-semibold rounded-full mb-4"
               whileHover={{ scale: 1.05 }}
             >
-              Pricing
+            Pricing
             </motion.span>
             <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-6">
               Choose your{" "}
@@ -407,15 +407,15 @@ export default function Pricing() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.3 }}
                 />
-              </span>
-            </h2>
-            <p className="text-[#1a1a1a]/60 text-lg mb-6">
-              Flexible options for every need. No hidden fees.
-            </p>
-            
-            {/* Toggle comparison */}
+          </span>
+          </h2>
+          <p className="text-[#1a1a1a]/60 text-lg mb-6">
+            Flexible options for every need. No hidden fees.
+          </p>
+          
+          {/* Toggle comparison */}
             <motion.button
-              onClick={() => setShowComparison(!showComparison)}
+            onClick={() => setShowComparison(!showComparison)}
               className="text-[#E54A4A] font-medium hover:underline inline-flex items-center gap-2"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -426,9 +426,9 @@ export default function Pricing() {
               >
                 ↓
               </motion.span>
-              {showComparison ? 'Hide comparison' : 'Compare all packages'}
+            {showComparison ? 'Hide comparison' : 'Compare all packages'}
             </motion.button>
-          </div>
+        </div>
         </Reveal>
 
         {/* Comparison Table */}
@@ -472,7 +472,7 @@ export default function Pricing() {
                           {typeof value === 'boolean' ? (
                             value ? (
                               <motion.div whileHover={{ scale: 1.3 }}>
-                                <Check className="w-5 h-5 text-green-500 mx-auto" />
+                              <Check className="w-5 h-5 text-green-500 mx-auto" />
                               </motion.div>
                             ) : (
                               <X className="w-5 h-5 text-[#1a1a1a]/20 mx-auto" />
@@ -507,8 +507,8 @@ export default function Pricing() {
           >
             <p className="text-[#1a1a1a]/40 text-sm inline-flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              100% satisfaction guaranteed · Full refund if not happy · Secure payment
-            </p>
+            100% satisfaction guaranteed · Full refund if not happy · Secure payment
+          </p>
           </motion.div>
         </Reveal>
       </div>

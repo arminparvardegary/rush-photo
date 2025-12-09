@@ -295,6 +295,26 @@ export default function OrderPage() {
     const newTrackingNumber = generateTrackingNumber();
     setTrackingNumber(newTrackingNumber);
     
+    // Save order to localStorage for admin panel
+    const order = {
+      id: Date.now().toString(),
+      trackingNumber: newTrackingNumber,
+      package: currentPackage?.name || "",
+      styles: selectedStyles,
+      status: "pending" as const,
+      createdAt: new Date().toISOString(),
+      estimatedDelivery: currentPackage?.turnaround || "3-5 days",
+      total: currentPackage?.price || 0,
+      productName: formData.productName,
+      customerEmail: formData.email,
+      customerName: formData.name,
+    };
+    
+    const existingOrders = localStorage.getItem("orders");
+    const orders = existingOrders ? JSON.parse(existingOrders) : [];
+    orders.push(order);
+    localStorage.setItem("orders", JSON.stringify(orders));
+    
     // Simulate sending email
     await new Promise(resolve => setTimeout(resolve, 500));
     setEmailSent(true);

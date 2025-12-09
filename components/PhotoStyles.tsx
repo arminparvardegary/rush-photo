@@ -227,12 +227,12 @@ export default function PhotoStyles() {
       <div className="container relative z-10">
         {/* Header */}
         <Reveal>
-          <div className="text-center max-w-2xl mx-auto mb-16">
+        <div className="text-center max-w-2xl mx-auto mb-16">
             <motion.span 
               className="inline-block px-4 py-2 bg-[#E54A4A]/10 text-[#E54A4A] text-sm font-semibold rounded-full mb-4"
               whileHover={{ scale: 1.05 }}
             >
-              Our Styles
+            Our Styles
             </motion.span>
             <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-6">
               Four ways to{" "}
@@ -254,12 +254,12 @@ export default function PhotoStyles() {
                     strokeLinecap="round"
                   />
                 </motion.svg>
-              </span>
-            </h2>
-            <p className="text-[#1a1a1a]/60 text-lg">
-              Each style crafted to perfection. Choose your favorite or get all four!
-            </p>
-          </div>
+          </span>
+          </h2>
+          <p className="text-[#1a1a1a]/60 text-lg">
+            Each style crafted to perfection. Choose your favorite or get all four!
+          </p>
+        </div>
         </Reveal>
 
         {/* Styles Grid */}
@@ -299,10 +299,10 @@ export default function PhotoStyles() {
 
         {/* CTA */}
         <Reveal delay={0.3}>
-          <div className="text-center mt-12">
+        <div className="text-center mt-12">
             <Magnetic strength={0.15}>
               <motion.a
-                href="/order"
+            href="/order"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-[#1a1a1a] text-white font-semibold rounded-full relative overflow-hidden group"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -321,11 +321,11 @@ export default function PhotoStyles() {
                   stroke="currentColor"
                   whileHover={{ x: 5 }}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </motion.svg>
               </motion.a>
             </Magnetic>
-          </div>
+        </div>
         </Reveal>
       </div>
     </section>

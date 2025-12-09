@@ -153,8 +153,8 @@ export default function Portfolio() {
       <motion.div 
         className="absolute inset-0 opacity-10"
         style={{
-          backgroundImage: `radial-gradient(circle at 2px 2px, #E54A4A 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
+        backgroundImage: `radial-gradient(circle at 2px 2px, #E54A4A 1px, transparent 0)`,
+        backgroundSize: '40px 40px'
         }}
         animate={{
           backgroundPosition: ["0px 0px", "40px 40px"],
@@ -187,12 +187,12 @@ export default function Portfolio() {
       <div className="container relative z-10">
         {/* Header */}
         <Reveal>
-          <div className="text-center max-w-2xl mx-auto mb-12">
+        <div className="text-center max-w-2xl mx-auto mb-12">
             <motion.span 
               className="inline-block px-4 py-2 bg-[#E54A4A]/20 text-[#E54A4A] text-sm font-semibold rounded-full mb-4"
               whileHover={{ scale: 1.05 }}
             >
-              Our Work
+            Our Work
             </motion.span>
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Portfolio{" "}
@@ -205,26 +205,26 @@ export default function Portfolio() {
                   }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
-              </span>
-            </h2>
-            <p className="text-white/50 text-lg">
-              Browse our recent work and see the quality you can expect
-            </p>
-          </div>
+          </span>
+          </h2>
+          <p className="text-white/50 text-lg">
+            Browse our recent work and see the quality you can expect
+          </p>
+        </div>
         </Reveal>
 
         {/* Filter Tabs */}
         <Reveal delay={0.2}>
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {categories.map((category) => (
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {categories.map((category) => (
               <Magnetic key={category} strength={0.1}>
                 <motion.button
-                  onClick={() => setActiveCategory(category)}
+              onClick={() => setActiveCategory(category)}
                   className={`relative px-5 py-2.5 rounded-full text-sm font-medium transition-all overflow-hidden ${
-                    activeCategory === category
+                activeCategory === category
                       ? 'text-white'
-                      : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
-                  }`}
+                  : 'bg-white/10 text-white/60 hover:bg-white/20 hover:text-white'
+              }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -238,8 +238,8 @@ export default function Portfolio() {
                   <span className="relative z-10">{category}</span>
                 </motion.button>
               </Magnetic>
-            ))}
-          </div>
+          ))}
+        </div>
         </Reveal>
 
         {/* Gallery Grid */}
@@ -248,7 +248,7 @@ export default function Portfolio() {
           layout
         >
           <AnimatePresence mode="popLayout">
-            {filteredImages.map((image, index) => (
+          {filteredImages.map((image, index) => (
               <ImageCard3D key={image.src} image={image} index={index} />
             ))}
           </AnimatePresence>
@@ -256,10 +256,10 @@ export default function Portfolio() {
 
         {/* CTA */}
         <Reveal delay={0.3}>
-          <div className="text-center mt-12">
+        <div className="text-center mt-12">
             <Magnetic strength={0.15}>
               <motion.a
-                href="/order"
+            href="/order"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white font-semibold rounded-full relative overflow-hidden group"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -281,11 +281,11 @@ export default function Portfolio() {
                   whileHover={{ x: 5 }}
                   transition={{ type: "spring", stiffness: 400 }}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </motion.svg>
               </motion.a>
             </Magnetic>
-          </div>
+        </div>
         </Reveal>
       </div>
     </section>

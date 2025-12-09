@@ -90,6 +90,13 @@ export default function Header() {
               </a>
               
               <a 
+                href="/login" 
+                className="px-4 py-2 text-[#1a1a1a]/70 hover:text-[#E54A4A] transition-colors font-medium text-sm"
+              >
+                Login
+              </a>
+              
+              <a 
                 href="/order" 
                 className="relative group overflow-hidden px-6 py-3 bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white font-semibold rounded-full transition-all duration-300 hover:shadow-xl hover:shadow-[#E54A4A]/30 hover:-translate-y-0.5"
               >
@@ -173,6 +180,13 @@ export default function Header() {
             <div className={`space-y-3 transition-all duration-500 ${
               menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
             }`} style={{ transitionDelay: menuOpen ? '400ms' : '0ms' }}>
+              <a 
+                href="/login"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-center gap-2 w-full py-3 text-[#1a1a1a] font-medium hover:text-[#E54A4A] transition-colors"
+              >
+                Login
+              </a>
               <a 
                 href="/order"
                 onClick={() => setMenuOpen(false)}
