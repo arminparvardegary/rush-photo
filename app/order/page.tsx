@@ -106,7 +106,7 @@ function getDeliveryDate(days: number): string {
 
 export default function OrderPage() {
   const [step, setStep] = useState(1);
-  const [selectedPackage, setSelectedPackage] = useState("triple");
+  const [selectedPackage, setSelectedPackage] = useState("complete");
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     name: "",
@@ -271,7 +271,7 @@ export default function OrderPage() {
   const clearOrder = () => {
     localStorage.removeItem('rushPhotoOrder');
     setStep(1);
-    setSelectedPackage("triple");
+    setSelectedPackage("complete");
     setSelectedStyles([]);
     setFormData({
       name: "",
