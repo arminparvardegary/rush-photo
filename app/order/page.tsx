@@ -1,854 +1,828 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { Check, ArrowLeft, ArrowRight, Package, CreditCard, Camera, Shield, Clock, RefreshCw, AlertCircle, Lock, Sparkles, Info, CheckCircle2, Copy, Mail, CheckCheck } from "lucide-react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { 
+  ArrowLeft, 
+  ArrowRight,
+  Check,
+  ShoppingCart,
+  Camera,
+  Sparkles,
+  Package,
+  Info,
+  Plus,
+  Minus,
+  X,
+  Mail,
+  Phone,
+  User,
+  Building,
+  FileText,
+  Send,
+  CheckCircle,
+  Clock,
+  Copy
+} from "lucide-react";
 
-// Generate a unique tracking number
-function generateTrackingNumber(): string {
-  const prefix = "RP";
-  const timestamp = Date.now().toString(36).toUpperCase();
-  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-  return `${prefix}-${timestamp}-${random}`;
+// Types
+type PackageType = "ecommerce" | "lifestyle" | "fullpackage" | null;
+type EcommerceStyle = "straight-on" | "top-down" | "angled";
+type Angle = "front" | "back" | "left" | "right";
+
+interface CartItem {
+  style: EcommerceStyle;
+  angles: Angle[];
+  pricePerAngle: number;
 }
 
-const photoStyles = [
+interface OrderState {
+  packageType: PackageType;
+  cart: CartItem[];
+  lifestyleIncluded: boolean;
+  formData: {
+    name: string;
+    email: string;
+    phone: string;
+    company: string;
+    productName: string;
+    notes: string;
+  };
+}
+
+// Pricing
+const PRICES = {
+  ecommerce: {
+    perAngle: 25,
+  },
+  lifestyle: {
+    flatRate: 149,
+  },
+  fullPackageDiscount: 0.1, // 10% discount
+};
+
+// Style info
+const ECOMMERCE_STYLES: { id: EcommerceStyle; name: string; description: string; image: string }[] = [
   {
-    id: "topdown",
+    id: "straight-on",
+    name: "Straight On",
+    description: "Direct front-facing shots, perfect for showcasing product details",
+    image: "/images/straight-on.jpg",
+  },
+  {
+    id: "top-down",
     name: "Top Down",
-    description: "Bird's-eye view shots for flat-lay compositions",
-    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&q=80",
+    description: "Bird's eye view photography, ideal for flat-lay compositions",
+    image: "/images/top-down.jpg",
   },
   {
-    id: "product",
-    name: "Product",
-    description: "Clean studio shots with perfect lighting",
-    image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&q=80",
-  },
-  {
-    id: "diagonal",
-    name: "Diagonal",
-    description: "Dynamic angled perspectives",
-    image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&q=80",
-  },
-  {
-    id: "lifestyle",
-    name: "Lifestyle",
-    description: "In-context real-world scenarios",
-    image: "https://images.unsplash.com/photo-1560343090-f0409e92791a?w=400&q=80",
-    premium: true, // Lifestyle is premium - only in Lifestyle or Complete packages
+    id: "angled",
+    name: "Angled",
+    description: "Dynamic 45° angle shots that add depth and dimension",
+    image: "/images/angled.jpg",
   },
 ];
 
-const packages = [
-  {
-    id: "single",
-    name: "Single",
-    price: 89,
-    description: "1 photography style",
-    stylesCount: 1,
-    turnaround: "5 days",
-    revisions: 2,
-    allowedStyles: ["topdown", "product", "diagonal"], // No lifestyle
-  },
-  {
-    id: "double",
-    name: "Double",
-    price: 159,
-    description: "2 photography styles",
-    stylesCount: 2,
-    turnaround: "4 days",
-    revisions: 2,
-    allowedStyles: ["topdown", "product", "diagonal"], // No lifestyle
-  },
-  {
-    id: "triple",
-    name: "Triple",
-    price: 219,
-    description: "3 photography styles",
-    stylesCount: 3,
-    turnaround: "3 days",
-    revisions: 5,
-    allowedStyles: ["topdown", "product", "diagonal"], // No lifestyle
-  },
-  {
-    id: "lifestyle",
-    name: "Lifestyle",
-    price: 149,
-    description: "Lifestyle photography only",
-    stylesCount: 1,
-    fixedStyle: "lifestyle",
-    turnaround: "4 days",
-    revisions: 3,
-    allowedStyles: ["lifestyle"], // Only lifestyle
-    badge: "Exclusive",
-  },
-  {
-    id: "complete",
-    name: "Complete",
-    price: 280,
-    originalPrice: 400,
-    description: "All 4 photography styles",
-    stylesCount: 4,
-    turnaround: "3 days",
-    revisions: "Unlimited",
-    allowedStyles: ["topdown", "product", "diagonal", "lifestyle"], // All styles
-    popular: true,
-  },
+const ANGLES: { id: Angle; name: string }[] = [
+  { id: "front", name: "Front" },
+  { id: "back", name: "Back" },
+  { id: "left", name: "Left Side" },
+  { id: "right", name: "Right Side" },
 ];
-
-// Helper to get estimated delivery date
-function getDeliveryDate(days: number): string {
-  const date = new Date();
-  date.setDate(date.getDate() + days + 2); // +2 for shipping
-  return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-}
 
 export default function OrderPage() {
   const [step, setStep] = useState(1);
-  const [selectedPackage, setSelectedPackage] = useState("complete");
-  const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
-  const [formData, setFormData] = useState({
+  const [order, setOrder] = useState<OrderState>({
+    packageType: null,
+    cart: [],
+    lifestyleIncluded: false,
+    formData: {
     name: "",
     email: "",
     phone: "",
     company: "",
     productName: "",
-    productDescription: "",
     notes: "",
+    },
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [showSavedIndicator, setShowSavedIndicator] = useState(false);
+  const [currentStyle, setCurrentStyle] = useState<EcommerceStyle | null>(null);
+  const [selectedAngles, setSelectedAngles] = useState<Angle[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderComplete, setOrderComplete] = useState(false);
   const [trackingNumber, setTrackingNumber] = useState("");
-  const [copied, setCopied] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
 
-  const currentPackage = packages.find(p => p.id === selectedPackage);
-  const maxStyles = currentPackage?.stylesCount || 4;
-  const allowedStyles = useMemo(() => currentPackage?.allowedStyles || [], [currentPackage?.allowedStyles]);
-
-  // Load saved data from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem('rushPhotoOrder');
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        if (data.selectedPackage) setSelectedPackage(data.selectedPackage);
-        if (data.selectedStyles) setSelectedStyles(data.selectedStyles);
-        if (data.formData) setFormData(data.formData);
-        if (data.step && data.step > 1) setStep(Math.min(data.step, 3));
-      } catch {
-        // Failed to load saved order, start fresh
-        localStorage.removeItem('rushPhotoOrder');
-      }
+  // Calculate totals
+  const calculateTotal = () => {
+    let total = 0;
+    
+    // E-commerce items
+    order.cart.forEach(item => {
+      total += item.angles.length * item.pricePerAngle;
+    });
+    
+    // Lifestyle
+    if (order.lifestyleIncluded) {
+      total += PRICES.lifestyle.flatRate;
     }
-  }, []);
+    
+    // Full package discount
+    if (order.packageType === "fullpackage" && order.cart.length > 0) {
+      total = total * (1 - PRICES.fullPackageDiscount);
+    }
+    
+    return Math.round(total);
+  };
 
-  // Save to localStorage on changes with indicator
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      localStorage.setItem('rushPhotoOrder', JSON.stringify({
-        selectedPackage,
-        selectedStyles,
-        formData,
-        step,
-      }));
-      setShowSavedIndicator(true);
-      setTimeout(() => setShowSavedIndicator(false), 2000);
-    }, 500);
+  const getTotalAngles = () => {
+    return order.cart.reduce((acc, item) => acc + item.angles.length, 0);
+  };
 
-    return () => clearTimeout(timeoutId);
-  }, [selectedPackage, selectedStyles, formData, step]);
-
-  // Update selected styles when package changes
-  useEffect(() => {
-    if (selectedPackage === "complete") {
-      setSelectedStyles(photoStyles.map(s => s.id));
-    } else if (selectedPackage === "lifestyle") {
-      setSelectedStyles(["lifestyle"]);
+  // Handlers
+  const selectPackageType = (type: PackageType) => {
+    setOrder(prev => ({
+      ...prev,
+      packageType: type,
+      lifestyleIncluded: type === "lifestyle" || type === "fullpackage",
+    }));
+    
+    if (type === "lifestyle") {
+      setStep(4); // Go directly to form for lifestyle
     } else {
-      // Filter out any styles that are not allowed in the new package
-      setSelectedStyles(prev => 
-        prev.filter(s => allowedStyles.includes(s)).slice(0, maxStyles)
-      );
-    }
-  }, [selectedPackage, maxStyles, allowedStyles]);
-
-  const isStyleAllowed = (styleId: string) => {
-    return allowedStyles.includes(styleId);
-  };
-
-  const toggleStyle = (styleId: string) => {
-    if (selectedPackage === "complete" || selectedPackage === "lifestyle") return;
-    if (!isStyleAllowed(styleId)) return;
-    
-    if (selectedStyles.includes(styleId)) {
-      setSelectedStyles(prev => prev.filter(s => s !== styleId));
-    } else if (selectedStyles.length < maxStyles) {
-      setSelectedStyles(prev => [...prev, styleId]);
+      setStep(2); // Go to style selection for e-commerce/full package
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
+  const selectStyle = (style: EcommerceStyle) => {
+    setCurrentStyle(style);
+    setSelectedAngles([]);
+    setStep(3);
   };
 
-  const handleBlur = (field: string) => {
-    setTouched(prev => ({ ...prev, [field]: true }));
-    validateField(field);
+  const toggleAngle = (angle: Angle) => {
+    setSelectedAngles(prev => 
+      prev.includes(angle) 
+        ? prev.filter(a => a !== angle)
+        : [...prev, angle]
+    );
   };
 
-  const validateField = (field: string) => {
-    const newErrors: Record<string, string> = {};
-    
-    if (field === 'name' && !formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-    if (field === 'email') {
-      if (!formData.email.trim()) {
-        newErrors.email = 'Email is required';
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        newErrors.email = 'Please enter a valid email';
+  const addToCart = () => {
+    if (currentStyle && selectedAngles.length > 0) {
+      // Check if style already in cart
+      const existingIndex = order.cart.findIndex(item => item.style === currentStyle);
+      
+      if (existingIndex >= 0) {
+        // Update existing
+        const newCart = [...order.cart];
+        newCart[existingIndex].angles = selectedAngles;
+        setOrder(prev => ({ ...prev, cart: newCart }));
+      } else {
+        // Add new
+        setOrder(prev => ({
+          ...prev,
+          cart: [...prev.cart, {
+            style: currentStyle,
+            angles: selectedAngles,
+            pricePerAngle: PRICES.ecommerce.perAngle,
+          }],
+        }));
       }
+      
+      setCurrentStyle(null);
+      setSelectedAngles([]);
+      setStep(2); // Back to style selection
     }
-    if (field === 'productName' && !formData.productName.trim()) {
-      newErrors.productName = 'Product name is required';
-    }
+  };
+
+  const removeFromCart = (style: EcommerceStyle) => {
+    setOrder(prev => ({
+      ...prev,
+      cart: prev.cart.filter(item => item.style !== style),
+    }));
+  };
+
+  const proceedToCheckout = () => {
+    setStep(4);
+  };
+
+  const updateFormData = (field: string, value: string) => {
+    setOrder(prev => ({
+      ...prev,
+      formData: { ...prev.formData, [field]: value },
+    }));
+  };
+
+  const generateTrackingNumber = () => {
+    const prefix = "RP";
+    const timestamp = Date.now().toString(36).toUpperCase();
+    const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+    return `${prefix}-${timestamp}-${random}`;
+  };
+
+  const submitOrder = async () => {
+    setIsSubmitting(true);
+    await new Promise(resolve => setTimeout(resolve, 2000));
     
-    setErrors(prev => ({ ...prev, ...newErrors }));
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+    const newTrackingNumber = generateTrackingNumber();
+    setTrackingNumber(newTrackingNumber);
     
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
-    if (!formData.productName.trim()) newErrors.productName = 'Product name is required';
+    // Save order to localStorage
+    const orderData = {
+      id: Date.now().toString(),
+      trackingNumber: newTrackingNumber,
+      packageType: order.packageType,
+      cart: order.cart,
+      lifestyleIncluded: order.lifestyleIncluded,
+      total: calculateTotal(),
+      status: "pending",
+      createdAt: new Date().toISOString(),
+      customerName: order.formData.name,
+      customerEmail: order.formData.email,
+      productName: order.formData.productName,
+    };
     
-    setErrors(newErrors);
-    setTouched({ name: true, email: true, productName: true });
-    return Object.keys(newErrors).length === 0;
+    const existingOrders = localStorage.getItem("orders");
+    const orders = existingOrders ? JSON.parse(existingOrders) : [];
+    orders.push(orderData);
+    localStorage.setItem("orders", JSON.stringify(orders));
+    
+    setIsSubmitting(false);
+    setOrderComplete(true);
+    setStep(5);
   };
 
-  const canProceed = () => {
-    if (step === 1) return selectedPackage !== "";
-    if (step === 2) {
-      if (selectedPackage === "complete") return selectedStyles.length === 4;
-      if (selectedPackage === "lifestyle") return selectedStyles.includes("lifestyle");
-      return selectedStyles.length === maxStyles;
-    }
-    if (step === 3) return formData.name && formData.email && formData.productName && Object.keys(errors).every(k => !errors[k]);
-    return true;
-  };
-
-  const nextStep = () => {
-    if (step === 3 && !validateForm()) return;
-    if (canProceed() && step < 4) {
-      setStep(step + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const prevStep = () => {
-    if (step > 1) {
-      setStep(step - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const clearOrder = () => {
-    localStorage.removeItem('rushPhotoOrder');
-    setStep(1);
-    setSelectedPackage("complete");
-    setSelectedStyles([]);
-    setFormData({
+  const resetOrder = () => {
+    setOrder({
+      packageType: null,
+      cart: [],
+      lifestyleIncluded: false,
+      formData: {
       name: "",
       email: "",
       phone: "",
       company: "",
       productName: "",
-      productDescription: "",
       notes: "",
+      },
     });
-    setErrors({});
-    setTouched({});
+    setStep(1);
+    setOrderComplete(false);
   };
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Generate tracking number
-    const newTrackingNumber = generateTrackingNumber();
-    setTrackingNumber(newTrackingNumber);
-    
-    // Save order to localStorage for admin panel
-    const order = {
-      id: Date.now().toString(),
-      trackingNumber: newTrackingNumber,
-      package: currentPackage?.name || "",
-      styles: selectedStyles,
-      status: "pending" as const,
-      createdAt: new Date().toISOString(),
-      estimatedDelivery: currentPackage?.turnaround || "3-5 days",
-      total: currentPackage?.price || 0,
-      productName: formData.productName,
-      customerEmail: formData.email,
-      customerName: formData.name,
-    };
-    
-    const existingOrders = localStorage.getItem("orders");
-    const orders = existingOrders ? JSON.parse(existingOrders) : [];
-    orders.push(order);
-    localStorage.setItem("orders", JSON.stringify(orders));
-    
-    // Simulate sending email
-    await new Promise(resolve => setTimeout(resolve, 500));
-    setEmailSent(true);
-    
-    localStorage.removeItem('rushPhotoOrder');
-    setIsSubmitting(false);
-    setStep(5); // Go to confirmation step
+  const copyTrackingNumber = () => {
+    navigator.clipboard.writeText(trackingNumber);
   };
 
-  const copyTrackingNumber = async () => {
-    try {
-      await navigator.clipboard.writeText(trackingNumber);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Fallback for browsers that don't support clipboard API
-      const textArea = document.createElement("textarea");
-      textArea.value = trackingNumber;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textArea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+  // Get style name helper
+  const getStyleName = (styleId: EcommerceStyle) => {
+    return ECOMMERCE_STYLES.find(s => s.id === styleId)?.name || styleId;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFFAF5] via-[#fff5eb] to-[#ffe8d6]">
+    <div className="min-h-screen bg-gradient-to-br from-[#FDF8F7] via-white to-[#FDF8F7]">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-[#E54A4A]/10 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#E54A4A] to-[#ff7f7f] rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-base sm:text-lg">R</span>
-            </div>
-            <div className="hidden xs:block">
-              <span className="text-[#1a1a1a] font-bold">Rush</span>
-              <span className="text-[#E54A4A] font-bold">.photo</span>
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-[#1a1a1a]/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#E54A4A] to-[#ff7f7f] flex items-center justify-center">
+                <span className="text-white font-bold text-lg">R</span>
             </div>
           </Link>
           
-          <div className="flex items-center gap-2 sm:gap-4">
-            {/* Auto-save indicator */}
-            <div className={`flex items-center gap-1 text-xs text-green-600 transition-opacity duration-300 ${showSavedIndicator ? 'opacity-100' : 'opacity-0'}`}>
-              <CheckCircle2 className="w-3 h-3" />
-              <span className="hidden sm:inline">Saved</span>
-            </div>
-            
+            <div className="flex items-center gap-4">
+              {step > 1 && step < 5 && (
             <button 
-              onClick={clearOrder}
-              className="text-[#1a1a1a]/40 hover:text-[#E54A4A] transition-colors text-xs sm:text-sm"
+                  onClick={resetOrder}
+                  className="text-[#1a1a1a]/40 hover:text-[#E54A4A] transition-colors text-sm"
             >
               Clear
             </button>
-            <Link href="/" className="flex items-center gap-1 sm:gap-2 text-[#1a1a1a]/60 hover:text-[#E54A4A] transition-colors text-xs sm:text-sm">
+              )}
+              <Link 
+                href="/" 
+                className="flex items-center gap-2 text-[#1a1a1a]/60 hover:text-[#E54A4A] transition-colors text-sm"
+              >
               <ArrowLeft className="w-4 h-4" />
-              <span className="hidden sm:inline">Back</span>
+                Back
             </Link>
+            </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        {/* Progress Steps */}
-        <div className="flex items-center justify-center gap-1 sm:gap-2 md:gap-4 mb-8 sm:mb-12">
-          {[
-            { num: 1, label: "Package", icon: Package },
-            { num: 2, label: "Styles", icon: Camera },
-            { num: 3, label: "Details", icon: CreditCard },
-            { num: 4, label: "Confirm", icon: Check },
-          ].map((s, i) => (
-            <div key={s.num} className="flex items-center">
-              <button 
-                onClick={() => s.num < step && setStep(s.num)}
-                disabled={s.num > step}
-                className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2 rounded-full transition-all ${
-                  step === s.num 
-                    ? 'bg-[#E54A4A] text-white shadow-lg shadow-[#E54A4A]/30' 
-                    : step > s.num 
-                      ? 'bg-green-500 text-white cursor-pointer hover:bg-green-600'
-                      : 'bg-white text-[#1a1a1a]/40 cursor-not-allowed shadow-sm'
-                }`}
-              >
-                {step > s.num ? (
-                  <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                ) : (
-                  <s.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                )}
-                <span className="text-xs sm:text-sm font-medium hidden sm:inline">{s.label}</span>
-              </button>
-              {i < 3 && (
-                <div className={`w-4 sm:w-8 md:w-12 h-0.5 mx-0.5 sm:mx-1 md:mx-2 transition-colors ${step > s.num ? 'bg-green-500' : 'bg-[#1a1a1a]/10'}`} />
+      {/* Progress Bar */}
+      {step < 5 && (
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
+          <div className="flex items-center justify-between">
+            {["Package", "Style", "Angles", "Details"].map((label, index) => {
+              const stepNum = index + 1;
+              const isActive = step === stepNum;
+              const isCompleted = step > stepNum;
+              const isLifestyleSkip = order.packageType === "lifestyle" && (stepNum === 2 || stepNum === 3);
+              
+              return (
+                <div key={label} className={`flex items-center ${index < 3 ? 'flex-1' : ''}`}>
+                  <div className="flex flex-col items-center">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all ${
+                      isCompleted || isLifestyleSkip
+                        ? 'bg-[#E54A4A] text-white'
+                        : isActive
+                        ? 'bg-[#E54A4A] text-white ring-4 ring-[#E54A4A]/20'
+                        : 'bg-[#1a1a1a]/5 text-[#1a1a1a]/40'
+                    }`}>
+                      {isCompleted || isLifestyleSkip ? <Check className="w-5 h-5" /> : stepNum}
+                    </div>
+                    <span className={`mt-2 text-xs font-medium ${
+                      isActive ? 'text-[#E54A4A]' : 'text-[#1a1a1a]/40'
+                    }`}>
+                      {label}
+                    </span>
+                  </div>
+                  {index < 3 && (
+                    <div className={`flex-1 h-0.5 mx-2 ${
+                      isCompleted || (isLifestyleSkip && step >= stepNum) ? 'bg-[#E54A4A]' : 'bg-[#1a1a1a]/10'
+                    }`} />
               )}
             </div>
-          ))}
+              );
+            })}
         </div>
+        </div>
+      )}
 
-        <div className={`grid ${step === 5 ? '' : 'lg:grid-cols-3'} gap-6 lg:gap-8`}>
           {/* Main Content */}
-          <div className={step === 5 ? 'max-w-2xl mx-auto w-full' : 'lg:col-span-2'}>
-            {/* Step 1: Package Selection */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-24">
+        
+        {/* Step 1: Choose Package Type */}
             {step === 1 && (
-              <div className="animate-fadeIn">
-                <div className="mb-6 sm:mb-8">
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-2 sm:mb-3">
-                    Choose Your Package
+          <div className="py-8">
+            <div className="text-center mb-12">
+              <h1 className="text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-4">
+                Choose Your Photography Package
                   </h1>
-                  <p className="text-[#1a1a1a]/60 text-sm sm:text-base">
-                    Select the package that fits your needs
+              <p className="text-[#1a1a1a]/60 max-w-xl mx-auto">
+                Select the type of photography that best fits your product needs
                   </p>
                 </div>
 
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                  {packages.map((pkg) => (
-                    <div
-                      key={pkg.id}
-                      onClick={() => setSelectedPackage(pkg.id)}
-                      className={`relative bg-white p-4 sm:p-5 rounded-2xl cursor-pointer transition-all duration-300 ${
-                        selectedPackage === pkg.id
-                          ? 'ring-2 ring-[#E54A4A] shadow-xl shadow-[#E54A4A]/10 scale-[1.02]'
-                          : 'border border-[#1a1a1a]/5 hover:border-[#E54A4A]/30 hover:shadow-lg'
-                      }`}
-                    >
-                      {pkg.popular && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#E54A4A] text-white text-xs font-semibold rounded-full">
-                          Popular
+            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              {/* E-commerce */}
+              <button
+                onClick={() => selectPackageType("ecommerce")}
+                className="group relative bg-white rounded-3xl p-8 border-2 border-[#1a1a1a]/5 hover:border-[#E54A4A] transition-all duration-300 hover:shadow-xl hover:shadow-[#E54A4A]/10 text-left"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Camera className="w-8 h-8 text-white" />
                         </div>
-                      )}
-                      {pkg.badge && !pkg.popular && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#1a1a1a] text-white text-xs font-semibold rounded-full">
-                          {pkg.badge}
+                <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">E-commerce</h3>
+                <p className="text-[#1a1a1a]/60 text-sm mb-4">
+                  Clean, professional product shots with multiple angles and styles
+                </p>
+                <div className="flex items-center gap-2 text-[#E54A4A] font-medium">
+                  <span>From $25/angle</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </div>
-                      )}
-                      
-                      <h3 className="text-base sm:text-lg font-bold text-[#1a1a1a] mb-1">{pkg.name}</h3>
-                      <p className="text-[#1a1a1a]/50 text-xs sm:text-sm mb-2 sm:mb-3">{pkg.description}</p>
-                      
-                      <div className="flex items-baseline gap-2 mb-2 sm:mb-3">
-                        <span className="text-xl sm:text-2xl font-bold text-[#E54A4A]">${pkg.price}</span>
-                        {pkg.originalPrice && (
-                          <span className="text-[#1a1a1a]/40 line-through text-xs sm:text-sm">${pkg.originalPrice}</span>
-                        )}
-                      </div>
+              </button>
 
-                      <div className="flex items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-[#1a1a1a]/50 mb-2 sm:mb-3">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {pkg.turnaround}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <RefreshCw className="w-3 h-3" />
-                          {pkg.revisions} rev
+              {/* Lifestyle */}
+              <button
+                onClick={() => selectPackageType("lifestyle")}
+                className="group relative bg-white rounded-3xl p-8 border-2 border-[#1a1a1a]/5 hover:border-[#E54A4A] transition-all duration-300 hover:shadow-xl hover:shadow-[#E54A4A]/10 text-left"
+              >
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span className="px-3 py-1 bg-purple-500 text-white text-xs font-bold rounded-full">
+                    Creative
                         </span>
                       </div>
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Sparkles className="w-8 h-8 text-white" />
+                        </div>
+                <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Lifestyle</h3>
+                <p className="text-[#1a1a1a]/60 text-sm mb-4">
+                  Styled tabletop photography with props and creative direction
+                </p>
+                <div className="flex items-center gap-2 text-[#E54A4A] font-medium">
+                  <span>$149 flat rate</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </div>
+              </button>
 
-                      {/* Lifestyle availability indicator */}
-                      {pkg.id === "lifestyle" ? (
-                        <div className="flex items-center gap-1 text-[10px] sm:text-xs text-green-600 mb-2 sm:mb-3">
-                          <Sparkles className="w-3 h-3" />
-                          <span>Premium style</span>
-                        </div>
-                      ) : pkg.allowedStyles?.includes("lifestyle") ? (
-                        <div className="flex items-center gap-1 text-[10px] sm:text-xs text-green-600 mb-2 sm:mb-3">
-                          <Sparkles className="w-3 h-3" />
-                          <span>Includes Lifestyle</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-1 text-[10px] sm:text-xs text-[#1a1a1a]/40 mb-2 sm:mb-3">
-                          <Lock className="w-3 h-3" />
-                          <span>Standard styles only</span>
-                        </div>
-                      )}
-
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                        selectedPackage === pkg.id
-                          ? 'border-[#E54A4A] bg-[#E54A4A]'
-                          : 'border-[#1a1a1a]/20'
-                      }`}>
-                        {selectedPackage === pkg.id && <Check className="w-3 h-3 text-white" />}
+              {/* Full Package */}
+              <button
+                onClick={() => selectPackageType("fullpackage")}
+                className="group relative bg-white rounded-3xl p-8 border-2 border-[#E54A4A] transition-all duration-300 hover:shadow-xl hover:shadow-[#E54A4A]/10 text-left"
+              >
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span className="px-3 py-1 bg-[#E54A4A] text-white text-xs font-bold rounded-full">
+                    Best Value
+                  </span>
                       </div>
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#E54A4A] to-[#ff7f7f] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Package className="w-8 h-8 text-white" />
                     </div>
-                  ))}
-                </div>
-
-                {/* Info box about Lifestyle */}
-                <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex gap-3">
-                  <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                  <div className="text-sm">
-                    <p className="font-medium text-amber-800">About Lifestyle Photography</p>
-                    <p className="text-amber-700 mt-1">
-                      Lifestyle photos show your product in real-world settings. This premium style is only available in the <strong>Lifestyle</strong> or <strong>Complete</strong> packages.
-                    </p>
+                <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Full Package</h3>
+                <p className="text-[#1a1a1a]/60 text-sm mb-4">
+                  E-commerce + Lifestyle combined with 10% discount
+                </p>
+                <div className="flex items-center gap-2 text-[#E54A4A] font-medium">
+                  <span>Save 10%</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
+              </button>
                 </div>
               </div>
             )}
 
-            {/* Step 2: Style Selection */}
+        {/* Step 2: Choose E-commerce Style */}
             {step === 2 && (
-              <div className="animate-fadeIn">
-                <div className="mb-6 sm:mb-8">
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-2 sm:mb-3">
-                    {selectedPackage === "complete" 
-                      ? "Your 4 Styles" 
-                      : selectedPackage === "lifestyle"
-                        ? "Lifestyle Photography"
-                        : `Select ${maxStyles} Style${maxStyles > 1 ? 's' : ''}`}
+          <div className="py-8">
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Left: Style Selection */}
+              <div className="flex-1">
+                <div className="mb-8">
+                  <button
+                    onClick={() => setStep(1)}
+                    className="flex items-center gap-2 text-[#1a1a1a]/60 hover:text-[#E54A4A] transition-colors mb-4"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to packages
+                  </button>
+                  <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-2">
+                    Choose Photography Style
                   </h1>
-                  <p className="text-[#1a1a1a]/60 text-sm sm:text-base">
-                    {selectedPackage === "complete" 
-                      ? "You get all 4 photography styles with the Complete Package" 
-                      : selectedPackage === "lifestyle"
-                        ? "Your product in real-world scenarios"
-                        : `Selected: ${selectedStyles.length}/${maxStyles}`}
+                  <p className="text-[#1a1a1a]/60">
+                    Select a style to customize angles
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                  {photoStyles.map((style) => {
-                    const isSelected = selectedStyles.includes(style.id);
-                    const isAllowed = isStyleAllowed(style.id);
-                    const isDisabled = !isAllowed || 
-                      ((selectedPackage === "complete" || selectedPackage === "lifestyle") 
-                        ? false 
-                        : !isSelected && selectedStyles.length >= maxStyles);
-                    const isFixed = selectedPackage === "complete" || selectedPackage === "lifestyle";
-                    const isLifestyleLocked = style.id === "lifestyle" && !isAllowed;
+                <div className="grid gap-4">
+                  {ECOMMERCE_STYLES.map((style) => {
+                    const inCart = order.cart.find(item => item.style === style.id);
                     
                     return (
-                      <div
+                      <button
                         key={style.id}
-                        onClick={() => !isDisabled && !isFixed && toggleStyle(style.id)}
-                        className={`relative rounded-2xl overflow-hidden transition-all duration-300 ${
-                          isLifestyleLocked 
-                            ? 'cursor-not-allowed opacity-60'
-                            : isFixed 
-                              ? 'cursor-default' 
-                              : 'cursor-pointer'
-                        } ${
-                          isSelected
-                            ? 'ring-4 ring-[#E54A4A] shadow-xl'
-                            : isDisabled && !isLifestyleLocked
-                              ? 'opacity-50 cursor-not-allowed'
-                              : !isLifestyleLocked ? 'hover:shadow-lg' : ''
+                        onClick={() => selectStyle(style.id)}
+                        className={`group relative bg-white rounded-2xl p-6 border-2 transition-all duration-300 text-left ${
+                          inCart 
+                            ? 'border-green-500 bg-green-50/50' 
+                            : 'border-[#1a1a1a]/5 hover:border-[#E54A4A]'
                         }`}
                       >
-                        <div className="aspect-[3/4]">
-                          <img
-                            src={style.image}
-                            alt={style.name}
-                            className={`w-full h-full object-cover ${isLifestyleLocked ? 'grayscale' : ''}`}
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                          
-                          <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                            <h3 className="text-base sm:text-lg font-bold text-white">{style.name}</h3>
-                            <p className="text-white/70 text-[10px] sm:text-xs">{style.description}</p>
+                        <div className="flex items-center gap-4">
+                          <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-[#1a1a1a]/5 to-[#1a1a1a]/10 flex items-center justify-center">
+                            <Camera className="w-8 h-8 text-[#1a1a1a]/40" />
                           </div>
-
-                          {/* Lock icon for lifestyle when not allowed */}
-                          {isLifestyleLocked && (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
-                              <Lock className="w-8 h-8 text-white mb-2" />
-                              <p className="text-white text-xs text-center px-4">
-                                Available in Lifestyle or Complete package
-                              </p>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-lg font-bold text-[#1a1a1a]">{style.name}</h3>
+                              {inCart && (
+                                <span className="px-2 py-0.5 bg-green-500 text-white text-xs font-medium rounded-full flex items-center gap-1">
+                                  <Check className="w-3 h-3" />
+                                  {inCart.angles.length} angles
+                                </span>
+                              )}
                             </div>
-                          )}
-
-                          {isSelected && !isLifestyleLocked && (
-                            <div className="absolute top-3 right-3 w-7 h-7 sm:w-8 sm:h-8 bg-[#E54A4A] rounded-full flex items-center justify-center">
-                              <Check className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                            </div>
-                          )}
-
-                          {style.premium && isAllowed && (
-                            <div className="absolute top-3 left-3 px-2 py-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full flex items-center gap-1">
-                              <Sparkles className="w-3 h-3 text-white" />
-                              <span className="text-[10px] font-semibold text-white">Premium</span>
-                            </div>
-                          )}
+                            <p className="text-[#1a1a1a]/60 text-sm mt-1">{style.description}</p>
+                            <p className="text-[#E54A4A] font-medium text-sm mt-2">
+                              ${PRICES.ecommerce.perAngle} per angle
+                            </p>
+                          </div>
+                          <ArrowRight className="w-5 h-5 text-[#1a1a1a]/30 group-hover:text-[#E54A4A] group-hover:translate-x-1 transition-all" />
                         </div>
-                      </div>
+                      </button>
                     );
                   })}
                 </div>
 
-                {/* Selection progress for non-fixed packages */}
-                {selectedPackage !== "complete" && selectedPackage !== "lifestyle" && (
-                  <div className="mt-6 p-4 bg-white rounded-xl shadow-sm">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium text-[#1a1a1a]">Selection Progress</span>
-                      <span className="text-sm text-[#E54A4A] font-semibold">{selectedStyles.length}/{maxStyles}</span>
-                    </div>
-                    <div className="h-2 bg-[#1a1a1a]/10 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] rounded-full transition-all duration-500"
-                        style={{ width: `${(selectedStyles.length / maxStyles) * 100}%` }}
-                      />
-                    </div>
-                    {selectedStyles.length < maxStyles && (
-                      <p className="text-xs text-[#1a1a1a]/50 mt-2">
-                        Select {maxStyles - selectedStyles.length} more style{maxStyles - selectedStyles.length > 1 ? 's' : ''} to continue
+                {order.cart.length > 0 && (
+                  <button
+                    onClick={proceedToCheckout}
+                    className="w-full mt-6 py-4 bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white font-bold rounded-2xl hover:shadow-xl hover:shadow-[#E54A4A]/30 transition-all flex items-center justify-center gap-2"
+                  >
+                    Continue to Details
+                    <ArrowRight className="w-5 h-5" />
+                  </button>
+                )}
+                          </div>
+
+              {/* Right: Cart Summary */}
+              <div className="lg:w-80">
+                <div className="bg-white rounded-3xl p-6 border border-[#1a1a1a]/5 sticky top-32">
+                  <h2 className="text-lg font-bold text-[#1a1a1a] mb-4 flex items-center gap-2">
+                    <ShoppingCart className="w-5 h-5" />
+                    Order Summary
+                  </h2>
+
+                  {order.cart.length === 0 && !order.lifestyleIncluded ? (
+                    <p className="text-[#1a1a1a]/40 text-sm text-center py-8">
+                      Select styles and angles to build your order
+                    </p>
+                  ) : (
+                    <div className="space-y-4">
+                      {order.cart.map((item) => (
+                        <div key={item.style} className="flex items-start justify-between py-3 border-b border-[#1a1a1a]/5">
+                          <div>
+                            <p className="font-medium text-[#1a1a1a]">{getStyleName(item.style)}</p>
+                            <p className="text-xs text-[#1a1a1a]/50">
+                              {item.angles.map(a => ANGLES.find(an => an.id === a)?.name).join(", ")}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-[#1a1a1a]">
+                              ${item.angles.length * item.pricePerAngle}
+                            </span>
+                            <button
+                              onClick={() => removeFromCart(item.style)}
+                              className="text-[#1a1a1a]/30 hover:text-[#E54A4A]"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+
+                      {order.lifestyleIncluded && (
+                        <div className="flex items-start justify-between py-3 border-b border-[#1a1a1a]/5">
+                          <div>
+                            <p className="font-medium text-[#1a1a1a]">Lifestyle</p>
+                            <p className="text-xs text-[#1a1a1a]/50">Flat rate</p>
+                          </div>
+                          <span className="font-medium text-[#1a1a1a]">
+                            ${PRICES.lifestyle.flatRate}
+                          </span>
+                            </div>
+                          )}
+
+                      {order.packageType === "fullpackage" && order.cart.length > 0 && (
+                        <div className="flex items-center justify-between py-2 text-green-600">
+                          <span className="text-sm">Full Package Discount</span>
+                          <span className="font-medium">-10%</span>
+                            </div>
+                          )}
+
+                      <div className="flex items-center justify-between pt-4">
+                        <span className="font-bold text-[#1a1a1a]">Total</span>
+                        <span className="text-2xl font-bold text-[#E54A4A]">${calculateTotal()}</span>
+                      </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Choose Angles */}
+        {step === 3 && currentStyle && (
+          <div className="py-8">
+            <div className="max-w-2xl mx-auto">
+              <button
+                onClick={() => { setStep(2); setCurrentStyle(null); }}
+                className="flex items-center gap-2 text-[#1a1a1a]/60 hover:text-[#E54A4A] transition-colors mb-6"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to styles
+              </button>
+
+              <div className="text-center mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-2">
+                  {getStyleName(currentStyle)}
+                </h1>
+                <p className="text-[#1a1a1a]/60">
+                  Select the angles you need (1-4 angles)
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                {ANGLES.map((angle) => {
+                  const isSelected = selectedAngles.includes(angle.id);
+                  
+                  return (
+                    <button
+                      key={angle.id}
+                      onClick={() => toggleAngle(angle.id)}
+                      className={`relative p-6 rounded-2xl border-2 transition-all duration-300 ${
+                        isSelected
+                          ? 'border-[#E54A4A] bg-[#E54A4A]/5'
+                          : 'border-[#1a1a1a]/10 hover:border-[#E54A4A]/50'
+                      }`}
+                    >
+                      <div className={`absolute top-3 right-3 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                        isSelected
+                          ? 'border-[#E54A4A] bg-[#E54A4A]'
+                          : 'border-[#1a1a1a]/20'
+                      }`}>
+                        {isSelected && <Check className="w-4 h-4 text-white" />}
+                      </div>
+                      
+                      <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-[#1a1a1a]/5 to-[#1a1a1a]/10 flex items-center justify-center">
+                        <Camera className="w-8 h-8 text-[#1a1a1a]/30" />
+                      </div>
+                      
+                      <h3 className="font-bold text-[#1a1a1a] text-center">{angle.name}</h3>
+                      <p className="text-[#E54A4A] text-sm font-medium text-center mt-1">
+                        ${PRICES.ecommerce.perAngle}
                       </p>
-                    )}
+                    </button>
+                    );
+                  })}
+                </div>
+
+              <div className="bg-white rounded-2xl p-6 border border-[#1a1a1a]/5 mb-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[#1a1a1a]/60 text-sm">Selected angles</p>
+                    <p className="text-2xl font-bold text-[#1a1a1a]">
+                      {selectedAngles.length} × ${PRICES.ecommerce.perAngle}
+                    </p>
+                    </div>
+                  <div className="text-right">
+                    <p className="text-[#1a1a1a]/60 text-sm">Subtotal</p>
+                    <p className="text-2xl font-bold text-[#E54A4A]">
+                      ${selectedAngles.length * PRICES.ecommerce.perAngle}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={addToCart}
+                disabled={selectedAngles.length === 0}
+                className={`w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all ${
+                  selectedAngles.length > 0
+                    ? 'bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white hover:shadow-xl hover:shadow-[#E54A4A]/30'
+                    : 'bg-[#1a1a1a]/10 text-[#1a1a1a]/30 cursor-not-allowed'
+                }`}
+              >
+                <Plus className="w-5 h-5" />
+                Add to Order
+              </button>
+            </div>
                   </div>
                 )}
-              </div>
-            )}
 
-            {/* Step 3: Details Form */}
-            {step === 3 && (
-              <div className="animate-fadeIn">
-                <div className="mb-6 sm:mb-8">
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-2 sm:mb-3">
+        {/* Step 4: Details Form (also for Lifestyle) */}
+        {step === 4 && (
+          <div className="py-8">
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Left: Form */}
+              <div className="flex-1 max-w-2xl">
+                {order.packageType !== "lifestyle" && (
+                  <button
+                    onClick={() => setStep(2)}
+                    className="flex items-center gap-2 text-[#1a1a1a]/60 hover:text-[#E54A4A] transition-colors mb-6"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to styles
+                  </button>
+                )}
+
+                {order.packageType === "lifestyle" && (
+                  <>
+                    <button
+                      onClick={() => setStep(1)}
+                      className="flex items-center gap-2 text-[#1a1a1a]/60 hover:text-[#E54A4A] transition-colors mb-6"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                      Back to packages
+                    </button>
+                    
+                    {/* Lifestyle Info */}
+                    <div className="bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-3xl p-6 mb-8 border border-purple-200/50">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-purple-500 flex items-center justify-center flex-shrink-0">
+                          <Sparkles className="w-6 h-6 text-white" />
+              </div>
+                        <div>
+                          <h2 className="text-xl font-bold text-[#1a1a1a] mb-2">About Lifestyle Photography</h2>
+                          <p className="text-[#1a1a1a]/70 text-sm leading-relaxed">
+                            Lifestyle refers to tabletop styled photography with props, simple sets, and creative direction. 
+                            Our team will develop a concept based on the product, get approval from you, then execute the shoot. 
+                            This is offered at a flat rate since the scope and styling are customized per project.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                <div className="mb-8">
+                  <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a] mb-2">
                     Your Details
                   </h1>
-                  <p className="text-[#1a1a1a]/60 text-sm sm:text-base">
-                    Tell us about yourself and your product
+                  <p className="text-[#1a1a1a]/60">
+                    Fill in your information to complete the order
                   </p>
                 </div>
 
-                <div className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg">
-                  <div className="grid md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
+                <div className="space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
-                        Full Name <span className="text-[#E54A4A]">*</span>
+                        Full Name *
                       </label>
+                      <div className="relative">
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1a1a1a]/30" />
                       <input
                         type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        onBlur={() => handleBlur('name')}
-                        className={`w-full px-4 py-3 rounded-xl border transition-all bg-white text-[#1a1a1a] text-sm sm:text-base ${
-                          errors.name && touched.name 
-                            ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
-                            : 'border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20'
-                        } outline-none`}
+                          value={order.formData.name}
+                          onChange={(e) => updateFormData("name", e.target.value)}
+                          className="w-full pl-12 pr-4 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all"
                         placeholder="John Doe"
                       />
-                      {errors.name && touched.name && (
-                        <p className="mt-1 text-xs sm:text-sm text-red-500 flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3" />
-                          {errors.name}
-                        </p>
-                      )}
                     </div>
+                    </div>
+                    
                     <div>
                       <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
-                        Email <span className="text-[#E54A4A]">*</span>
+                        Email *
                       </label>
+                      <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1a1a1a]/30" />
                       <input
                         type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        onBlur={() => handleBlur('email')}
-                        className={`w-full px-4 py-3 rounded-xl border transition-all bg-white text-[#1a1a1a] text-sm sm:text-base ${
-                          errors.email && touched.email 
-                            ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
-                            : 'border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20'
-                        } outline-none`}
+                          value={order.formData.email}
+                          onChange={(e) => updateFormData("email", e.target.value)}
+                          className="w-full pl-12 pr-4 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all"
                         placeholder="john@example.com"
                       />
-                      {errors.email && touched.email && (
-                        <p className="mt-1 text-xs sm:text-sm text-red-500 flex items-center gap-1">
-                          <AlertCircle className="w-3 h-3" />
-                          {errors.email}
-                        </p>
-                      )}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
+                  <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
-                        Phone <span className="text-[#1a1a1a]/40">(optional)</span>
+                        Phone
                       </label>
+                      <div className="relative">
+                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1a1a1a]/30" />
                       <input
                         type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all bg-white text-[#1a1a1a] text-sm sm:text-base"
-                        placeholder="+1 (555) 000-0000"
+                          value={order.formData.phone}
+                          onChange={(e) => updateFormData("phone", e.target.value)}
+                          className="w-full pl-12 pr-4 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all"
+                          placeholder="(555) 123-4567"
                       />
                     </div>
+                    </div>
+                    
                     <div>
                       <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
-                        Company <span className="text-[#1a1a1a]/40">(optional)</span>
+                        Company
                       </label>
+                      <div className="relative">
+                        <Building className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1a1a1a]/30" />
                       <input
                         type="text"
-                        name="company"
-                        value={formData.company}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all bg-white text-[#1a1a1a] text-sm sm:text-base"
+                          value={order.formData.company}
+                          onChange={(e) => updateFormData("company", e.target.value)}
+                          className="w-full pl-12 pr-4 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all"
                         placeholder="Your Company"
                       />
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="mb-4 md:mb-6">
-                    <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
-                      Product Name <span className="text-[#E54A4A]">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="productName"
-                      value={formData.productName}
-                      onChange={handleInputChange}
-                      onBlur={() => handleBlur('productName')}
-                      className={`w-full px-4 py-3 rounded-xl border transition-all bg-white text-[#1a1a1a] text-sm sm:text-base ${
-                        errors.productName && touched.productName 
-                          ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20' 
-                          : 'border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20'
-                      } outline-none`}
-                      placeholder="What product are we photographing?"
-                    />
-                    {errors.productName && touched.productName && (
-                      <p className="mt-1 text-xs sm:text-sm text-red-500 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" />
-                        {errors.productName}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="mb-4 md:mb-6">
-                    <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
-                      Product Description <span className="text-[#1a1a1a]/40">(optional)</span>
-                    </label>
-                    <textarea
-                      name="productDescription"
-                      value={formData.productDescription}
-                      onChange={handleInputChange}
-                      rows={3}
-                      className="w-full px-4 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all resize-none bg-white text-[#1a1a1a] text-sm sm:text-base"
-                      placeholder="Tell us about your product..."
-                    />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
-                      Special Notes <span className="text-[#1a1a1a]/40">(optional)</span>
+                      Product Name *
+                    </label>
+                    <div className="relative">
+                      <FileText className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1a1a1a]/30" />
+                    <input
+                      type="text"
+                        value={order.formData.productName}
+                        onChange={(e) => updateFormData("productName", e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all"
+                        placeholder="What product are we shooting?"
+                      />
+                  </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
+                      Additional Notes
                     </label>
                     <textarea
-                      name="notes"
-                      value={formData.notes}
-                      onChange={handleInputChange}
-                      rows={2}
-                      className="w-full px-4 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all resize-none bg-white text-[#1a1a1a] text-sm sm:text-base"
-                      placeholder="Any special requirements or preferences?"
+                      value={order.formData.notes}
+                      onChange={(e) => updateFormData("notes", e.target.value)}
+                      rows={4}
+                      className="w-full px-4 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all resize-none"
+                      placeholder="Any special requirements or notes..."
                     />
                   </div>
                 </div>
-              </div>
-            )}
 
-            {/* Step 4: Confirmation */}
-            {step === 4 && (
-              <div className="animate-fadeIn">
-                <div className="mb-6 sm:mb-8">
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-2 sm:mb-3">
-                    Order Summary
-                  </h1>
-                  <p className="text-[#1a1a1a]/60 text-sm sm:text-base">
-                    Review your order before confirming
-                  </p>
-                </div>
-
-                <div className="bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg mb-6">
-                  {/* Package */}
-                  <div className="flex justify-between items-start pb-4 sm:pb-6 border-b border-[#1a1a1a]/10">
-                    <div>
-                      <h3 className="font-semibold text-[#1a1a1a]">{currentPackage?.name} Package</h3>
-                      <p className="text-xs sm:text-sm text-[#1a1a1a]/50">{currentPackage?.description}</p>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-xl sm:text-2xl font-bold text-[#E54A4A]">${currentPackage?.price}</span>
-                      {currentPackage?.originalPrice && (
-                        <span className="block text-xs sm:text-sm text-[#1a1a1a]/40 line-through">${currentPackage.originalPrice}</span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Selected Styles */}
-                  <div className="py-4 sm:py-6 border-b border-[#1a1a1a]/10">
-                    <h4 className="font-medium text-[#1a1a1a] mb-3 text-sm sm:text-base">Selected Styles</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedStyles.map((styleId) => {
-                        const style = photoStyles.find(s => s.id === styleId);
-                        return (
-                          <span key={styleId} className="px-3 py-1 bg-[#E54A4A]/10 text-[#E54A4A] rounded-full text-xs sm:text-sm font-medium">
-                            {style?.name}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Contact Info */}
-                  <div className="py-4 sm:py-6 border-b border-[#1a1a1a]/10">
-                    <h4 className="font-medium text-[#1a1a1a] mb-3 text-sm sm:text-base">Contact Information</h4>
-                    <div className="space-y-1 text-xs sm:text-sm text-[#1a1a1a]/70">
-                      <p>{formData.name}</p>
-                      <p>{formData.email}</p>
-                      {formData.phone && <p>{formData.phone}</p>}
-                      {formData.company && <p>{formData.company}</p>}
-                    </div>
-                  </div>
-
-                  {/* Product Info */}
-                  <div className="pt-4 sm:pt-6">
-                    <h4 className="font-medium text-[#1a1a1a] mb-3 text-sm sm:text-base">Product</h4>
-                    <p className="text-[#1a1a1a]/70 text-sm sm:text-base">{formData.productName}</p>
-                    {formData.productDescription && (
-                      <p className="text-xs sm:text-sm text-[#1a1a1a]/50 mt-1">{formData.productDescription}</p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Total */}
-                <div className="bg-[#1a1a1a] p-4 sm:p-6 rounded-2xl text-white flex flex-col md:flex-row justify-between items-center gap-4">
-                  <div className="text-center md:text-left">
-                    <p className="text-white/60 text-xs sm:text-sm">Total Amount</p>
-                    <p className="text-2xl sm:text-3xl font-bold">${currentPackage?.price}</p>
-                  </div>
                   <button
-                    onClick={handleSubmit}
-                    disabled={isSubmitting}
-                    className={`w-full md:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] rounded-full font-semibold transition-all flex items-center justify-center gap-2 ${
-                      isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:shadow-lg'
+                  onClick={submitOrder}
+                  disabled={!order.formData.name || !order.formData.email || !order.formData.productName || isSubmitting}
+                  className={`w-full mt-8 py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all ${
+                    order.formData.name && order.formData.email && order.formData.productName && !isSubmitting
+                      ? 'bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white hover:shadow-xl hover:shadow-[#E54A4A]/30'
+                      : 'bg-[#1a1a1a]/10 text-[#1a1a1a]/30 cursor-not-allowed'
                     }`}
                   >
                     {isSubmitting ? (
@@ -858,268 +832,152 @@ export default function OrderPage() {
                       </>
                     ) : (
                       <>
-                        Confirm Order
-                        <ArrowRight className="w-4 h-4" />
+                      <Send className="w-5 h-5" />
+                      Submit Order
                       </>
                     )}
                   </button>
                 </div>
 
-                <p className="text-center text-[#1a1a1a]/40 text-xs sm:text-sm mt-4">
-                  You will receive shipping instructions via email after confirmation
+              {/* Right: Order Summary */}
+              <div className="lg:w-80">
+                <div className="bg-white rounded-3xl p-6 border border-[#1a1a1a]/5 sticky top-32">
+                  <h2 className="text-lg font-bold text-[#1a1a1a] mb-4 flex items-center gap-2">
+                    <ShoppingCart className="w-5 h-5" />
+                    Order Summary
+                  </h2>
+
+                  <div className="space-y-4">
+                    {order.cart.map((item) => (
+                      <div key={item.style} className="flex items-start justify-between py-3 border-b border-[#1a1a1a]/5">
+                        <div>
+                          <p className="font-medium text-[#1a1a1a]">{getStyleName(item.style)}</p>
+                          <p className="text-xs text-[#1a1a1a]/50">
+                            {item.angles.map(a => ANGLES.find(an => an.id === a)?.name).join(", ")}
                 </p>
               </div>
-            )}
+                        <span className="font-medium text-[#1a1a1a]">
+                          ${item.angles.length * item.pricePerAngle}
+                        </span>
+                      </div>
+                    ))}
 
-            {/* Step 5: Order Confirmed */}
-            {step === 5 && (
-              <div className="animate-fadeIn">
-                {/* Success Header */}
-                <div className="text-center mb-8">
-                  <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-green-500/30">
-                    <CheckCheck className="w-10 h-10 text-white" />
+                    {order.lifestyleIncluded && (
+                      <div className="flex items-start justify-between py-3 border-b border-[#1a1a1a]/5">
+                        <div>
+                          <p className="font-medium text-[#1a1a1a]">Lifestyle</p>
+                          <p className="text-xs text-[#1a1a1a]/50">Flat rate - custom styled shoot</p>
                   </div>
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#1a1a1a] mb-2">
-                    Order Confirmed!
-                  </h1>
-                  <p className="text-[#1a1a1a]/60 text-sm sm:text-base">
-                    Thank you for your order, {formData.name.split(' ')[0]}!
-                  </p>
+                        <span className="font-medium text-[#1a1a1a]">
+                          ${PRICES.lifestyle.flatRate}
+                        </span>
                 </div>
-
-                {/* Tracking Number Card */}
-                <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg mb-6">
-                  <div className="text-center mb-6">
-                    <p className="text-sm text-[#1a1a1a]/60 mb-2">Your Tracking Number</p>
-                    <div className="flex items-center justify-center gap-3 flex-wrap">
-                      <code className="text-xl sm:text-2xl md:text-3xl font-mono font-bold text-[#E54A4A] bg-[#E54A4A]/5 px-4 py-2 rounded-xl">
-                        {trackingNumber}
-                      </code>
-                      <button
-                        onClick={copyTrackingNumber}
-                        className={`p-3 rounded-xl transition-all ${
-                          copied 
-                            ? 'bg-green-500 text-white' 
-                            : 'bg-[#1a1a1a]/5 text-[#1a1a1a]/60 hover:bg-[#E54A4A]/10 hover:text-[#E54A4A]'
-                        }`}
-                        title="Copy tracking number"
-                      >
-                        {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                      </button>
-                    </div>
-                    {copied && (
-                      <p className="text-green-600 text-sm mt-2 animate-fadeIn">
-                        Copied to clipboard!
-                      </p>
                     )}
-                  </div>
 
-                  <div className="border-t border-[#1a1a1a]/10 pt-6">
-                    <div className="flex items-center gap-3 text-green-600 mb-4">
-                      <Mail className="w-5 h-5" />
-                      <span className="text-sm font-medium">
-                        {emailSent ? 'Confirmation email sent!' : 'Sending confirmation email...'}
-                      </span>
+                    {order.packageType === "fullpackage" && order.cart.length > 0 && (
+                      <div className="flex items-center justify-between py-2 text-green-600">
+                        <span className="text-sm">Full Package Discount</span>
+                        <span className="font-medium">-10%</span>
                     </div>
-                    <p className="text-sm text-[#1a1a1a]/60">
-                      We&apos;ve sent shipping instructions to <strong>{formData.email}</strong>
-                    </p>
-                  </div>
+                    )}
+
+                    <div className="flex items-center justify-between pt-4 border-t border-[#1a1a1a]/10">
+                      <span className="font-bold text-[#1a1a1a]">Total</span>
+                      <span className="text-2xl font-bold text-[#E54A4A]">${calculateTotal()}</span>
                 </div>
 
-                {/* Next Steps */}
-                <div className="bg-white p-6 rounded-2xl shadow-lg mb-6">
-                  <h3 className="font-bold text-[#1a1a1a] mb-4">Next Steps</h3>
-                  <div className="space-y-4">
-                    <div className="flex gap-4">
-                      <div className="w-8 h-8 rounded-full bg-[#E54A4A]/10 text-[#E54A4A] flex items-center justify-center font-bold text-sm flex-shrink-0">
-                        1
+                    <div className="pt-4 space-y-2 text-sm text-[#1a1a1a]/60">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        100% Satisfaction Guarantee
                       </div>
-                      <div>
-                        <p className="font-medium text-[#1a1a1a]">Check Your Email</p>
-                        <p className="text-sm text-[#1a1a1a]/60">
-                          You&apos;ll receive detailed shipping instructions within a few minutes.
-                        </p>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-blue-500" />
+                        3-5 days turnaround
                       </div>
                     </div>
-                    <div className="flex gap-4">
-                      <div className="w-8 h-8 rounded-full bg-[#E54A4A]/10 text-[#E54A4A] flex items-center justify-center font-bold text-sm flex-shrink-0">
-                        2
                       </div>
-                      <div>
-                        <p className="font-medium text-[#1a1a1a]">Ship Your Product</p>
-                        <p className="text-sm text-[#1a1a1a]/60">
-                          Use the prepaid label in your email to ship your product to our studio.
-                        </p>
                       </div>
                     </div>
-                    <div className="flex gap-4">
-                      <div className="w-8 h-8 rounded-full bg-[#E54A4A]/10 text-[#E54A4A] flex items-center justify-center font-bold text-sm flex-shrink-0">
-                        3
                       </div>
-                      <div>
-                        <p className="font-medium text-[#1a1a1a]">Track Your Order</p>
-                        <p className="text-sm text-[#1a1a1a]/60">
-                          Use your tracking number to check the status of your order anytime.
-                        </p>
                       </div>
-                    </div>
-                  </div>
+        )}
+
+        {/* Step 5: Confirmation */}
+        {step === 5 && orderComplete && (
+          <div className="py-16">
+            <div className="max-w-lg mx-auto text-center">
+              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-green-500 flex items-center justify-center">
+                <CheckCircle className="w-10 h-10 text-white" />
                 </div>
 
-                {/* Order Details */}
-                <div className="bg-[#1a1a1a]/5 p-6 rounded-2xl mb-6">
-                  <h4 className="font-medium text-[#1a1a1a] mb-3">Order Details</h4>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p className="text-[#1a1a1a]/50">Package</p>
-                      <p className="font-medium text-[#1a1a1a]">{currentPackage?.name}</p>
-                    </div>
-                    <div>
-                      <p className="text-[#1a1a1a]/50">Total</p>
-                      <p className="font-medium text-[#E54A4A]">${currentPackage?.price}</p>
-                    </div>
-                    <div>
-                      <p className="text-[#1a1a1a]/50">Styles</p>
-                      <p className="font-medium text-[#1a1a1a]">{selectedStyles.length} styles</p>
-                    </div>
-                    <div>
-                      <p className="text-[#1a1a1a]/50">Est. Delivery</p>
-                      <p className="font-medium text-[#1a1a1a]">{currentPackage?.turnaround}</p>
-                    </div>
-                  </div>
-                </div>
+              <h1 className="text-3xl font-bold text-[#1a1a1a] mb-4">
+                Order Submitted!
+              </h1>
+              
+              <p className="text-[#1a1a1a]/60 mb-8">
+                Thank you for your order. We&apos;ll be in touch shortly to confirm details and get started on your project.
+              </p>
 
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link
-                    href="/"
-                    className="flex-1 px-6 py-4 bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white font-semibold rounded-full text-center hover:shadow-lg transition-all"
-                  >
-                    Back to Home
-                  </Link>
-                  <button
-                    onClick={copyTrackingNumber}
-                    className="flex-1 px-6 py-4 bg-white text-[#1a1a1a] font-semibold rounded-full border-2 border-[#1a1a1a]/10 hover:border-[#E54A4A] hover:text-[#E54A4A] transition-all flex items-center justify-center gap-2"
-                  >
-                    <Copy className="w-4 h-4" />
-                    {copied ? 'Copied!' : 'Copy Tracking Number'}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Navigation Buttons */}
-            {step < 4 && (
-              <div className="flex justify-between mt-6 sm:mt-8">
-                {step > 1 ? (
-                  <button
-                    onClick={prevStep}
-                    className="flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-[#1a1a1a]/60 hover:text-[#1a1a1a] transition-colors text-sm sm:text-base"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    Back
-                  </button>
-                ) : (
-                  <div />
-                )}
-                
+              <div className="bg-white rounded-2xl p-6 border border-[#1a1a1a]/5 mb-8">
+                <p className="text-sm text-[#1a1a1a]/60 mb-2">Tracking Number</p>
+                <div className="flex items-center justify-center gap-3">
+                  <code className="text-xl font-mono font-bold text-[#E54A4A]">
+                    {trackingNumber}
+                  </code>
                 <button
-                  onClick={nextStep}
-                  disabled={!canProceed()}
-                  className={`flex items-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold transition-all text-sm sm:text-base ${
-                    canProceed()
-                      ? 'bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white hover:shadow-lg shadow-[#E54A4A]/30'
-                      : 'bg-[#1a1a1a]/10 text-[#1a1a1a]/30 cursor-not-allowed'
-                  }`}
-                >
-                  Continue
-                  <ArrowRight className="w-4 h-4" />
+                    onClick={copyTrackingNumber}
+                    className="p-2 rounded-lg hover:bg-[#1a1a1a]/5 transition-colors"
+                  >
+                    <Copy className="w-5 h-5 text-[#1a1a1a]/40" />
                 </button>
               </div>
-            )}
           </div>
 
-          {/* Sidebar - Order Summary (hidden on step 5) */}
-          {step !== 5 && (
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg lg:sticky lg:top-24">
-              <h3 className="font-bold text-[#1a1a1a] mb-4 text-sm sm:text-base">Order Summary</h3>
-              
-              {/* Package */}
-              <div className="flex justify-between items-center py-3 border-b border-[#1a1a1a]/10">
-                <span className="text-[#1a1a1a]/70 text-xs sm:text-sm">Package</span>
-                <span className="font-semibold text-[#1a1a1a] text-sm sm:text-base">{currentPackage?.name}</span>
+              <div className="bg-[#E54A4A]/5 rounded-2xl p-6 mb-8 text-left">
+                <h3 className="font-bold text-[#1a1a1a] mb-3">Order Summary</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-[#1a1a1a]/60">Package</span>
+                    <span className="font-medium text-[#1a1a1a] capitalize">{order.packageType}</span>
               </div>
-
-              {/* Styles */}
-              {selectedStyles.length > 0 && (
-                <div className="py-3 border-b border-[#1a1a1a]/10">
-                  <span className="text-[#1a1a1a]/70 text-xs sm:text-sm">Styles</span>
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {selectedStyles.map((styleId) => {
-                      const style = photoStyles.find(s => s.id === styleId);
-                      return (
-                        <span key={styleId} className="px-2 py-0.5 bg-[#E54A4A]/10 text-[#E54A4A] rounded text-[10px] sm:text-xs">
-                          {style?.name}
-                        </span>
-                      );
-                    })}
-                  </div>
+                  {order.cart.length > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-[#1a1a1a]/60">E-commerce Styles</span>
+                      <span className="font-medium text-[#1a1a1a]">{order.cart.length}</span>
                 </div>
               )}
-
-              {/* Estimated Delivery */}
-              <div className="flex justify-between items-center py-3 border-b border-[#1a1a1a]/10">
-                <span className="text-[#1a1a1a]/70 text-xs sm:text-sm">Est. Delivery</span>
-                <span className="text-xs sm:text-sm font-medium text-[#1a1a1a]">
-                  {currentPackage && getDeliveryDate(parseInt(currentPackage.turnaround))}
-                </span>
+                  {order.lifestyleIncluded && (
+                    <div className="flex justify-between">
+                      <span className="text-[#1a1a1a]/60">Lifestyle</span>
+                      <span className="font-medium text-[#1a1a1a]">Included</span>
               </div>
-
-              {/* Total */}
-              <div className="flex justify-between items-center pt-4">
-                <span className="font-semibold text-[#1a1a1a] text-sm sm:text-base">Total</span>
-                <div className="text-right">
-                  <span className="text-xl sm:text-2xl font-bold text-[#E54A4A]">${currentPackage?.price}</span>
-                  {currentPackage?.originalPrice && (
-                    <span className="block text-[10px] sm:text-xs text-green-600 font-medium">
-                      Save ${currentPackage.originalPrice - currentPackage.price}
-                    </span>
                   )}
+                  <div className="flex justify-between pt-2 border-t border-[#1a1a1a]/10">
+                    <span className="font-bold text-[#1a1a1a]">Total</span>
+                    <span className="font-bold text-[#E54A4A]">${calculateTotal()}</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Trust badges */}
-              <div className="mt-6 pt-4 border-t border-[#1a1a1a]/10 space-y-2 sm:space-y-3">
-                <div className="flex items-center gap-2 text-xs sm:text-sm text-[#1a1a1a]/60">
-                  <Shield className="w-4 h-4 text-green-500 flex-shrink-0" />
-                  <span>100% Satisfaction Guarantee</span>
+              <div className="flex gap-4">
+                <button
+                  onClick={resetOrder}
+                  className="flex-1 py-3 border-2 border-[#E54A4A] text-[#E54A4A] font-bold rounded-xl hover:bg-[#E54A4A]/5 transition-colors"
+                >
+                  New Order
+                </button>
+                <Link
+                  href="/"
+                  className="flex-1 py-3 bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white font-bold rounded-xl hover:shadow-lg hover:shadow-[#E54A4A]/30 transition-all text-center"
+                >
+                  Back to Home
+                </Link>
                 </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm text-[#1a1a1a]/60">
-                  <RefreshCw className="w-4 h-4 text-green-500 flex-shrink-0" />
-                  <span>Free Revisions Included</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm text-[#1a1a1a]/60">
-                  <Clock className="w-4 h-4 text-green-500 flex-shrink-0" />
-                  <span>{currentPackage?.turnaround} Turnaround</span>
-                </div>
-              </div>
             </div>
           </div>
           )}
-        </div>
-      </div>
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
-        }
-      `}</style>
+      </main>
     </div>
   );
 }
