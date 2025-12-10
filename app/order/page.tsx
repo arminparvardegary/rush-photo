@@ -370,65 +370,83 @@ export default function OrderPage() {
               {/* E-commerce */}
               <button
                 onClick={() => selectPackageType("ecommerce")}
-                className="group relative bg-white rounded-3xl p-8 border-2 border-[#1a1a1a]/5 hover:border-[#E54A4A] transition-all duration-300 hover:shadow-xl hover:shadow-[#E54A4A]/10 text-left"
+                className="group relative bg-white rounded-3xl overflow-hidden border-2 border-[#1a1a1a]/5 hover:border-[#E54A4A] transition-all duration-300 hover:shadow-xl hover:shadow-[#E54A4A]/10 text-left"
               >
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <Camera className="w-8 h-8 text-white" />
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop"
+                    alt="E-commerce Photography"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
                         </div>
-                <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">E-commerce</h3>
-                <p className="text-[#1a1a1a]/60 text-sm mb-4">
-                  Clean, professional product shots with multiple angles and styles
-                </p>
-                <div className="flex items-center gap-2 text-[#E54A4A] font-medium">
-                  <span>From $25/angle</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">E-commerce</h3>
+                  <p className="text-[#1a1a1a]/60 text-sm mb-4">
+                    Clean, professional product shots with multiple angles and styles
+                  </p>
+                  <div className="flex items-center gap-2 text-[#E54A4A] font-medium">
+                    <span>From $25/angle</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </div>
+                      </div>
               </button>
 
               {/* Lifestyle */}
               <button
                 onClick={() => selectPackageType("lifestyle")}
-                className="group relative bg-white rounded-3xl p-8 border-2 border-[#1a1a1a]/5 hover:border-[#E54A4A] transition-all duration-300 hover:shadow-xl hover:shadow-[#E54A4A]/10 text-left"
+                className="group relative bg-white rounded-3xl overflow-hidden border-2 border-[#1a1a1a]/5 hover:border-[#E54A4A] transition-all duration-300 hover:shadow-xl hover:shadow-[#E54A4A]/10 text-left"
               >
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <div className="absolute top-4 left-4 z-10">
                   <span className="px-3 py-1 bg-purple-500 text-white text-xs font-bold rounded-full">
                     Creative
                         </span>
                       </div>
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <Sparkles className="w-8 h-8 text-white" />
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop"
+                    alt="Lifestyle Photography"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
                         </div>
-                <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Lifestyle</h3>
-                <p className="text-[#1a1a1a]/60 text-sm mb-4">
-                  Styled tabletop photography with props and creative direction
-                </p>
-                <div className="flex items-center gap-2 text-[#E54A4A] font-medium">
-                  <span>$149 flat rate</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Lifestyle</h3>
+                  <p className="text-[#1a1a1a]/60 text-sm mb-4">
+                    Styled tabletop photography with props and creative direction
+                  </p>
+                  <div className="flex items-center gap-2 text-[#E54A4A] font-medium">
+                    <span>$149 flat rate</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </div>
+                </div>
               </button>
 
               {/* Full Package */}
               <button
                 onClick={() => selectPackageType("fullpackage")}
-                className="group relative bg-white rounded-3xl p-8 border-2 border-[#E54A4A] transition-all duration-300 hover:shadow-xl hover:shadow-[#E54A4A]/10 text-left"
+                className="group relative bg-white rounded-3xl overflow-hidden border-2 border-[#E54A4A] transition-all duration-300 hover:shadow-xl hover:shadow-[#E54A4A]/10 text-left"
               >
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <div className="absolute top-4 left-4 z-10">
                   <span className="px-3 py-1 bg-[#E54A4A] text-white text-xs font-bold rounded-full">
                     Best Value
                   </span>
                       </div>
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#E54A4A] to-[#ff7f7f] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <Package className="w-8 h-8 text-white" />
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src="https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=600&h=400&fit=crop"
+                    alt="Full Package Photography"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
                     </div>
-                <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Full Package</h3>
-                <p className="text-[#1a1a1a]/60 text-sm mb-4">
-                  E-commerce + Lifestyle combined with 10% discount
-                </p>
-                <div className="flex items-center gap-2 text-[#E54A4A] font-medium">
-                  <span>Save 10%</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Full Package</h3>
+                  <p className="text-[#1a1a1a]/60 text-sm mb-4">
+                    E-commerce + Lifestyle combined with 10% discount
+                  </p>
+                  <div className="flex items-center gap-2 text-[#E54A4A] font-medium">
+                    <span>Save 10%</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
+                </div>
               </button>
                 </div>
               </div>
@@ -574,7 +592,7 @@ export default function OrderPage() {
                           )}
                         </div>
                       </div>
-            </div>
+                </div>
           </div>
         )}
 
@@ -597,7 +615,7 @@ export default function OrderPage() {
                 <p className="text-[#1a1a1a]/60">
                   Select the angles you need (1-4 angles)
                 </p>
-              </div>
+                    </div>
 
               <div className="grid grid-cols-2 gap-4 mb-8">
                 {ANGLES.map((angle) => {
@@ -626,8 +644,8 @@ export default function OrderPage() {
                           src={angle.image} 
                           alt={angle.name}
                           className={`w-full h-full object-cover transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-105'}`}
-                        />
-                      </div>
+                      />
+                    </div>
                       
                       <h3 className="font-bold text-[#1a1a1a] text-center">{angle.name}</h3>
                       <p className="text-[#E54A4A] text-sm font-medium text-center mt-1">
