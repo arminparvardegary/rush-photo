@@ -2,17 +2,13 @@
 # Rush Photo - Docker Compose Configuration
 # ============================================
 
-version: '3.8'
-
 services:
   rush-photo:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: rush-photo-app
-    restart: unless-stopped
-    ports:
-      - "3002:3000"
+    restart: always
     environment:
       - NODE_ENV=production
       - HOSTNAME=0.0.0.0
@@ -23,11 +19,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+    networks:
+      - rush-box_rushbox-network
     deploy:
       resources:
         limits:
@@ -36,3 +29,7 @@ services:
         reservations:
           cpus: '0.25'
           memory: 256M
+
+networks:
+  rush-box_rushbox-network:
+    external: true
