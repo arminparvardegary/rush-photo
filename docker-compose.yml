@@ -1,6 +1,10 @@
 # ============================================
 # Rush Photo - Docker Compose Configuration
 # ============================================
+# Container: rush-photo-app
+# Domain: rush.photos
+# Routed by: rush-box-main nginx
+# ============================================
 
 services:
   rush-photo:
@@ -20,7 +24,8 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - rush-box_rushbox-network
+      - default
+      - rushbox-network
     deploy:
       resources:
         limits:
@@ -31,5 +36,8 @@ services:
           memory: 256M
 
 networks:
-  rush-box_rushbox-network:
+  default:
+    driver: bridge
+  rushbox-network:
     external: true
+    name: rush-box_rushbox-network
