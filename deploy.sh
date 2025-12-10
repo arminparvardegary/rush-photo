@@ -79,10 +79,10 @@ if docker ps | grep -q "rushbox-nginx"; then
     echo -e "${YELLOW}🔒 Checking SSL...${NC}"
     if curl -s -o /dev/null -w "%{http_code}" https://$DOMAIN 2>/dev/null | grep -q "200\|301\|302"; then
         echo -e "${GREEN}✅ SSL is working!${NC}"
-    else
+else
         echo -e "${YELLOW}⚠️  SSL might need setup. Run on server:${NC}"
         echo "docker exec rushbox-certbot certbot certonly --webroot -w /var/www/certbot -d $DOMAIN -d www.$DOMAIN --email admin@$DOMAIN --agree-tos --no-eff-email"
-    fi
+fi
 fi
 
 # 8. Show status

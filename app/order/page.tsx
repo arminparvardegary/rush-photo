@@ -61,33 +61,33 @@ const PRICES = {
   fullPackageDiscount: 0.1, // 10% discount
 };
 
-// Style info
+// Style info with placeholder images
 const ECOMMERCE_STYLES: { id: EcommerceStyle; name: string; description: string; image: string }[] = [
   {
     id: "straight-on",
     name: "Straight On",
     description: "Direct front-facing shots, perfect for showcasing product details",
-    image: "/images/straight-on.jpg",
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
   },
   {
     id: "top-down",
     name: "Top Down",
     description: "Bird's eye view photography, ideal for flat-lay compositions",
-    image: "/images/top-down.jpg",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
   },
   {
     id: "angled",
     name: "Angled",
     description: "Dynamic 45° angle shots that add depth and dimension",
-    image: "/images/angled.jpg",
+    image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=400&fit=crop",
   },
 ];
 
-const ANGLES: { id: Angle; name: string }[] = [
-  { id: "front", name: "Front" },
-  { id: "back", name: "Back" },
-  { id: "left", name: "Left Side" },
-  { id: "right", name: "Right Side" },
+const ANGLES: { id: Angle; name: string; image: string }[] = [
+  { id: "front", name: "Front", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop" },
+  { id: "back", name: "Back", image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=300&fit=crop" },
+  { id: "left", name: "Left Side", image: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=300&h=300&fit=crop" },
+  { id: "right", name: "Right Side", image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=300&h=300&fit=crop" },
 ];
 
 export default function OrderPage() {
@@ -471,8 +471,12 @@ export default function OrderPage() {
                         }`}
                       >
                         <div className="flex items-center gap-4">
-                          <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-[#1a1a1a]/5 to-[#1a1a1a]/10 flex items-center justify-center">
-                            <Camera className="w-8 h-8 text-[#1a1a1a]/40" />
+                          <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
+                          <img
+                            src={style.image}
+                            alt={style.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            />
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center gap-2">
@@ -609,16 +613,20 @@ export default function OrderPage() {
                           : 'border-[#1a1a1a]/10 hover:border-[#E54A4A]/50'
                       }`}
                     >
-                      <div className={`absolute top-3 right-3 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                      <div className={`absolute top-3 right-3 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all z-10 ${
                         isSelected
                           ? 'border-[#E54A4A] bg-[#E54A4A]'
-                          : 'border-[#1a1a1a]/20'
+                          : 'border-[#1a1a1a]/20 bg-white'
                       }`}>
                         {isSelected && <Check className="w-4 h-4 text-white" />}
                       </div>
                       
-                      <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-[#1a1a1a]/5 to-[#1a1a1a]/10 flex items-center justify-center">
-                        <Camera className="w-8 h-8 text-[#1a1a1a]/30" />
+                      <div className="w-24 h-24 mx-auto mb-4 rounded-xl overflow-hidden">
+                        <img 
+                          src={angle.image} 
+                          alt={angle.name}
+                          className={`w-full h-full object-cover transition-transform duration-300 ${isSelected ? 'scale-110' : 'group-hover:scale-105'}`}
+                        />
                       </div>
                       
                       <h3 className="font-bold text-[#1a1a1a] text-center">{angle.name}</h3>
