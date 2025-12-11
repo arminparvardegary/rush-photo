@@ -30,7 +30,13 @@ export default function LoginPage() {
     }
 
     // Store in localStorage (in production, use proper auth)
-    localStorage.setItem("user", JSON.stringify({ email, role: "customer" }));
+    // Admin detection: emails containing "admin" get admin role
+    const isAdminUser = email.toLowerCase().includes("admin");
+    localStorage.setItem("user", JSON.stringify({ 
+      email, 
+      role: isAdminUser ? "admin" : "customer",
+      name: email.split('@')[0]
+    }));
     setIsLoading(false);
     router.push("/admin");
   };

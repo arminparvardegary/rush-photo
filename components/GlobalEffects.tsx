@@ -1,12 +1,11 @@
 "use client";
 
-import { CursorFollower, ScrollProgress } from "./Motion";
+import { ScrollProgress } from "./Motion";
 
 export default function GlobalEffects() {
   return (
     <>
       <ScrollProgress />
-      <CursorFollower />
     </>
   );
 }
