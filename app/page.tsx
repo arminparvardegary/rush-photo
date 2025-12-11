@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import TrustBadges from "@/components/TrustBadges";
 import Marquee from "@/components/Marquee";
+import PackageSelection from "@/components/PackageSelection";
 import PhotoStyles from "@/components/PhotoStyles";
 import BeforeAfter from "@/components/BeforeAfter";
 import Portfolio from "@/components/Portfolio";
@@ -22,6 +23,7 @@ export default function Home() {
       <Header />
       <TrustBadges />
       <Marquee />
+      <PackageSelection />
       <PhotoStyles />
       <BeforeAfter />
       <div id="portfolio">

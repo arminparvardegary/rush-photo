@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock, ArrowRight, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Mail, Lock, ArrowRight, Eye, EyeOff, AlertCircle, ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -12,7 +12,18 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [hasCheckoutPending, setHasCheckoutPending] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect");
+
+  useEffect(() => {
+    // Check if there's a pending checkout
+    const returnToCheckout = localStorage.getItem("returnToCheckout");
+    if (returnToCheckout) {
+      setHasCheckoutPending(true);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +49,13 @@ export default function LoginPage() {
       name: email.split('@')[0]
     }));
     setIsLoading(false);
-    router.push("/admin");
+    
+    // Redirect to the specified URL or default to admin
+    if (redirectUrl) {
+      router.push(redirectUrl);
+    } else {
+      router.push("/admin");
+    }
   };
 
   return (
@@ -63,7 +80,24 @@ export default function LoginPage() {
         {/* Login Card */}
         <div className="bg-white rounded-3xl shadow-2xl p-8">
           <h1 className="text-3xl font-bold text-[#1a1a1a] mb-2">Welcome back</h1>
-          <p className="text-[#1a1a1a]/60 mb-8">Sign in to your account</p>
+          <p className="text-[#1a1a1a]/60 mb-6">Sign in to your account</p>
+
+          {/* Checkout Pending Notice */}
+          {hasCheckoutPending && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 p-4 bg-[#E54A4A]/5 border border-[#E54A4A]/20 rounded-xl flex items-center gap-3"
+            >
+              <div className="w-10 h-10 rounded-lg bg-[#E54A4A] flex items-center justify-center">
+                <ShoppingCart className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="font-medium text-[#1a1a1a] text-sm">Order in progress</p>
+                <p className="text-xs text-[#1a1a1a]/50">Login to continue your checkout</p>
+              </div>
+            </motion.div>
+          )}
 
           {error && (
             <motion.div

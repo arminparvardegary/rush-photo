@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { 
@@ -125,6 +126,7 @@ const DEFAULT_ANGLES: { id: Angle; name: string; image: string; price: number }[
 ];
 
 export default function OrderPage() {
+  const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
   const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>("information");
   const [order, setOrder] = useState<OrderState>({
@@ -162,6 +164,10 @@ export default function OrderPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showMiniCart, setShowMiniCart] = useState(false);
   
+  // User state
+  const [user, setUser] = useState<any>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
   // Dynamic pricing state
   const [PRICES, setPRICES] = useState(DEFAULT_PRICES);
   const [ECOMMERCE_STYLES, setECOMMERCE_STYLES] = useState(DEFAULT_ECOMMERCE_STYLES);
@@ -189,6 +195,65 @@ export default function OrderPage() {
       }
     }
   }, []);
+
+  // Handle URL package parameter
+  useEffect(() => {
+    const packageParam = searchParams.get("package");
+    if (packageParam && ["ecommerce", "lifestyle", "fullpackage"].includes(packageParam)) {
+      selectPackageType(packageParam as PackageType);
+    }
+  }, [searchParams]);
+
+  // Load user data and pre-fill form
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      try {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+        setIsLoggedIn(true);
+        
+        // Pre-fill form data from user info
+        setOrder(prev => ({
+          ...prev,
+          formData: {
+            ...prev.formData,
+            email: parsedUser.email || prev.formData.email,
+            firstName: parsedUser.name?.split(' ')[0] || prev.formData.firstName,
+            lastName: parsedUser.name?.split(' ').slice(1).join(' ') || prev.formData.lastName,
+            phone: parsedUser.phone || prev.formData.phone,
+            company: parsedUser.company || prev.formData.company,
+          },
+        }));
+      } catch (e) {
+        console.error("Error loading user:", e);
+      }
+    }
+    
+    // Check if returning from login
+    const returnToCheckout = localStorage.getItem("returnToCheckout");
+    if (returnToCheckout) {
+      try {
+        const savedOrder = JSON.parse(returnToCheckout);
+        setOrder(savedOrder.order);
+        setStep(savedOrder.step);
+        setCheckoutStep(savedOrder.checkoutStep);
+        localStorage.removeItem("returnToCheckout");
+      } catch (e) {
+        console.error("Error restoring checkout:", e);
+      }
+    }
+  }, []);
+
+  // Save order state before redirecting to login
+  const handleLoginRedirect = () => {
+    localStorage.setItem("returnToCheckout", JSON.stringify({
+      order,
+      step,
+      checkoutStep,
+    }));
+    window.location.href = "/login?redirect=/order";
+  };
 
   const calculateTotal = () => {
     let total = 0;
@@ -229,9 +294,15 @@ export default function OrderPage() {
   };
 
   const selectStyle = (style: EcommerceStyle) => {
+    // If clicking the same style, deselect it
+    if (currentStyle === style) {
+      setCurrentStyle(null);
+      setSelectedAngles([]);
+    } else {
     setCurrentStyle(style);
     setSelectedAngles([]);
-    setStep(3);
+    }
+    // Stay on step 2, show angles inline
   };
 
   const toggleAngle = (angle: Angle) => {
@@ -693,61 +764,159 @@ export default function OrderPage() {
               </div>
             )}
 
-            {/* Style Cards with Blur Effect */}
-            <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+            {/* Style Cards with Inline Angle Selection */}
+            <div className="space-y-6">
                   {ECOMMERCE_STYLES.map((style) => {
                     const inCart = order.cart.find(item => item.style === style.id);
+                const isSelected = currentStyle === style.id;
                 const otherStyleSelected = currentStyle && currentStyle !== style.id;
+                const stylePrice = style.pricePerAngle || PRICES.ecommerce.perAngle;
                 
                     return (
-                  <div key={style.id} className={`transition-all duration-500 ${otherStyleSelected ? 'opacity-30 blur-sm scale-95' : ''}`}>
-                      <button
+                  <div 
+                        key={style.id}
+                    className={`transition-all duration-500 ${otherStyleSelected ? 'opacity-30 blur-sm scale-[0.98]' : ''}`}
+                  >
+                    {/* Style Card */}
+                    <button
                         onClick={() => selectStyle(style.id)}
                       disabled={!!otherStyleSelected}
                       className={`group relative w-full rounded-3xl overflow-hidden transition-all duration-300 ${
-                          inCart 
-                          ? 'ring-4 ring-green-500 shadow-xl' 
-                          : 'hover:shadow-2xl hover:scale-[1.02]'
-                    }`}
-                  >
-                    {inCart && (
+                        isSelected 
+                          ? 'ring-4 ring-[#E54A4A] shadow-2xl' 
+                          : inCart 
+                            ? 'ring-4 ring-green-500 shadow-xl' 
+                            : 'hover:shadow-2xl'
+                      }`}
+                    >
+                      {inCart && !isSelected && (
                         <div className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-green-500 flex items-center justify-center shadow-lg">
                           <Check className="w-6 h-6 text-white" />
                       </div>
                     )}
                       
-                      <div className="aspect-[4/3] relative">
+                      <div className="flex flex-col md:flex-row">
+                        <div className="md:w-1/3 aspect-video md:aspect-auto relative">
                           <img
                             src={style.image}
                             alt={style.name}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/60 hidden md:block" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent md:hidden" />
                           </div>
-                      
-                      <div className="absolute bottom-0 left-0 right-0 p-6 text-left">
-                        <h3 className="text-2xl font-bold text-white mb-1">{style.name}</h3>
-                        <p className="text-white/70 text-sm mb-3">{style.description}</p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-[#ff7f7f] font-bold text-lg">${style.pricePerAngle || PRICES.ecommerce.perAngle}/angle</span>
-                          {inCart ? (
-                            <span className="text-green-400 text-sm font-medium flex items-center gap-1">
-                              <Check className="w-4 h-4" />
-                              {inCart.angles.length} angles added
-                            </span>
-                          ) : (
-                            <span className="text-white/60 text-sm flex items-center gap-1 group-hover:text-white transition-colors">
-                              Select angles
-                              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            </span>
-                          )}
+                        
+                        <div className="md:w-2/3 p-6 md:p-8 bg-white flex flex-col justify-center">
+                          <div className="flex items-start justify-between gap-4">
+                            <div>
+                              <h3 className="text-2xl font-bold text-[#1a1a1a] mb-2">{style.name}</h3>
+                              <p className="text-[#1a1a1a]/60 text-sm mb-4">{style.description}</p>
+                            </div>
+                            <span className="text-[#E54A4A] font-bold text-xl whitespace-nowrap">${stylePrice}/angle</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            {inCart ? (
+                              <span className="text-green-600 text-sm font-medium flex items-center gap-2 bg-green-50 px-3 py-1.5 rounded-full">
+                                <Check className="w-4 h-4" />
+                                {inCart.angles.length} angles in cart
+                              </span>
+                            ) : (
+                              <span className="text-[#1a1a1a]/40 text-sm">Click to select angles</span>
+                            )}
+                            <div className={`flex items-center gap-2 text-sm font-medium transition-colors ${isSelected ? 'text-[#E54A4A]' : 'text-[#1a1a1a]/60 group-hover:text-[#E54A4A]'}`}>
+                              {isSelected ? 'Click to close' : 'Select angles'}
+                              <ChevronDown className={`w-5 h-5 transition-transform ${isSelected ? 'rotate-180' : ''}`} />
+                            </div>
+                          </div>
                         </div>
                       </div>
+                    </button>
+
+                    {/* Inline Angle Selection */}
+                    {isSelected && (
+                      <div className="mt-4 bg-white rounded-2xl border-2 border-[#E54A4A]/20 overflow-hidden shadow-lg animate-in slide-in-from-top-4 duration-300">
+                        <div className="p-6 border-b border-[#1a1a1a]/5 bg-gradient-to-r from-[#E54A4A]/5 to-transparent">
+                          <h4 className="font-bold text-[#1a1a1a]">Select Angles for {style.name}</h4>
+                          <p className="text-sm text-[#1a1a1a]/50">Choose 1-4 angles for your product shots</p>
+                        </div>
+                        
+                        <div className="p-6">
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                            {ANGLES.map((angle) => {
+                              const isAngleSelected = selectedAngles.includes(angle.id);
+                              return (
+                                <button
+                                  key={angle.id}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleAngle(angle.id);
+                                  }}
+                                  className={`relative aspect-square rounded-xl overflow-hidden transition-all duration-300 ${
+                                    isAngleSelected
+                                      ? 'ring-4 ring-[#E54A4A] scale-[0.98]'
+                                      : 'hover:scale-[1.02] hover:shadow-lg'
+                                  }`}
+                                >
+                                  <img 
+                                    src={angle.image} 
+                                    alt={angle.name}
+                                    className={`w-full h-full object-cover transition-all ${isAngleSelected ? 'brightness-90' : ''}`}
+                                  />
+                                  <div className={`absolute inset-0 transition-all ${
+                                    isAngleSelected ? 'bg-[#E54A4A]/20' : 'bg-black/20 hover:bg-black/10'
+                                  }`} />
+                                  
+                                  <div className={`absolute top-2 right-2 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                                    isAngleSelected
+                                      ? 'border-[#E54A4A] bg-[#E54A4A]'
+                                      : 'border-white bg-white/30'
+                                  }`}>
+                                    {isAngleSelected && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
+                                  </div>
+                                  
+                                  <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                                    <p className="text-white font-medium text-xs text-center">{angle.name}</p>
+                                  </div>
                       </button>
-                  </div>
                     );
                   })}
                 </div>
+
+                          {/* Add to Cart Section */}
+                          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-[#f9f9f9] rounded-xl">
+                            <div className="flex items-center gap-4">
+                              <div className="text-center sm:text-left">
+                                <p className="text-sm text-[#1a1a1a]/50">Selected</p>
+                                <p className="text-2xl font-bold text-[#1a1a1a]">{selectedAngles.length} angle{selectedAngles.length !== 1 ? 's' : ''}</p>
+                              </div>
+                              <div className="text-center sm:text-left">
+                                <p className="text-sm text-[#1a1a1a]/50">Subtotal</p>
+                                <p className="text-2xl font-bold text-[#E54A4A]">${selectedAngles.length * stylePrice}</p>
+                              </div>
+                            </div>
+                  <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                addToCart();
+                              }}
+                              disabled={selectedAngles.length === 0}
+                              className={`w-full sm:w-auto px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
+                                selectedAngles.length > 0
+                                  ? 'bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white hover:shadow-xl hover:shadow-[#E54A4A]/30'
+                                  : 'bg-[#1a1a1a]/10 text-[#1a1a1a]/30 cursor-not-allowed'
+                              }`}
+                            >
+                              <ShoppingCart className="w-5 h-5" />
+                              Add to Cart
+                  </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
 
             {/* Items in Cart */}
             {order.cart.length > 0 && (
@@ -970,6 +1139,42 @@ export default function OrderPage() {
               {/* Step Content */}
               {checkoutStep === "information" && (
                 <div className="space-y-8">
+                  {/* Login Section */}
+                  {!isLoggedIn ? (
+                    <div className="bg-gradient-to-r from-[#E54A4A]/5 to-[#ff7f7f]/5 rounded-2xl p-6 border border-[#E54A4A]/10">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-xl bg-[#E54A4A]/10 flex items-center justify-center">
+                            <User className="w-6 h-6 text-[#E54A4A]" />
+                          </div>
+                <div>
+                            <h3 className="font-bold text-[#1a1a1a]">Have an account?</h3>
+                            <p className="text-sm text-[#1a1a1a]/50">Login for faster checkout</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={handleLoginRedirect}
+                          className="px-6 py-2.5 bg-[#1a1a1a] text-white font-medium rounded-xl hover:bg-[#333] transition-colors flex items-center gap-2"
+                        >
+                          <User className="w-4 h-4" />
+                          Login
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-green-50 rounded-2xl p-6 border border-green-200">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-green-500 flex items-center justify-center">
+                          <Check className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-[#1a1a1a]">Welcome back, {user?.name || user?.email?.split('@')[0]}!</h3>
+                          <p className="text-sm text-[#1a1a1a]/50">Your information has been pre-filled</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                 <div>
                     <h2 className="text-2xl font-bold text-[#1a1a1a] mb-6">Contact Information</h2>
                 <div className="space-y-4">
