@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -196,13 +196,33 @@ export default function OrderPage() {
     }
   }, []);
 
-  // Handle URL package parameter
+  // Handle URL package parameter - run only once on mount
+  const [hasInitialized, setHasInitialized] = useState(false);
+  
   useEffect(() => {
+    if (hasInitialized) return;
+    
     const packageParam = searchParams.get("package");
     if (packageParam && ["ecommerce", "lifestyle", "fullpackage"].includes(packageParam)) {
-      selectPackageType(packageParam as PackageType);
+      // Set order state directly instead of calling selectPackageType
+      const type = packageParam as PackageType;
+      setOrder(prev => ({
+        ...prev,
+        packageType: type,
+        lifestyleIncluded: type === "lifestyle" || type === "fullpackage",
+      }));
+      setSelectedPackage(type);
+      
+      if (type === "lifestyle") {
+        setStep(4);
+      } else {
+        // For ecommerce and fullpackage, go to style selection
+        setStep(2);
+      }
+      
+      setHasInitialized(true);
     }
-  }, [searchParams]);
+  }, [searchParams, hasInitialized]);
 
   // Load user data and pre-fill form
   useEffect(() => {
@@ -723,11 +743,24 @@ export default function OrderPage() {
             <div className="text-center mb-10">
               <h1 className="text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-3">
                 Select E-commerce Style
-                  </h1>
+              </h1>
               <p className="text-[#1a1a1a]/60 text-lg">
                 Choose the shooting style for your products
-                  </p>
+              </p>
+              
+              {/* Full Package Indicator */}
+              {order.packageType === "fullpackage" && (
+                <div className="mt-6 inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-500/10 to-amber-500/10 rounded-full border border-purple-500/20">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center">
+                      <Sparkles className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-purple-700 font-medium">Lifestyle Photography Included</span>
+                  </div>
+                  <span className="text-amber-600 font-bold">+ 10% OFF</span>
                 </div>
+              )}
+            </div>
 
             {/* Cart Summary - Sticky */}
             {order.cart.length > 0 && (
