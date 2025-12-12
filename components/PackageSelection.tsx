@@ -7,11 +7,7 @@ import {
   Camera,
   Sparkles,
   Package,
-  Shield,
-  Clock,
-  Heart,
-  Star,
-  Zap
+  Star
 } from "lucide-react";
 
 // Default Pricing
@@ -29,7 +25,7 @@ const PACKAGE_IMAGES = {
 };
 
 export default function PackageSelection() {
-  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+  const [hoveredPackage, setHoveredPackage] = useState<string | null>(null);
   const [prices, setPrices] = useState(DEFAULT_PRICES);
 
   useEffect(() => {
@@ -49,53 +45,49 @@ export default function PackageSelection() {
   }, []);
 
   return (
-    <section id="packages" className="py-20 sm:py-32 bg-gradient-to-br from-[#FFF8F0] via-white to-[#fff0f0]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="text-center mb-12 sm:mb-16">
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#E54A4A]/10 text-[#E54A4A] font-medium text-sm mb-6">
-            <Zap className="w-4 h-4" />
-            Professional Product Photography
-          </span>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
+    <section className="min-h-[calc(100vh-80px)] flex items-center justify-center bg-[#FAFAFA] py-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 w-full">
+        {/* Minimal Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-3xl sm:text-4xl font-semibold text-[#1a1a1a] mb-3 tracking-tight">
             Choose Your Package
-          </h2>
-          <p className="text-lg sm:text-xl text-[#1a1a1a]/60 max-w-2xl mx-auto">
-            Select the type of photography that best fits your brand and product needs
+          </h1>
+          <p className="text-[#666] text-base">
+            Professional product photography for your brand
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
+        {/* Package Cards */}
+        <div className="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto">
           {/* E-commerce Package */}
           <Link
             href="/order?package=ecommerce"
-            onMouseEnter={() => setSelectedPackage("ecommerce")}
-            onMouseLeave={() => setSelectedPackage(null)}
-            className={`group relative overflow-hidden rounded-3xl transition-all duration-500 ${
-              selectedPackage === "ecommerce" 
-                ? "ring-4 ring-[#E54A4A] scale-[1.02]" 
-                : selectedPackage ? "opacity-50 blur-[1px]" : "hover:scale-[1.02]"
+            onMouseEnter={() => setHoveredPackage("ecommerce")}
+            onMouseLeave={() => setHoveredPackage(null)}
+            className={`group relative overflow-hidden rounded-2xl bg-white border border-[#E5E5E5] transition-all duration-300 ${
+              hoveredPackage === "ecommerce" 
+                ? "border-[#E54A4A] shadow-lg shadow-[#E54A4A]/10 scale-[1.02]" 
+                : hoveredPackage ? "opacity-60" : "hover:border-[#CCC]"
             }`}
           >
-            <div className="aspect-[4/5] relative">
+            <div className="aspect-[4/3] relative overflow-hidden">
               <img
                 src={PACKAGE_IMAGES.ecommerce}
                 alt="E-commerce Photography"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-              
-              <div className="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end text-left">
-                <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-4 border border-white/30">
-                  <Camera className="w-7 h-7 text-white" />
-                </div>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">E-commerce</h3>
-                <p className="text-white/80 text-sm sm:text-base mb-4">
-                  Clean, consistent product shots on white background
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-white font-bold text-xl">From ${prices.ecommerce.perAngle}/angle</span>
-                  <ArrowRight className="w-6 h-6 text-white group-hover:translate-x-1 transition-transform" />
-                </div>
+            </div>
+            <div className="p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <Camera className="w-4 h-4 text-[#E54A4A]" />
+                <h3 className="text-lg font-semibold text-[#1a1a1a]">E-commerce</h3>
+              </div>
+              <p className="text-[#666] text-sm mb-4">
+                Clean product shots on white background
+              </p>
+              <div className="flex items-center justify-between">
+                <span className="text-[#E54A4A] font-semibold">From ${prices.ecommerce.perAngle}/angle</span>
+                <ArrowRight className="w-4 h-4 text-[#999] group-hover:text-[#E54A4A] group-hover:translate-x-1 transition-all" />
               </div>
             </div>
           </Link>
@@ -103,34 +95,32 @@ export default function PackageSelection() {
           {/* Lifestyle Package */}
           <Link
             href="/order?package=lifestyle"
-            onMouseEnter={() => setSelectedPackage("lifestyle")}
-            onMouseLeave={() => setSelectedPackage(null)}
-            className={`group relative overflow-hidden rounded-3xl transition-all duration-500 ${
-              selectedPackage === "lifestyle" 
-                ? "ring-4 ring-purple-500 scale-[1.02]" 
-                : selectedPackage ? "opacity-50 blur-[1px]" : "hover:scale-[1.02]"
+            onMouseEnter={() => setHoveredPackage("lifestyle")}
+            onMouseLeave={() => setHoveredPackage(null)}
+            className={`group relative overflow-hidden rounded-2xl bg-white border border-[#E5E5E5] transition-all duration-300 ${
+              hoveredPackage === "lifestyle" 
+                ? "border-purple-500 shadow-lg shadow-purple-500/10 scale-[1.02]" 
+                : hoveredPackage ? "opacity-60" : "hover:border-[#CCC]"
             }`}
           >
-            <div className="aspect-[4/5] relative">
+            <div className="aspect-[4/3] relative overflow-hidden">
               <img
                 src={PACKAGE_IMAGES.lifestyle}
                 alt="Lifestyle Photography"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-purple-900/90 via-purple-900/40 to-transparent" />
-              
-              <div className="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end text-left">
-                <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-4 border border-white/30">
-                  <Sparkles className="w-7 h-7 text-white" />
-                </div>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">Lifestyle</h3>
-                <p className="text-white/80 text-sm sm:text-base mb-4">
-                  Styled scenes with props and creative direction
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-white font-bold text-xl">${prices.lifestyle.flatRate} flat rate</span>
-                  <ArrowRight className="w-6 h-6 text-white group-hover:translate-x-1 transition-transform" />
-                </div>
+            </div>
+            <div className="p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="w-4 h-4 text-purple-500" />
+                <h3 className="text-lg font-semibold text-[#1a1a1a]">Lifestyle</h3>
+              </div>
+              <p className="text-[#666] text-sm mb-4">
+                Styled scenes with props and creative direction
+              </p>
+              <div className="flex items-center justify-between">
+                <span className="text-purple-600 font-semibold">${prices.lifestyle.flatRate} flat rate</span>
+                <ArrowRight className="w-4 h-4 text-[#999] group-hover:text-purple-500 group-hover:translate-x-1 transition-all" />
               </div>
             </div>
           </Link>
@@ -138,60 +128,41 @@ export default function PackageSelection() {
           {/* Full Package */}
           <Link
             href="/order?package=fullpackage"
-            onMouseEnter={() => setSelectedPackage("fullpackage")}
-            onMouseLeave={() => setSelectedPackage(null)}
-            className={`group relative overflow-hidden rounded-3xl transition-all duration-500 ${
-              selectedPackage === "fullpackage" 
-                ? "ring-4 ring-amber-500 scale-[1.02]" 
-                : selectedPackage ? "opacity-50 blur-[1px]" : "hover:scale-[1.02]"
+            onMouseEnter={() => setHoveredPackage("fullpackage")}
+            onMouseLeave={() => setHoveredPackage(null)}
+            className={`group relative overflow-hidden rounded-2xl bg-white border border-[#E5E5E5] transition-all duration-300 ${
+              hoveredPackage === "fullpackage" 
+                ? "border-amber-500 shadow-lg shadow-amber-500/10 scale-[1.02]" 
+                : hoveredPackage ? "opacity-60" : "hover:border-[#CCC]"
             }`}
           >
-            <div className="absolute top-4 right-4 z-10 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg flex items-center gap-1">
-              <Star className="w-4 h-4" />
+            <div className="absolute top-3 right-3 z-10 bg-amber-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1">
+              <Star className="w-3 h-3" />
               SAVE {prices.fullPackageDiscount}%
             </div>
-            <div className="aspect-[4/5] relative">
+            <div className="aspect-[4/3] relative overflow-hidden">
               <img
                 src={PACKAGE_IMAGES.fullpackage}
                 alt="Full Package Photography"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-amber-900/90 via-amber-900/40 to-transparent" />
-              
-              <div className="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end text-left">
-                <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-4 border border-white/30">
-                  <Package className="w-7 h-7 text-white" />
-                </div>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">Full Package</h3>
-                <p className="text-white/80 text-sm sm:text-base mb-4">
-                  E-commerce + Lifestyle with {prices.fullPackageDiscount}% discount
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-white font-bold text-xl">Best Value</span>
-                  <ArrowRight className="w-6 h-6 text-white group-hover:translate-x-1 transition-transform" />
-                </div>
+            </div>
+            <div className="p-5">
+              <div className="flex items-center gap-2 mb-2">
+                <Package className="w-4 h-4 text-amber-500" />
+                <h3 className="text-lg font-semibold text-[#1a1a1a]">Full Package</h3>
+              </div>
+              <p className="text-[#666] text-sm mb-4">
+                E-commerce + Lifestyle with {prices.fullPackageDiscount}% discount
+              </p>
+              <div className="flex items-center justify-between">
+                <span className="text-amber-600 font-semibold">Best Value</span>
+                <ArrowRight className="w-4 h-4 text-[#999] group-hover:text-amber-500 group-hover:translate-x-1 transition-all" />
               </div>
             </div>
           </Link>
-        </div>
-
-        {/* Trust Badges */}
-        <div className="mt-16 flex flex-wrap items-center justify-center gap-8 text-[#1a1a1a]/50">
-          <div className="flex items-center gap-2">
-            <Shield className="w-5 h-5" />
-            <span className="text-sm">Satisfaction Guaranteed</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock className="w-5 h-5" />
-            <span className="text-sm">3-5 Day Delivery</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Heart className="w-5 h-5" />
-            <span className="text-sm">500+ Happy Customers</span>
-          </div>
         </div>
       </div>
     </section>
   );
 }
-
