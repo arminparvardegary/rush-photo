@@ -8,16 +8,16 @@ const footerLinks = {
     { name: 'Lifestyle', href: '#work' },
   ],
   company: [
-    { name: 'About', href: '#' },
+    { name: 'About', href: '/about' },
     { name: 'Process', href: '#process' },
     { name: 'Pricing', href: '#pricing' },
     { name: 'Contact', href: '#contact' },
   ],
   rush: [
     { name: 'Rush.graphics', href: 'https://rushgraphics.com', active: false },
-    { name: 'Rush.vision', href: '#', active: false },
-    { name: 'Rush.photos', href: '#', active: true },
-    { name: 'Rush.videos', href: '#', active: false },
+    { name: 'Rush.vision', href: null, active: false },
+    { name: 'Rush.photos', href: '/', active: true },
+    { name: 'Rush.videos', href: null, active: false },
   ],
 };
 
@@ -79,12 +79,18 @@ export default function Footer() {
             <ul className="space-y-3">
               {footerLinks.rush.map((link) => (
                 <li key={link.name}>
+                  {link.href ? (
                   <a 
                     href={link.href} 
                     className={`text-sm transition-colors ${link.active ? 'text-[#E54A4A] font-medium' : 'text-white/50 hover:text-[#E54A4A]'}`}
                   >
                     {link.name}
                   </a>
+                  ) : (
+                    <span className="text-white/30 text-sm">
+                      {link.name} <span className="text-white/20">(soon)</span>
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>
@@ -109,8 +115,8 @@ export default function Footer() {
             © {new Date().getFullYear()} Rush Photos. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <a href="#" className="text-white/30 text-sm hover:text-[#E54A4A] transition-colors">Privacy</a>
-            <a href="#" className="text-white/30 text-sm hover:text-[#E54A4A] transition-colors">Terms</a>
+            <a href="/privacy" className="text-white/30 text-sm hover:text-[#E54A4A] transition-colors">Privacy</a>
+            <a href="/terms" className="text-white/30 text-sm hover:text-[#E54A4A] transition-colors">Terms</a>
           </div>
         </div>
       </div>

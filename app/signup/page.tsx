@@ -45,20 +45,29 @@ export default function SignupPage() {
     }
 
     setIsLoading(true);
-
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Store in localStorage (in production, use proper auth)
-    localStorage.setItem("user", JSON.stringify({
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      role: "customer",
-    }));
-
-    setIsLoading(false);
-    router.push("/admin");
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          password: formData.password,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data?.error || "Signup failed");
+        setIsLoading(false);
+        return;
+      }
+      setIsLoading(false);
+      router.push("/admin");
+    } catch {
+      setError("Network error. Please try again.");
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -222,9 +231,9 @@ export default function SignupPage() {
               <input type="checkbox" className="mt-1 w-4 h-4 rounded border-[#1a1a1a]/20 text-[#E54A4A] focus:ring-[#E54A4A]" required />
               <span className="text-sm text-[#1a1a1a]/60">
                 I agree to the{" "}
-                <Link href="#" className="text-[#E54A4A] hover:underline">Terms of Service</Link>{" "}
+                <Link href="/terms" className="text-[#E54A4A] hover:underline">Terms of Service</Link>{" "}
                 and{" "}
-                <Link href="#" className="text-[#E54A4A] hover:underline">Privacy Policy</Link>
+                <Link href="/privacy" className="text-[#E54A4A] hover:underline">Privacy Policy</Link>
               </span>
             </label>
 

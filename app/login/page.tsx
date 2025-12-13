@@ -30,31 +30,29 @@ export default function LoginPage() {
     setError("");
     setIsLoading(true);
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
     // Simple validation
     if (!email || !password) {
       setError("Please fill in all fields");
       setIsLoading(false);
       return;
     }
-
-    // Store in localStorage (in production, use proper auth)
-    // Admin detection: emails containing "admin" get admin role
-    const isAdminUser = email.toLowerCase().includes("admin");
-    localStorage.setItem("user", JSON.stringify({ 
-      email, 
-      role: isAdminUser ? "admin" : "customer",
-      name: email.split('@')[0]
-    }));
-    setIsLoading(false);
-    
-    // Redirect to the specified URL or default to admin
-    if (redirectUrl) {
-      router.push(redirectUrl);
-    } else {
-      router.push("/admin");
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data?.error || "Login failed");
+        setIsLoading(false);
+        return;
+      }
+      setIsLoading(false);
+      router.push(redirectUrl || "/admin");
+    } catch {
+      setError("Network error. Please try again.");
+      setIsLoading(false);
     }
   };
 
@@ -160,7 +158,7 @@ export default function LoginPage() {
                 <input type="checkbox" className="w-4 h-4 rounded border-[#1a1a1a]/20 text-[#E54A4A] focus:ring-[#E54A4A]" />
                 <span className="text-sm text-[#1a1a1a]/60">Remember me</span>
               </label>
-              <Link href="#" className="text-sm text-[#E54A4A] hover:underline">
+              <Link href="/forgot-password" className="text-sm text-[#E54A4A] hover:underline">
                 Forgot password?
               </Link>
             </div>

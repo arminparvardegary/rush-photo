@@ -133,48 +133,83 @@ export default function AdminPage() {
   const [pricingSaved, setPricingSaved] = useState(false);
 
   useEffect(() => {
-    // Check if user is logged in
-    const userData = localStorage.getItem("user");
-    if (!userData) {
-      router.push("/login");
-      return;
-    }
-    const parsedUser = JSON.parse(userData);
-    setUser(parsedUser);
-    setEditedUser(parsedUser);
-
-    // Load orders from localStorage (in production, fetch from API)
-    const savedOrders = localStorage.getItem("orders");
-    if (savedOrders) {
-      setOrders(JSON.parse(savedOrders));
-    }
-
-    // Load pricing from localStorage
-    const savedPricing = localStorage.getItem("pricing");
-    if (savedPricing) {
+    const load = async () => {
       try {
-        setPricing(JSON.parse(savedPricing));
+        const meRes = await fetch("/api/auth/me");
+        if (!meRes.ok) {
+          router.push("/login");
+          return;
+        }
+        const meData = await meRes.json();
+        setUser(meData.user);
+        setEditedUser(meData.user);
+
+        const [ordersRes, pricingRes] = await Promise.all([
+          fetch("/api/orders"),
+          fetch("/api/pricing"),
+        ]);
+
+        if (ordersRes.ok) {
+          const ordersData = await ordersRes.json();
+          setOrders(Array.isArray(ordersData.orders) ? ordersData.orders : []);
+        }
+
+        if (pricingRes.ok) {
+          const pricingData = await pricingRes.json();
+          if (pricingData?.pricing) setPricing(pricingData.pricing);
+        }
       } catch (e) {
-        console.error("Error loading pricing:", e);
+        console.error("Admin bootstrap failed:", e);
+        router.push("/login");
       }
-    }
+    };
+    load();
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    router.push("/");
+    fetch("/api/auth/logout", { method: "POST" }).finally(() => {
+      router.push("/");
+    });
   };
 
   const handleSaveProfile = () => {
-    localStorage.setItem("user", JSON.stringify(editedUser));
-    setUser(editedUser);
-    setIsEditing(false);
+    fetch("/api/users/me", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: editedUser?.name,
+        email: editedUser?.email,
+        phone: editedUser?.phone,
+        company: editedUser?.company,
+      }),
+    })
+      .then(async (res) => {
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data?.error || "Failed");
+        setUser(data.user);
+        setEditedUser(data.user);
+        setIsEditing(false);
+      })
+      .catch((e) => {
+        console.error("Save profile failed:", e);
+      });
   };
 
   const handleSavePricing = () => {
-    localStorage.setItem("pricing", JSON.stringify(pricing));
-    setPricingSaved(true);
-    setTimeout(() => setPricingSaved(false), 3000);
+    fetch("/api/pricing", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pricing }),
+    })
+      .then(async (res) => {
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data?.error || "Failed");
+        setPricingSaved(true);
+        setTimeout(() => setPricingSaved(false), 3000);
+      })
+      .catch((e) => {
+        console.error("Save pricing failed:", e);
+      });
   };
 
   const updateStylePrice = (styleId: string, price: number) => {

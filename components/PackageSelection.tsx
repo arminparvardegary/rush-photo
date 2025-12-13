@@ -29,10 +29,13 @@ export default function PackageSelection() {
   const [prices, setPrices] = useState(DEFAULT_PRICES);
 
   useEffect(() => {
-    const savedPricing = localStorage.getItem("pricing");
-    if (savedPricing) {
+    const load = async () => {
       try {
-        const pricing = JSON.parse(savedPricing);
+        const res = await fetch("/api/pricing");
+        if (!res.ok) return;
+        const data = await res.json();
+        const pricing = data?.pricing;
+        if (!pricing) return;
         setPrices({
           ecommerce: { perAngle: pricing.ecommerce?.perAngle || 25 },
           lifestyle: { flatRate: pricing.lifestyle?.flatRate || 149 },
@@ -41,7 +44,8 @@ export default function PackageSelection() {
       } catch (e) {
         console.error("Error loading pricing:", e);
       }
-    }
+    };
+    load();
   }, []);
 
   return (

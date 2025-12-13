@@ -32,6 +32,9 @@ yarn-error.log*
 # Vercel
 .vercel
 
+# Local dev data (file-based storage used by API routes)
+/data/
+
 # TypeScript
 *.tsbuildinfo
 
