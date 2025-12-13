@@ -18,6 +18,14 @@ services:
       - HOSTNAME=0.0.0.0
       - PORT=3002
       - NEXT_PUBLIC_SITE_URL=https://rush.photos
+      - NEXT_PUBLIC_BASE_URL=https://rush.photos
+      # Auth Configuration
+      - AUTH_SECRET=cMTm8wSZIcmzd3ckc5kD5FSn1u57OhNeQBFWm01U3fE=
+      # Google OAuth
+      - GOOGLE_CLIENT_ID=762790599040-6p4q7mfmsuus5ku0dff62vku1qdmum4k.apps.googleusercontent.com
+      - GOOGLE_CLIENT_SECRET=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
+      # Admin emails
+      - ADMIN_EMAILS=admin@rush.photos
     # SECURITY: Only expose to internal network, NOT to internet
     expose:
       - "3002"
