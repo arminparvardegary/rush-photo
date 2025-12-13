@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   ArrowLeft, 
   ArrowRight,
@@ -13,22 +13,16 @@ import {
   Sparkles,
   Package,
   Info,
-  Plus,
-  Minus,
   X,
   Mail,
   Phone,
   User,
-  Building,
-  FileText,
   Send,
   CheckCircle,
   Clock,
   Copy,
   ChevronRight,
   ChevronDown,
-  Truck,
-  Store,
   Shield,
   Lock,
   Tag,
@@ -37,6 +31,7 @@ import {
   Star,
   Zap
 } from "lucide-react";
+import { StepProgress } from "@/components/ui/ProgressBar";
 
 // Types
 type PackageType = "ecommerce" | "lifestyle" | "fullpackage" | null;
@@ -570,10 +565,27 @@ export default function OrderPage() {
 
   const stepIndex = checkoutSteps.findIndex(s => s.key === checkoutStep);
 
+  // Calculate wizard progress
+  const getWizardProgress = () => {
+    if (step === 1) return 1;
+    if (step === 2) return 2;
+    if (step === 3) return 2;
+    if (step === 4) {
+      if (checkoutStep === "information") return 3;
+      if (checkoutStep === "shipping") return 4;
+      if (checkoutStep === "payment") return 5;
+    }
+    if (step === 5) return 6;
+    return 1;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FFF8F0] via-white to-[#fff0f0]">
+      {/* Global Progress Bar */}
+      <StepProgress currentStep={getWizardProgress()} totalSteps={6} />
+
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-[#1a1a1a]/5 shadow-sm">
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-[#1a1a1a]/5 shadow-sm pt-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
@@ -666,9 +678,17 @@ export default function OrderPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
+        <AnimatePresence mode="wait">
         {/* Step 1: Package Selection - with Images */}
             {step === 1 && (
-          <div className="py-10 sm:py-20">
+          <motion.div 
+            key="step1"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="py-10 sm:py-20"
+          >
             <div className="text-center mb-12 sm:mb-16">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#E54A4A]/10 text-[#E54A4A] font-medium text-sm mb-6">
                 <Zap className="w-4 h-4" />
@@ -802,12 +822,19 @@ export default function OrderPage() {
                 <span className="text-sm">500+ Happy Customers</span>
               </div>
                 </div>
-              </div>
+              </motion.div>
             )}
 
         {/* Step 2: Style Selection with Blur Effect */}
             {step === 2 && (
-          <div className="py-8">
+          <motion.div 
+            key="step2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="py-8"
+          >
                   <button
               onClick={() => {
                 setStep(1);
@@ -1064,12 +1091,19 @@ export default function OrderPage() {
                 </div>
               </div>
                 )}
-                            </div>
+                            </motion.div>
                           )}
 
         {/* Step 3: Angle Selection */}
         {step === 3 && currentStyle && (
-          <div className="py-8">
+          <motion.div 
+            key="step3"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="py-8"
+          >
             <div className="max-w-3xl mx-auto">
               <button
                 onClick={() => {
@@ -1185,12 +1219,19 @@ export default function OrderPage() {
                 </div>
               </div>
             </div>
-                  </div>
+                  </motion.div>
                 )}
 
         {/* Step 4: Premium Checkout (minimal, brand-like) */}
         {step === 4 && (
-          <div className="-mx-4 sm:-mx-6 bg-[#fafafa]">
+          <motion.div 
+            key="step4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="-mx-4 sm:-mx-6 bg-[#fafafa]"
+          >
             <div className="max-w-7xl mx-auto grid lg:grid-cols-12 min-h-[calc(100vh-80px)]">
               {/* Left: Form */}
               <div className="lg:col-span-7 xl:col-span-8 bg-white px-6 sm:px-10 lg:px-14 py-8 sm:py-12 order-2 lg:order-1">
@@ -1826,12 +1867,19 @@ export default function OrderPage() {
                 </div>
               </aside>
                       </div>
-                      </div>
+                      </motion.div>
         )}
 
         {/* Step 5: Confirmation */}
         {step === 5 && orderComplete && (
-          <div className="py-16">
+          <motion.div 
+            key="step5"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.4 }}
+            className="py-16"
+          >
             <div className="max-w-lg mx-auto text-center">
               <div className="w-24 h-24 mx-auto mb-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-xl shadow-green-500/30">
                 <CheckCircle className="w-12 h-12 text-white" />
@@ -1903,8 +1951,9 @@ export default function OrderPage() {
                 </Link>
                 </div>
             </div>
-          </div>
+          </motion.div>
           )}
+        </AnimatePresence>
       </main>
     </div>
   );
