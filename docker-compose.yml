@@ -26,6 +26,9 @@ services:
       - GOOGLE_CLIENT_SECRET=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
       # Admin emails
       - ADMIN_EMAILS=admin@rush.photos
+    # Persistent data volume
+    volumes:
+      - ./data:/app/data
     # SECURITY: Only expose to internal network, NOT to internet
     expose:
       - "3002"
