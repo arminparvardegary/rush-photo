@@ -916,17 +916,19 @@ export default function OrderPage() {
                         key={style.id}
                     className={`transition-all duration-500 ${otherStyleSelected ? 'opacity-30 blur-sm scale-[0.98]' : ''}`}
                   >
-                    {/* Style Card */}
+                    {/* Combined Card + Angle Selection */}
+                    <div className={`overflow-hidden transition-all duration-300 ${
+                      isSelected 
+                        ? 'rounded-3xl ring-4 ring-[#E54A4A] shadow-2xl' 
+                        : inCart 
+                          ? 'rounded-3xl ring-4 ring-green-500 shadow-xl' 
+                          : 'rounded-3xl hover:shadow-2xl'
+                    }`}>
+                      {/* Style Card Header */}
                     <button
                         onClick={() => selectStyle(style.id)}
                       disabled={!!otherStyleSelected}
-                      className={`group relative w-full rounded-3xl overflow-hidden transition-all duration-300 ${
-                        isSelected 
-                          ? 'ring-4 ring-[#E54A4A] shadow-2xl' 
-                          : inCart 
-                            ? 'ring-4 ring-green-500 shadow-xl' 
-                            : 'hover:shadow-2xl'
-                      }`}
+                        className="group relative w-full transition-all duration-300"
                     >
                       {inCart && !isSelected && (
                         <div className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-green-500 flex items-center justify-center shadow-lg">
@@ -971,9 +973,9 @@ export default function OrderPage() {
                       </div>
                     </button>
 
-                    {/* Inline Angle Selection */}
+                      {/* Inline Angle Selection - Connected seamlessly */}
                     {isSelected && (
-                      <div className="mt-4 bg-white rounded-2xl border-2 border-[#E54A4A]/20 overflow-hidden shadow-lg animate-in slide-in-from-top-4 duration-300">
+                        <div className="bg-white border-t border-[#E54A4A]/20 animate-in slide-in-from-top-2 duration-300">
                         <div className="p-6 border-b border-[#1a1a1a]/5 bg-gradient-to-r from-[#E54A4A]/5 to-transparent">
                           <h4 className="font-bold text-[#1a1a1a]">Select Angles for {style.name}</h4>
                           <p className="text-sm text-[#1a1a1a]/50">Choose 1-4 angles for your product shots</p>
@@ -1052,6 +1054,7 @@ export default function OrderPage() {
                         </div>
                       </div>
                     )}
+                    </div>
                   </div>
                 );
               })}
@@ -1862,8 +1865,8 @@ export default function OrderPage() {
                   </div>
                 </div>
               </div>
-                    </div>
-                  </div>
+                      </div>
+                      </div>
                 </div>
               </aside>
                       </div>
