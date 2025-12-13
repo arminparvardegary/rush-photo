@@ -4,7 +4,12 @@ import path from "node:path";
 const DATA_DIR = path.join(process.cwd(), "data");
 
 async function ensureDataDir(): Promise<void> {
-  await fs.mkdir(DATA_DIR, { recursive: true });
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+  } catch (err) {
+    console.error("[Storage] Failed to create data directory:", DATA_DIR, err);
+    throw err;
+  }
 }
 
 function safeJsonParse<T>(raw: string, fallback: T): T {

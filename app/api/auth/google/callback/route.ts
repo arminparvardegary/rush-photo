@@ -69,6 +69,7 @@ export async function GET(request: Request) {
 
   try {
     // Exchange code for tokens
+    console.log("[Google OAuth] Exchanging code for tokens...");
     const tokenResponse = await fetch(GOOGLE_TOKEN_URL, {
       method: "POST",
       headers: {
@@ -85,13 +86,15 @@ export async function GET(request: Request) {
 
     if (!tokenResponse.ok) {
       const errorData = await tokenResponse.text();
-      console.error("Token exchange failed:", errorData);
+      console.error("[Google OAuth] Token exchange failed:", errorData);
       return NextResponse.redirect(`${baseUrl}/login?error=token_exchange_failed`);
     }
 
     const tokens: GoogleTokenResponse = await tokenResponse.json();
+    console.log("[Google OAuth] Token exchange successful");
 
     // Get user info from Google
+    console.log("[Google OAuth] Fetching user info...");
     const userInfoResponse = await fetch(GOOGLE_USERINFO_URL, {
       headers: {
         Authorization: `Bearer ${tokens.access_token}`,
@@ -99,25 +102,35 @@ export async function GET(request: Request) {
     });
 
     if (!userInfoResponse.ok) {
-      console.error("Failed to get user info");
+      console.error("[Google OAuth] Failed to get user info");
       return NextResponse.redirect(`${baseUrl}/login?error=userinfo_failed`);
     }
 
     const userInfo: GoogleUserInfo = await userInfoResponse.json();
+    console.log("[Google OAuth] User info received:", userInfo.email);
 
     if (!userInfo.email) {
       return NextResponse.redirect(`${baseUrl}/login?error=no_email`);
     }
 
     // Find or create user
-    const user = await findOrCreateGoogleUser({
-      googleId: userInfo.id,
-      email: userInfo.email,
-      name: userInfo.name || userInfo.email.split("@")[0],
-      avatarUrl: userInfo.picture,
-    });
+    console.log("[Google OAuth] Finding or creating user...");
+    let user;
+    try {
+      user = await findOrCreateGoogleUser({
+        googleId: userInfo.id,
+        email: userInfo.email,
+        name: userInfo.name || userInfo.email.split("@")[0],
+        avatarUrl: userInfo.picture,
+      });
+      console.log("[Google OAuth] User found/created:", user.id);
+    } catch (userError) {
+      console.error("[Google OAuth] Failed to find/create user:", userError);
+      return NextResponse.redirect(`${baseUrl}/login?error=user_creation_failed`);
+    }
 
     // Create session
+    console.log("[Google OAuth] Creating session...");
     const sessionToken = createSessionToken(user);
 
     // Set session cookie
@@ -130,10 +143,14 @@ export async function GET(request: Request) {
       path: "/",
     });
 
+    console.log("[Google OAuth] Login successful, redirecting to:", redirectPath);
     return response;
   } catch (err) {
-    console.error("Google OAuth callback error:", err);
-    return NextResponse.redirect(`${baseUrl}/login?error=callback_failed`);
+    console.error("[Google OAuth] Callback error:", err);
+    // Return more specific error message
+    const errorMessage = err instanceof Error ? err.message : "unknown";
+    console.error("[Google OAuth] Error details:", errorMessage);
+    return NextResponse.redirect(`${baseUrl}/login?error=callback_failed&details=${encodeURIComponent(errorMessage)}`);
   }
 }
 
