@@ -252,7 +252,7 @@ export default function OrderPage() {
         if (!parsedUser) return;
         setUser(parsedUser);
         setIsLoggedIn(true);
-
+        
         // Pre-fill form data from user info (without overwriting existing)
         setOrder((prev) => ({
           ...prev,
@@ -484,9 +484,9 @@ export default function OrderPage() {
       if (!created?.trackingNumber) throw new Error("Order created, but missing order number");
       setTrackingNumber(created.trackingNumber);
       if (typeof created.total === "number") setConfirmedTotal(created.total);
-      setOrderComplete(true);
-      setStep(5);
-      setIsSubmitting(false);
+    setOrderComplete(true);
+    setStep(5);
+    setIsSubmitting(false);
     } catch (e: any) {
       setPaymentError(e?.message || "Unable to place order");
       setIsSubmitting(false);
@@ -1197,13 +1197,13 @@ export default function OrderPage() {
                 {/* Back */}
                 <div className="mb-8">
                   {order.packageType !== "lifestyle" ? (
-                    <button
-                      onClick={() => setStep(2)}
+                  <button
+                    onClick={() => setStep(2)}
                       className="inline-flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
-                    >
+                  >
                       <ArrowLeft className="w-4 h-4" />
                       Back
-                    </button>
+                  </button>
                   ) : (
                     <button
                       onClick={() => setStep(1)}
@@ -1212,21 +1212,21 @@ export default function OrderPage() {
                       <ArrowLeft className="w-4 h-4" />
                       Back
                     </button>
-                  )}
+              )}
                 </div>
 
                 {/* Stepper */}
                 <div className="mb-10">
                   <div className="flex items-center justify-between gap-3">
                     {checkoutSteps.map((s, index) => (
-                      <button
+                    <button
                         key={s.key}
                         onClick={() => index <= stepIndex && setCheckoutStep(s.key)}
-                        disabled={index > stepIndex}
+                      disabled={index > stepIndex}
                         className={`flex-1 rounded-xl border px-3 py-3 text-left transition-colors ${
-                          index === stepIndex
+                        index === stepIndex 
                             ? "border-neutral-900 bg-white"
-                            : index < stepIndex
+                          : index < stepIndex 
                               ? "border-neutral-200 bg-white hover:border-neutral-400"
                               : "border-neutral-200 bg-neutral-50 text-neutral-400 cursor-not-allowed"
                         }`}
@@ -1241,8 +1241,8 @@ export default function OrderPage() {
                                   : "bg-neutral-200 text-neutral-600"
                             }`}
                           >
-                            {index < stepIndex ? <Check className="w-4 h-4" /> : index + 1}
-                          </span>
+                        {index < stepIndex ? <Check className="w-4 h-4" /> : index + 1}
+                      </span>
                           <div className="min-w-0">
                             <div className="text-sm font-semibold text-neutral-900 truncate">{s.label}</div>
                             <div className="text-xs text-neutral-500 truncate">
@@ -1251,65 +1251,65 @@ export default function OrderPage() {
                                 : s.key === "shipping"
                                   ? "Billing details"
                                   : "Payment"}
-                            </div>
+              </div>
                           </div>
                         </div>
                       </button>
-                    ))}
+                ))}
                   </div>
-                </div>
+                        </div>
 
                 {/* Content */}
-                {checkoutStep === "information" && (
+              {checkoutStep === "information" && (
                   <div className="space-y-10">
                     {/* Login */}
-                    {!isLoggedIn ? (
+                  {!isLoggedIn ? (
                       <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-xl bg-white border border-neutral-200 flex items-center justify-center">
                               <User className="w-5 h-5 text-neutral-700" />
-                            </div>
-                            <div>
+                          </div>
+                <div>
                               <div className="text-sm font-semibold text-neutral-900">Have an account?</div>
                               <div className="text-sm text-neutral-600">Login for faster checkout.</div>
-                            </div>
                           </div>
-                          <button
-                            onClick={handleLoginRedirect}
-                            className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-neutral-800 transition-colors"
-                          >
-                            <User className="w-4 h-4" />
-                            Login
-                          </button>
                         </div>
+                        <button
+                          onClick={handleLoginRedirect}
+                            className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-neutral-800 transition-colors"
+                        >
+                          <User className="w-4 h-4" />
+                          Login
+                        </button>
                       </div>
-                    ) : (
+                    </div>
+                  ) : (
                       <div className="rounded-2xl border border-neutral-200 bg-white p-5">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-xl bg-neutral-900 flex items-center justify-center">
                             <Check className="w-5 h-5 text-white" />
-                          </div>
-                          <div>
+                        </div>
+                        <div>
                             <div className="text-sm font-semibold text-neutral-900">
                               Welcome back, {user?.name || user?.email?.split("@")[0]}!
                             </div>
                             <div className="text-sm text-neutral-600">We pre-filled what we could.</div>
-                          </div>
                         </div>
                       </div>
-                    )}
+                    </div>
+                  )}
 
                     {/* Contact */}
                     <section>
                       <h2 className="text-xl font-bold text-neutral-900 mb-5">Contact</h2>
-                      <div className="space-y-4">
-                        <div>
+                <div className="space-y-4">
+                    <div>
                           <label className="block text-sm font-medium text-neutral-700 mb-2">Email</label>
-                          <input
-                            type="email"
-                            value={order.formData.email}
-                            onChange={(e) => updateFormData("email", e.target.value)}
+                      <input
+                        type="email"
+                        value={order.formData.email}
+                        onChange={(e) => updateFormData("email", e.target.value)}
                             className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900 ${
                               errors.email ? "border-red-500" : "border-neutral-200"
                             }`}
@@ -1321,34 +1321,34 @@ export default function OrderPage() {
                               {errors.email}
                             </p>
                           )}
-                        </div>
+                    </div>
 
                         <label className="flex items-center gap-3 cursor-pointer select-none">
                           <button
                             type="button"
-                            onClick={() => setEmailUpdates(!emailUpdates)}
+                        onClick={() => setEmailUpdates(!emailUpdates)}
                             className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
                               emailUpdates ? "bg-neutral-900 border-neutral-900" : "border-neutral-300 hover:border-neutral-500"
-                            }`}
+                        }`}
                             aria-pressed={emailUpdates}
-                          >
-                            {emailUpdates && <Check className="w-4 h-4 text-white" strokeWidth={3} />}
+                      >
+                          {emailUpdates && <Check className="w-4 h-4 text-white" strokeWidth={3} />}
                           </button>
                           <span className="text-sm text-neutral-700">Email me updates and offers</span>
-                        </label>
-                      </div>
+                    </label>
+                    </div>
                     </section>
-
+                    
                     {/* Product */}
                     <section>
                       <h2 className="text-xl font-bold text-neutral-900 mb-5">Product</h2>
-                      <div className="space-y-4">
-                        <div>
+                    <div className="space-y-4">
+                      <div>
                           <label className="block text-sm font-medium text-neutral-700 mb-2">Product name *</label>
-                          <input
-                            type="text"
-                            value={order.formData.productName}
-                            onChange={(e) => updateFormData("productName", e.target.value)}
+                      <input
+                        type="text"
+                        value={order.formData.productName}
+                        onChange={(e) => updateFormData("productName", e.target.value)}
                             className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900 ${
                               errors.productName ? "border-red-500" : "border-neutral-200"
                             }`}
@@ -1360,31 +1360,31 @@ export default function OrderPage() {
                               {errors.productName}
                             </p>
                           )}
-                        </div>
-                        <div>
+                      </div>
+                      <div>
                           <label className="block text-sm font-medium text-neutral-700 mb-2">Notes (optional)</label>
-                          <textarea
-                            value={order.formData.notes}
-                            onChange={(e) => updateFormData("notes", e.target.value)}
-                            rows={4}
+                    <textarea
+                      value={order.formData.notes}
+                      onChange={(e) => updateFormData("notes", e.target.value)}
+                          rows={4}
                             className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900 resize-none"
                             placeholder="Any preferences, references, or constraints?"
-                          />
-                        </div>
+                        />
                       </div>
+                    </div>
                     </section>
 
-                    <button
-                      onClick={handleCheckoutContinue}
+                  <button
+                    onClick={handleCheckoutContinue}
                       className="w-full rounded-xl bg-neutral-900 px-5 py-4 text-white font-semibold hover:bg-neutral-800 transition-colors inline-flex items-center justify-center gap-2"
-                    >
+                  >
                       Continue
                       <ArrowRight className="w-4 h-4" />
-                    </button>
+                  </button>
                   </div>
-                )}
+              )}
 
-                {checkoutStep === "shipping" && (
+              {checkoutStep === "shipping" && (
                   <div className="space-y-10">
                     {/* Delivery */}
                     <section>
@@ -1393,149 +1393,149 @@ export default function OrderPage() {
                         <div className="flex items-start gap-4">
                           <div className="w-10 h-10 rounded-xl bg-neutral-900 flex items-center justify-center">
                             <Mail className="w-5 h-5 text-white" />
-                          </div>
-                          <div className="flex-1">
+                        </div>
+                        <div className="flex-1">
                             <div className="text-sm font-semibold text-neutral-900">Digital delivery</div>
                             <div className="text-sm text-neutral-600">Final files delivered via email.</div>
-                          </div>
-                          <div className="text-sm font-semibold text-neutral-900">Free</div>
-                        </div>
                       </div>
+                          <div className="text-sm font-semibold text-neutral-900">Free</div>
+                      </div>
+                    </div>
                     </section>
 
                     {/* Billing */}
                     <section>
                       <h2 className="text-xl font-bold text-neutral-900 mb-5">Billing details</h2>
-                      <div className="space-y-4">
-                        <div className="relative">
+                  <div className="space-y-4">
+                      <div className="relative">
                           <label className="block text-sm font-medium text-neutral-700 mb-2">Country/Region</label>
-                          <select
-                            value={order.formData.country}
-                            onChange={(e) => updateFormData("country", e.target.value)}
+                      <select
+                        value={order.formData.country}
+                        onChange={(e) => updateFormData("country", e.target.value)}
                             className="w-full appearance-none rounded-xl border border-neutral-200 bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900"
-                          >
-                            <option value="United States">United States</option>
-                            <option value="Canada">Canada</option>
-                            <option value="United Kingdom">United Kingdom</option>
-                          </select>
+                      >
+                        <option value="United States">United States</option>
+                        <option value="Canada">Canada</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                      </select>
                           <ChevronDown className="absolute right-4 top-[46px] w-5 h-5 text-neutral-400 pointer-events-none" />
-                        </div>
+                    </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <div>
+                        <div>
                             <label className="block text-sm font-medium text-neutral-700 mb-2">First name</label>
-                            <input
-                              type="text"
-                              value={order.formData.firstName}
-                              onChange={(e) => updateFormData("firstName", e.target.value)}
+                      <input
+                        type="text"
+                        value={order.formData.firstName}
+                        onChange={(e) => updateFormData("firstName", e.target.value)}
                               className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900 ${
                                 errors.firstName ? "border-red-500" : "border-neutral-200"
                               }`}
-                            />
-                          </div>
-                          <div>
+                          />
+                        </div>
+                        <div>
                             <label className="block text-sm font-medium text-neutral-700 mb-2">Last name</label>
-                            <input
-                              type="text"
-                              value={order.formData.lastName}
-                              onChange={(e) => updateFormData("lastName", e.target.value)}
+                      <input
+                        type="text"
+                        value={order.formData.lastName}
+                        onChange={(e) => updateFormData("lastName", e.target.value)}
                               className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900 ${
                                 errors.lastName ? "border-red-500" : "border-neutral-200"
                               }`}
-                            />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-neutral-700 mb-2">Company (optional)</label>
-                          <input
-                            type="text"
-                            value={order.formData.company}
-                            onChange={(e) => updateFormData("company", e.target.value)}
-                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900"
                           />
                         </div>
+                    </div>
 
-                        <div>
+                      <div>
+                          <label className="block text-sm font-medium text-neutral-700 mb-2">Company (optional)</label>
+                      <input
+                        type="text"
+                          value={order.formData.company}
+                          onChange={(e) => updateFormData("company", e.target.value)}
+                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900"
+                    />
+                      </div>
+
+                      <div>
                           <label className="block text-sm font-medium text-neutral-700 mb-2">Address</label>
-                          <input
-                            type="text"
-                            value={order.formData.address}
-                            onChange={(e) => updateFormData("address", e.target.value)}
+                    <input
+                      type="text"
+                      value={order.formData.address}
+                      onChange={(e) => updateFormData("address", e.target.value)}
                             className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900 ${
                               errors.address ? "border-red-500" : "border-neutral-200"
                             }`}
-                          />
-                        </div>
+                        />
+                      </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                          <div>
+                        <div>
                             <label className="block text-sm font-medium text-neutral-700 mb-2">City</label>
-                            <input
-                              type="text"
-                              value={order.formData.city}
-                              onChange={(e) => updateFormData("city", e.target.value)}
+                      <input
+                        type="text"
+                        value={order.formData.city}
+                        onChange={(e) => updateFormData("city", e.target.value)}
                               className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900 ${
                                 errors.city ? "border-red-500" : "border-neutral-200"
                               }`}
-                            />
-                          </div>
-                          <div>
+                          />
+                        </div>
+                        <div>
                             <label className="block text-sm font-medium text-neutral-700 mb-2">State</label>
-                            <input
-                              type="text"
-                              value={order.formData.state}
-                              onChange={(e) => updateFormData("state", e.target.value)}
+                      <input
+                        type="text"
+                        value={order.formData.state}
+                        onChange={(e) => updateFormData("state", e.target.value)}
                               className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900 ${
                                 errors.state ? "border-red-500" : "border-neutral-200"
                               }`}
-                            />
-                          </div>
-                          <div>
+                          />
+                        </div>
+                        <div>
                             <label className="block text-sm font-medium text-neutral-700 mb-2">ZIP</label>
-                            <input
-                              type="text"
-                              value={order.formData.zipCode}
-                              onChange={(e) => updateFormData("zipCode", e.target.value)}
+                      <input
+                        type="text"
+                        value={order.formData.zipCode}
+                        onChange={(e) => updateFormData("zipCode", e.target.value)}
                               className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900 ${
                                 errors.zipCode ? "border-red-500" : "border-neutral-200"
                               }`}
-                            />
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-neutral-700 mb-2">Phone (optional)</label>
-                          <input
-                            type="tel"
-                            value={order.formData.phone}
-                            onChange={(e) => updateFormData("phone", e.target.value)}
-                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900"
-                            placeholder="For updates"
                           />
                         </div>
                       </div>
+
+                      <div>
+                          <label className="block text-sm font-medium text-neutral-700 mb-2">Phone (optional)</label>
+                    <input
+                      type="tel"
+                      value={order.formData.phone}
+                      onChange={(e) => updateFormData("phone", e.target.value)}
+                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900"
+                            placeholder="For updates"
+                    />
+                      </div>
+                    </div>
                     </section>
 
-                    <button
-                      onClick={handleCheckoutContinue}
+                  <button
+                    onClick={handleCheckoutContinue}
                       className="w-full rounded-xl bg-neutral-900 px-5 py-4 text-white font-semibold hover:bg-neutral-800 transition-colors inline-flex items-center justify-center gap-2"
-                    >
+                  >
                       Continue
                       <ArrowRight className="w-4 h-4" />
-                    </button>
+                  </button>
 
-                    <button
-                      onClick={() => setCheckoutStep("information")}
+                  <button
+                    onClick={() => setCheckoutStep("information")}
                       className="w-full text-sm text-neutral-600 hover:text-neutral-900 transition-colors inline-flex items-center justify-center gap-2"
-                    >
-                      <ArrowLeft className="w-4 h-4" />
+                  >
+                    <ArrowLeft className="w-4 h-4" />
                       Back to information
-                    </button>
+                  </button>
                   </div>
-                )}
+              )}
 
-                {checkoutStep === "payment" && (
+              {checkoutStep === "payment" && (
                   <div className="space-y-10">
                     <section>
                       <h2 className="text-xl font-bold text-neutral-900 mb-2">Payment</h2>
@@ -1547,7 +1547,7 @@ export default function OrderPage() {
                     {paymentError && (
                       <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
                         {paymentError}
-                      </div>
+                          </div>
                     )}
 
                     <section className="space-y-4">
@@ -1556,32 +1556,32 @@ export default function OrderPage() {
                         <div className="flex items-start gap-3">
                           <div className="w-10 h-10 rounded-xl bg-neutral-900 flex items-center justify-center">
                             <CreditCard className="w-5 h-5 text-white" />
-                          </div>
+                        </div>
                           <div className="flex-1">
                             <div className="text-sm font-semibold text-neutral-900">Pay by card</div>
                             <div className="text-sm text-neutral-600">
                               You’ll be redirected to a secure checkout to complete payment.
-                            </div>
                           </div>
-                        </div>
-                        <button
+                          </div>
+                  </div>
+                  <button
                           type="button"
                           onClick={startStripeCheckout}
-                          disabled={isSubmitting}
+                    disabled={isSubmitting}
                           className="mt-4 w-full rounded-xl bg-neutral-900 px-5 py-4 text-white font-semibold hover:bg-neutral-800 transition-colors disabled:opacity-70 inline-flex items-center justify-center gap-2"
-                        >
-                          {isSubmitting ? (
-                            <>
+                  >
+                    {isSubmitting ? (
+                      <>
                               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                               Redirecting…
-                            </>
-                          ) : (
-                            <>
+                      </>
+                    ) : (
+                      <>
                               <Lock className="w-4 h-4" />
                               Continue to payment
-                            </>
-                          )}
-                        </button>
+                      </>
+                    )}
+                  </button>
                       </div>
 
                       {/* Invoice */}
@@ -1614,16 +1614,16 @@ export default function OrderPage() {
                       </p>
                     </div>
 
-                    <button
-                      onClick={() => setCheckoutStep("shipping")}
+                  <button
+                    onClick={() => setCheckoutStep("shipping")}
                       className="w-full text-sm text-neutral-600 hover:text-neutral-900 transition-colors inline-flex items-center justify-center gap-2"
-                    >
-                      <ArrowLeft className="w-4 h-4" />
+                  >
+                    <ArrowLeft className="w-4 h-4" />
                       Back to billing
-                    </button>
-                  </div>
-                )}
-              </div>
+                  </button>
+                </div>
+              )}
+                </div>
 
               {/* Right: Summary */}
               <aside className="lg:col-span-5 xl:col-span-4 border-t lg:border-t-0 lg:border-l border-neutral-200 bg-[#fafafa] order-1 lg:order-2">
@@ -1651,61 +1651,61 @@ export default function OrderPage() {
                       </div>
 
                       <div className="space-y-4 pb-4 border-b border-neutral-200">
-                        {order.cart.map((item) => (
+                    {order.cart.map((item) => (
                           <div key={item.style} className="flex items-start gap-3">
                             <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-neutral-100 border border-neutral-200 flex-shrink-0">
-                              <img
+                      <img
                                 src={ECOMMERCE_STYLES.find((s) => s.id === item.style)?.image}
-                                alt={getStyleName(item.style)}
-                                className="w-full h-full object-cover"
-                              />
+                        alt={getStyleName(item.style)}
+                        className="w-full h-full object-cover"
+                      />
                               <div className="absolute -top-2 -right-2 w-6 h-6 bg-neutral-900 rounded-full flex items-center justify-center text-[11px] font-bold text-white">
-                                {item.angles.length}
-                              </div>
-                            </div>
-                            <div className="flex-1 min-w-0">
+                        {item.angles.length}
+              </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
                               <div className="text-sm font-semibold text-neutral-900 truncate">{getStyleName(item.style)}</div>
                               <div className="text-xs text-neutral-500">
                                 {item.angles.length} angles × ${item.pricePerAngle}
-                              </div>
+                    </div>
                             </div>
                             <div className="text-sm font-semibold text-neutral-900">
                               ${item.angles.length * item.pricePerAngle}
                             </div>
-                          </div>
-                        ))}
+                      </div>
+                    ))}
 
-                        {order.lifestyleIncluded && (
+                    {order.lifestyleIncluded && (
                           <div className="flex items-start gap-3">
                             <div className="w-14 h-14 rounded-xl bg-neutral-900 flex items-center justify-center flex-shrink-0">
                               <Sparkles className="w-6 h-6 text-white" />
-                            </div>
-                            <div className="flex-1 min-w-0">
+                  </div>
+                    <div className="flex-1 min-w-0">
                               <div className="text-sm font-semibold text-neutral-900">Lifestyle</div>
                               <div className="text-xs text-neutral-500">Styled shoot</div>
-                            </div>
+                </div>
                             <div className="text-sm font-semibold text-neutral-900">${PRICES.lifestyle.flatRate}</div>
-                          </div>
-                        )}
-                      </div>
+                    </div>
+                    )}
+              </div>
 
                       {/* Discount + breakdown */}
                       <div className="pt-4 space-y-3">
                         <div className="flex gap-2">
-                          <div className="relative flex-1">
+                  <div className="relative flex-1">
                             <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-                            <input
-                              type="text"
-                              value={discountCode}
+                    <input
+                      type="text"
+                      value={discountCode}
                               onChange={(e) => {
                                 setDiscountError("");
                                 setDiscountCode(e.target.value);
                               }}
                               disabled={!!appliedPromo}
                               className="w-full pl-10 pr-3 py-3 rounded-xl border border-neutral-200 bg-white text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900 disabled:bg-neutral-50 disabled:text-neutral-500"
-                              placeholder="Discount code"
-                            />
-                          </div>
+                      placeholder="Discount code"
+                    />
+                  </div>
                           {appliedPromo ? (
                             <button
                               type="button"
@@ -1717,7 +1717,7 @@ export default function OrderPage() {
                               className="rounded-xl border border-neutral-900 bg-white px-4 py-3 text-sm font-semibold text-neutral-900 hover:bg-neutral-50 transition-colors"
                             >
                               Remove
-                            </button>
+                  </button>
                           ) : (
                             <button
                               type="button"
@@ -1765,13 +1765,13 @@ export default function OrderPage() {
                               {isApplyingDiscount ? "Applying…" : "Apply"}
                             </button>
                           )}
-                        </div>
+                </div>
 
                         {discountError && <div className="text-sm text-red-600">{discountError}</div>}
                         {appliedPromo && (
                           <div className="text-sm text-neutral-700">
                             Applied <span className="font-semibold">{appliedPromo.code}</span>
-                          </div>
+                </div>
                         )}
 
                         {(() => {
@@ -1781,7 +1781,7 @@ export default function OrderPage() {
                               <div className="flex justify-between text-sm">
                                 <span className="text-neutral-600">Subtotal</span>
                                 <span className="text-neutral-900 font-medium">${b.itemsSubtotal}</span>
-                              </div>
+                      </div>
                               {b.bundleDiscount > 0 && (
                                 <div className="flex justify-between text-sm">
                                   <span className="text-neutral-600">Bundle discount</span>
@@ -1792,15 +1792,15 @@ export default function OrderPage() {
                                 <div className="flex justify-between text-sm">
                                   <span className="text-neutral-600">
                                     Promo <span className="font-mono">{appliedPromo.code}</span>
-                                  </span>
+                    </span>
                                   <span className="text-neutral-900 font-medium">-${b.promoDiscount}</span>
-                                </div>
-                              )}
+                      </div>
+                )}
                               <div className="flex justify-between text-sm">
                                 <span className="text-neutral-600">Delivery</span>
                                 <span className="text-neutral-900 font-medium">Free</span>
-                              </div>
-                            </div>
+                    </div>
+                      </div>
                           );
                         })()}
 
@@ -1812,21 +1812,21 @@ export default function OrderPage() {
                     </div>
 
                     <div className="mt-4 rounded-2xl border border-neutral-200 bg-white p-5">
-                      <div className="flex items-start gap-3">
+                <div className="flex items-start gap-3">
                         <Clock className="w-5 h-5 text-neutral-800 mt-0.5" />
-                        <div>
+                  <div>
                           <div className="text-sm font-semibold text-neutral-900">3–5 business days</div>
                           <div className="text-sm text-neutral-600 mt-1">
                             Delivered digitally. 100% satisfaction guaranteed.
-                          </div>
-                        </div>
-                      </div>
+                  </div>
+                </div>
+              </div>
                     </div>
                   </div>
                 </div>
               </aside>
-            </div>
-          </div>
+                      </div>
+                      </div>
         )}
 
         {/* Step 5: Confirmation */}
@@ -1842,7 +1842,7 @@ export default function OrderPage() {
               </h1>
               
               <p className="text-lg text-[#1a1a1a]/60 mb-10">
-                Thank you for your order. We'll be in touch shortly to confirm details and get started on your project.
+                Thank you for your order. We&apos;ll be in touch shortly to confirm details and get started on your project.
               </p>
 
               <div className="bg-white rounded-3xl p-8 border border-[#1a1a1a]/5 shadow-xl mb-8">

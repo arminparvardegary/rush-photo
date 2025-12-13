@@ -381,7 +381,7 @@ export default function AdminPage() {
               <div className="absolute right-20 bottom-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2" />
               <div className="relative z-10">
                 <h1 className="text-3xl font-bold mb-2">Welcome back, {user.name || user.email?.split('@')[0] || 'User'}! 👋</h1>
-                <p className="text-white/80 mb-6">Here's what's happening with your photo orders.</p>
+                <p className="text-white/80 mb-6">Here&apos;s what&apos;s happening with your photo orders.</p>
                 <Link
                   href="/order"
                   className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#E54A4A] font-semibold rounded-xl hover:shadow-xl transition-all"
