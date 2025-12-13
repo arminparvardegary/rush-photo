@@ -18,6 +18,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 
+  // Check if user signed up with Google (no password)
+  if (user.authProvider === "google" && !user.passwordHash) {
+    return NextResponse.json(
+      { error: "Please use Google to sign in" },
+      { status: 400 }
+    );
+  }
+
+  if (!user.passwordHash || !user.passwordSalt) {
+    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+  }
+
   const ok = await verifyPassword(password, user.passwordSalt, user.passwordHash);
   if (!ok) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });

@@ -41,6 +41,7 @@ export async function POST(req: Request) {
     role,
     passwordHash: hash,
     passwordSalt: salt,
+    authProvider: "email",
   });
 
   const token = createSessionToken(user);

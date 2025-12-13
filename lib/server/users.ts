@@ -10,8 +10,12 @@ export interface UserRecord {
   phone?: string;
   company?: string;
   role: UserRole;
-  passwordHash: string;
-  passwordSalt: string;
+  passwordHash?: string;
+  passwordSalt?: string;
+  // OAuth fields
+  googleId?: string;
+  avatarUrl?: string;
+  authProvider: "email" | "google";
   createdAt: string;
   updatedAt: string;
 }
@@ -63,9 +67,12 @@ export async function createUser(input: {
   name: string;
   phone?: string;
   company?: string;
-  passwordHash: string;
-  passwordSalt: string;
+  passwordHash?: string;
+  passwordSalt?: string;
   role: UserRole;
+  googleId?: string;
+  avatarUrl?: string;
+  authProvider: "email" | "google";
 }): Promise<UserRecord> {
   const users = await getAllUsers();
   const now = new Date().toISOString();
@@ -78,12 +85,61 @@ export async function createUser(input: {
     role: input.role,
     passwordHash: input.passwordHash,
     passwordSalt: input.passwordSalt,
+    googleId: input.googleId,
+    avatarUrl: input.avatarUrl,
+    authProvider: input.authProvider,
     createdAt: now,
     updatedAt: now,
   };
   users.push(user);
   await saveAllUsers(users);
   return user;
+}
+
+export async function findUserByGoogleId(googleId: string): Promise<UserRecord | null> {
+  const users = await getAllUsers();
+  return users.find((u) => u.googleId === googleId) ?? null;
+}
+
+export async function findOrCreateGoogleUser(profile: {
+  googleId: string;
+  email: string;
+  name: string;
+  avatarUrl?: string;
+}): Promise<UserRecord> {
+  // First, check if user exists by Google ID
+  let user = await findUserByGoogleId(profile.googleId);
+  if (user) return user;
+
+  // Check if user exists by email (might have signed up with email before)
+  user = await findUserByEmail(profile.email);
+  if (user) {
+    // Link Google account to existing user
+    const updated = await updateUser(user.id, {});
+    if (updated) {
+      // Update googleId directly
+      const users = await getAllUsers();
+      const idx = users.findIndex((u) => u.id === user!.id);
+      if (idx !== -1) {
+        users[idx].googleId = profile.googleId;
+        users[idx].avatarUrl = profile.avatarUrl || users[idx].avatarUrl;
+        users[idx].updatedAt = new Date().toISOString();
+        await saveAllUsers(users);
+        return users[idx];
+      }
+    }
+    return user;
+  }
+
+  // Create new user
+  return createUser({
+    email: profile.email,
+    name: profile.name,
+    googleId: profile.googleId,
+    avatarUrl: profile.avatarUrl,
+    authProvider: "google",
+    role: isAdminEmail(profile.email) ? "admin" : "customer",
+  });
 }
 
 export async function updateUser(
