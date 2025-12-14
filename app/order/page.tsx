@@ -825,7 +825,7 @@ export default function OrderPage() {
               </motion.div>
             )}
 
-        {/* Step 2: Style Selection with Blur Effect */}
+        {/* Step 2: Style Selection - Clean Design */}
             {step === 2 && (
           <motion.div 
             key="step2"
@@ -833,268 +833,226 @@ export default function OrderPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="py-8"
+            className="py-6"
           >
+            {/* Back Button */}
                   <button
-              onClick={() => {
-                setStep(1);
-                setSelectedPackage(null);
-              }}
-              className="flex items-center gap-2 text-[#1a1a1a]/60 hover:text-[#E54A4A] transition-colors mb-8 group"
+              onClick={() => { setStep(1); setSelectedPackage(null); }}
+              className="flex items-center gap-2 text-neutral-500 hover:text-[#E54A4A] transition-colors mb-6 text-sm"
             >
-              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+              <ArrowLeft className="w-4 h-4" />
                     Back to packages
                   </button>
 
-            <div className="text-center mb-10">
-              <h1 className="text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-3">
-                Select E-commerce Style
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="text-2xl font-bold text-[#1a1a1a] mb-2">
+                {order.packageType === "fullpackage" ? "Build Your Full Package" : "Select Photography Style"}
               </h1>
-              <p className="text-[#1a1a1a]/60 text-lg">
-                Choose the shooting style for your products
+              <p className="text-neutral-500">
+                {order.packageType === "fullpackage" 
+                  ? "Choose styles and angles for your complete package"
+                  : "Pick a style and add angles to your cart"
+                }
               </p>
-              
-              {/* Full Package Indicator */}
-              {order.packageType === "fullpackage" && (
-                <div className="mt-6 inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-500/10 to-amber-500/10 rounded-full border border-purple-500/20">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center">
-                      <Sparkles className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-purple-700 font-medium">Lifestyle Photography Included</span>
-                  </div>
-                  <span className="text-amber-600 font-bold">+ 10% OFF</span>
-                </div>
-              )}
             </div>
 
-            {/* Cart Summary - Sticky */}
-            {order.cart.length > 0 && (
-              <div className="sticky top-20 z-30 mb-8">
-                <div className="bg-white/95 backdrop-blur-lg rounded-2xl p-4 sm:p-6 border border-[#1a1a1a]/5 shadow-lg">
-                  <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#E54A4A] to-[#ff7f7f] flex items-center justify-center">
-                        <ShoppingCart className="w-6 h-6 text-white" />
+            {/* Full Package Badge */}
+              {order.packageType === "fullpackage" && (
+              <div className="mb-8 p-4 bg-gradient-to-r from-amber-50 to-purple-50 rounded-xl border border-amber-200">
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 to-purple-500 flex items-center justify-center">
+                      <Package className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-[#1a1a1a]">Full Package Deal</p>
+                      <p className="text-sm text-neutral-600">E-commerce + Lifestyle included</p>
+                  </div>
+                </div>
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
+                    <Zap className="w-4 h-4" />
+                    {Math.round(PRICES.fullPackageDiscount * 100)}% Savings Applied
+            </div>
                         </div>
+              </div>
+            )}
+
+            {/* Floating Cart Bar */}
+            <AnimatePresence>
+            {(order.cart.length > 0 || order.lifestyleIncluded) && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                className="sticky top-16 z-30 mb-6"
+              >
+                <div className="bg-[#1a1a1a] rounded-xl p-4 text-white shadow-xl">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <ShoppingCart className="w-5 h-5" />
                         <div>
-                        <p className="font-bold text-[#1a1a1a]">{order.cart.length} style{order.cart.length > 1 ? 's' : ''} selected</p>
-                        <p className="text-sm text-[#1a1a1a]/50">{getTotalAngles()} total angles</p>
+                        <p className="font-medium text-sm">
+                          {order.cart.length} style{order.cart.length !== 1 ? 's' : ''} 
+                          {order.lifestyleIncluded && ' + Lifestyle'}
+                        </p>
+                        <p className="text-xs text-white/60">{getTotalAngles()} angles</p>
                         </div>
                       </div>
                     <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <p className="text-sm text-[#1a1a1a]/50">Subtotal</p>
-                        <p className="text-2xl font-bold text-[#1a1a1a]">${calculateTotal()}</p>
-                      </div>
+                      <span className="text-xl font-bold">${calculateTotal()}</span>
                         <button
-                        onClick={() => {
-                          setStep(4);
-                          setCheckoutStep("information");
-                        }}
-                        className="px-6 py-3 bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white font-bold rounded-xl hover:shadow-xl hover:shadow-[#E54A4A]/30 transition-all flex items-center gap-2"
+                        onClick={() => { setStep(4); setCheckoutStep("information"); }}
+                        className="px-5 py-2.5 bg-[#E54A4A] text-white font-semibold rounded-lg hover:bg-[#d43d3d] transition-colors flex items-center gap-2"
                       >
-                        Checkout
-                        <ArrowRight className="w-5 h-5" />
+                        Checkout <ArrowRight className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
                 </div>
-              </div>
+              </motion.div>
             )}
+            </AnimatePresence>
 
-            {/* Style Cards with Inline Angle Selection */}
-            <div className="space-y-6">
+            {/* Style Cards - Clean Grid */}
+            <div className="grid gap-4">
                   {ECOMMERCE_STYLES.map((style) => {
                     const inCart = order.cart.find(item => item.style === style.id);
                 const isSelected = currentStyle === style.id;
-                const otherStyleSelected = currentStyle && currentStyle !== style.id;
                 const stylePrice = style.pricePerAngle || PRICES.ecommerce.perAngle;
                 
                     return (
-                  <div 
-                        key={style.id}
-                    className={`transition-all duration-500 ${otherStyleSelected ? 'opacity-30 blur-sm scale-[0.98]' : ''}`}
-                  >
-                    {/* Combined Card + Angle Selection */}
-                    <div className={`overflow-hidden transition-all duration-300 ${
-                      isSelected 
-                        ? 'rounded-3xl ring-4 ring-[#E54A4A] shadow-2xl' 
-                        : inCart 
-                          ? 'rounded-3xl ring-4 ring-green-500 shadow-xl' 
-                          : 'rounded-3xl hover:shadow-2xl'
-                    }`}>
-                      {/* Style Card Header */}
+                  <div key={style.id} className="bg-white rounded-xl border border-neutral-200 overflow-hidden transition-all hover:border-neutral-300">
+                    {/* Style Header - Clickable */}
                     <button
                         onClick={() => selectStyle(style.id)}
-                      disabled={!!otherStyleSelected}
-                        className="group relative w-full transition-all duration-300"
+                      className="w-full p-4 flex items-center gap-4 text-left hover:bg-neutral-50 transition-colors"
                     >
-                      {inCart && !isSelected && (
-                        <div className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-green-500 flex items-center justify-center shadow-lg">
-                          <Check className="w-6 h-6 text-white" />
-                      </div>
-                    )}
-                      
-                      <div className="flex flex-col md:flex-row">
-                        <div className="md:w-1/3 aspect-video md:aspect-auto relative">
-                          <img
-                            src={style.image}
-                            alt={style.name}
-                            className="w-full h-full object-cover"
-                            />
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/60 hidden md:block" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent md:hidden" />
-                          </div>
-                        
-                        <div className="md:w-2/3 p-6 md:p-8 bg-white flex flex-col justify-center">
-                          <div className="flex items-start justify-between gap-4">
-                            <div>
-                              <h3 className="text-2xl font-bold text-[#1a1a1a] mb-2">{style.name}</h3>
-                              <p className="text-[#1a1a1a]/60 text-sm mb-4">{style.description}</p>
-                            </div>
-                            <span className="text-[#E54A4A] font-bold text-xl whitespace-nowrap">${stylePrice}/angle</span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            {inCart ? (
-                              <span className="text-green-600 text-sm font-medium flex items-center gap-2 bg-green-50 px-3 py-1.5 rounded-full">
-                                <Check className="w-4 h-4" />
-                                {inCart.angles.length} angles in cart
+                      <img src={style.image} alt={style.name} className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-[#1a1a1a]">{style.name}</h3>
+                          {inCart && (
+                            <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+                              {inCart.angles.length} angles
                               </span>
-                            ) : (
-                              <span className="text-[#1a1a1a]/40 text-sm">Click to select angles</span>
                             )}
-                            <div className={`flex items-center gap-2 text-sm font-medium transition-colors ${isSelected ? 'text-[#E54A4A]' : 'text-[#1a1a1a]/60 group-hover:text-[#E54A4A]'}`}>
-                              {isSelected ? 'Click to close' : 'Select angles'}
-                              <ChevronDown className={`w-5 h-5 transition-transform ${isSelected ? 'rotate-180' : ''}`} />
                             </div>
+                        <p className="text-sm text-neutral-500 truncate">{style.description}</p>
                           </div>
-                        </div>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <span className="text-[#E54A4A] font-bold">${stylePrice}/angle</span>
+                        <ChevronDown className={`w-5 h-5 text-neutral-400 transition-transform ${isSelected ? 'rotate-180' : ''}`} />
                       </div>
                     </button>
 
-                      {/* Inline Angle Selection - Connected seamlessly */}
+                    {/* Angle Selection - Expandable */}
+                    <AnimatePresence>
                     {isSelected && (
-                        <div className="bg-white border-t border-[#E54A4A]/20 animate-in slide-in-from-top-2 duration-300">
-                        <div className="p-6 border-b border-[#1a1a1a]/5 bg-gradient-to-r from-[#E54A4A]/5 to-transparent">
-                          <h4 className="font-bold text-[#1a1a1a]">Select Angles for {style.name}</h4>
-                          <p className="text-sm text-[#1a1a1a]/50">Choose 1-4 angles for your product shots</p>
-                        </div>
-                        
-                        <div className="p-6">
-                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                      <motion.div 
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="border-t border-neutral-100 overflow-hidden"
+                      >
+                        <div className="p-4 bg-neutral-50">
+                          <p className="text-sm font-medium text-neutral-700 mb-3">Select angles:</p>
+                          <div className="grid grid-cols-4 gap-2 mb-4">
                             {ANGLES.map((angle) => {
                               const isAngleSelected = selectedAngles.includes(angle.id);
                               return (
                                 <button
                                   key={angle.id}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleAngle(angle.id);
-                                  }}
-                                  className={`relative aspect-square rounded-xl overflow-hidden transition-all duration-300 ${
-                                    isAngleSelected
-                                      ? 'ring-4 ring-[#E54A4A] scale-[0.98]'
-                                      : 'hover:scale-[1.02] hover:shadow-lg'
+                                  onClick={(e) => { e.stopPropagation(); toggleAngle(angle.id); }}
+                                  className={`relative aspect-square rounded-lg overflow-hidden transition-all ${
+                                    isAngleSelected ? 'ring-2 ring-[#E54A4A]' : 'hover:opacity-80'
                                   }`}
                                 >
-                                  <img 
-                                    src={angle.image} 
-                                    alt={angle.name}
-                                    className={`w-full h-full object-cover transition-all ${isAngleSelected ? 'brightness-90' : ''}`}
-                                  />
-                                  <div className={`absolute inset-0 transition-all ${
-                                    isAngleSelected ? 'bg-[#E54A4A]/20' : 'bg-black/20 hover:bg-black/10'
-                                  }`} />
-                                  
-                                  <div className={`absolute top-2 right-2 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
-                                    isAngleSelected
-                                      ? 'border-[#E54A4A] bg-[#E54A4A]'
-                                      : 'border-white bg-white/30'
-                                  }`}>
-                                    {isAngleSelected && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
+                                  <img src={angle.image} alt={angle.name} className="w-full h-full object-cover" />
+                                  <div className={`absolute inset-0 ${isAngleSelected ? 'bg-[#E54A4A]/30' : 'bg-black/30'}`} />
+                                  {isAngleSelected && (
+                                    <div className="absolute top-1 right-1 w-5 h-5 bg-[#E54A4A] rounded-full flex items-center justify-center">
+                                      <Check className="w-3 h-3 text-white" strokeWidth={3} />
                                   </div>
-                                  
-                                  <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
-                                    <p className="text-white font-medium text-xs text-center">{angle.name}</p>
-                                  </div>
+                                  )}
+                                  <span className="absolute bottom-1 left-1 right-1 text-white text-[10px] font-medium text-center">{angle.name}</span>
                       </button>
                     );
                   })}
                 </div>
 
-                          {/* Add to Cart Section */}
-                          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-[#f9f9f9] rounded-xl">
-                            <div className="flex items-center gap-4">
-                              <div className="text-center sm:text-left">
-                                <p className="text-sm text-[#1a1a1a]/50">Selected</p>
-                                <p className="text-2xl font-bold text-[#1a1a1a]">{selectedAngles.length} angle{selectedAngles.length !== 1 ? 's' : ''}</p>
-                              </div>
-                              <div className="text-center sm:text-left">
-                                <p className="text-sm text-[#1a1a1a]/50">Subtotal</p>
-                                <p className="text-2xl font-bold text-[#E54A4A]">${selectedAngles.length * stylePrice}</p>
-                              </div>
+                          {/* Add Button */}
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <span className="text-sm text-neutral-500">{selectedAngles.length} selected = </span>
+                              <span className="font-bold text-[#1a1a1a]">${selectedAngles.length * stylePrice}</span>
                             </div>
                   <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                addToCart();
-                              }}
+                              onClick={(e) => { e.stopPropagation(); addToCart(); }}
                               disabled={selectedAngles.length === 0}
-                              className={`w-full sm:w-auto px-8 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
+                              className={`px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 transition-all ${
                                 selectedAngles.length > 0
-                                  ? 'bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white hover:shadow-xl hover:shadow-[#E54A4A]/30'
-                                  : 'bg-[#1a1a1a]/10 text-[#1a1a1a]/30 cursor-not-allowed'
+                                  ? 'bg-[#E54A4A] text-white hover:bg-[#d43d3d]'
+                                  : 'bg-neutral-200 text-neutral-400 cursor-not-allowed'
                               }`}
                             >
-                              <ShoppingCart className="w-5 h-5" />
-                              Add to Cart
+                              <Check className="w-4 h-4" />
+                              {inCart ? 'Update' : 'Add'}
                   </button>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     )}
-                    </div>
+                    </AnimatePresence>
                   </div>
                 );
               })}
             </div>
 
-            {/* Items in Cart */}
+            {/* Cart Summary */}
             {order.cart.length > 0 && (
-              <div className="mt-12">
-                <h3 className="text-lg font-bold text-[#1a1a1a] mb-4">Added to Cart</h3>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="mt-8 p-4 bg-white rounded-xl border border-neutral-200">
+                <h3 className="text-sm font-semibold text-neutral-700 mb-3">Your selections:</h3>
+                <div className="space-y-2">
                   {order.cart.map((item) => {
                     const styleInfo = ECOMMERCE_STYLES.find(s => s.id === item.style);
                     return (
-                      <div key={item.style} className="bg-white rounded-2xl p-4 border border-[#1a1a1a]/5 flex items-center gap-4">
-                        <img 
-                          src={styleInfo?.image} 
-                          alt={getStyleName(item.style)}
-                          className="w-16 h-16 rounded-xl object-cover"
-                        />
-                        <div className="flex-1">
-                          <h4 className="font-bold text-[#1a1a1a]">{getStyleName(item.style)}</h4>
-                          <p className="text-sm text-[#1a1a1a]/50">{item.angles.length} angles</p>
+                      <div key={item.style} className="flex items-center justify-between py-2 border-b border-neutral-100 last:border-0">
+                        <div className="flex items-center gap-3">
+                          <img src={styleInfo?.image} alt="" className="w-10 h-10 rounded object-cover" />
+                          <div>
+                            <p className="font-medium text-sm text-[#1a1a1a]">{getStyleName(item.style)}</p>
+                            <p className="text-xs text-neutral-500">{item.angles.map(a => ANGLES.find(x => x.id === a)?.name).join(', ')}</p>
                         </div>
-                        <div className="text-right">
-                          <p className="font-bold text-[#1a1a1a]">${item.angles.length * item.pricePerAngle}</p>
-                  <button
-                            onClick={() => removeFromCart(item.style)}
-                            className="text-red-500 hover:text-red-600 text-sm flex items-center gap-1 mt-1"
-                          >
-                            <X className="w-3 h-3" />
-                            Remove
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="font-semibold text-[#1a1a1a]">${item.angles.length * item.pricePerAngle}</span>
+                          <button onClick={() => removeFromCart(item.style)} className="text-neutral-400 hover:text-red-500 transition-colors">
+                            <X className="w-4 h-4" />
                   </button>
                         </div>
                       </div>
                     );
                   })}
+                  {order.lifestyleIncluded && (
+                    <div className="flex items-center justify-between py-2">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded bg-purple-100 flex items-center justify-center">
+                          <Sparkles className="w-5 h-5 text-purple-600" />
                 </div>
+                        <div>
+                          <p className="font-medium text-sm text-[#1a1a1a]">Lifestyle Photography</p>
+                          <p className="text-xs text-neutral-500">Included in package</p>
+                        </div>
+                      </div>
+                      <span className="font-semibold text-[#1a1a1a]">${PRICES.lifestyle.flatRate}</span>
               </div>
                 )}
-                            </motion.div>
+                </div>
+                            </div>
+            )}
+          </motion.div>
                           )}
 
         {/* Step 3: Angle Selection */}
