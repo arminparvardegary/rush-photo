@@ -1,11 +1,53 @@
 "use client";
 
-import { useState } from "react";
-import { Phone, X, ArrowRight, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Phone, X, ArrowRight, Sparkles, User, LogOut, ShoppingCart } from "lucide-react";
+
+interface UserInfo {
+  id: string;
+  name: string;
+  email: string;
+  avatarUrl?: string;
+  role: string;
+}
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showPromo, setShowPromo] = useState(true);
+  const [user, setUser] = useState<UserInfo | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+
+  // Check auth status on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/auth/me");
+        if (res.ok) {
+          const data = await res.json();
+          if (data?.user) {
+            setUser(data.user);
+          }
+        }
+      } catch {
+        // Not logged in
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    checkAuth();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      setUser(null);
+      setShowUserMenu(false);
+      window.location.href = "/";
+    } catch {
+      // Error logging out
+    }
+  };
 
   return (
     <>
@@ -88,13 +130,82 @@ export default function Header() {
                 </div>
                 <span className="hidden xl:inline text-sm font-medium">973-427-9393</span>
               </a>
-              
+
+              {/* Cart Icon */}
               <a 
-                href="/login" 
-                className="px-4 py-2 text-[#1a1a1a]/70 hover:text-[#E54A4A] transition-colors font-medium text-sm"
+                href="/order" 
+                className="relative w-10 h-10 rounded-full bg-[#1a1a1a]/5 flex items-center justify-center hover:bg-[#E54A4A]/10 transition-colors group"
+                title="Start Order"
               >
-                Login
+                <ShoppingCart className="w-5 h-5 text-[#1a1a1a]/70 group-hover:text-[#E54A4A] transition-colors" />
               </a>
+              
+              {/* Auth Section */}
+              {isLoading ? (
+                <div className="w-20 h-8 bg-neutral-200 animate-pulse rounded-lg" />
+              ) : user ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setShowUserMenu(!showUserMenu)}
+                    className="flex items-center gap-3 px-3 py-2 rounded-full hover:bg-[#E54A4A]/10 transition-colors"
+                  >
+                    {user.avatarUrl ? (
+                      <img 
+                        src={user.avatarUrl} 
+                        alt={user.name}
+                        className="w-8 h-8 rounded-full object-cover ring-2 ring-[#E54A4A]/20"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#E54A4A] to-[#ff7f7f] flex items-center justify-center">
+                        <span className="text-white text-sm font-bold">
+                          {user.name?.charAt(0)?.toUpperCase() || "U"}
+                        </span>
+                      </div>
+                    )}
+                    <span className="text-sm font-medium text-[#1a1a1a] hidden xl:block">
+                      {user.name?.split(" ")[0] || "Account"}
+                    </span>
+                  </button>
+
+                  {/* User Dropdown */}
+                  {showUserMenu && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-40" 
+                        onClick={() => setShowUserMenu(false)}
+                      />
+                      <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-neutral-200 py-2 z-50">
+                        <div className="px-4 py-3 border-b border-neutral-100">
+                          <p className="font-medium text-[#1a1a1a] text-sm">{user.name}</p>
+                          <p className="text-xs text-neutral-500 truncate">{user.email}</p>
+                        </div>
+                        <a
+                          href="/admin"
+                          className="flex items-center gap-3 px-4 py-3 text-sm text-[#1a1a1a] hover:bg-[#E54A4A]/5 transition-colors"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          <User className="w-4 h-4" />
+                          Dashboard
+                        </a>
+                        <button
+                          onClick={handleLogout}
+                          className="flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors w-full text-left"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          Logout
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ) : (
+                <a 
+                  href="/login" 
+                  className="px-4 py-2 text-[#1a1a1a]/70 hover:text-[#E54A4A] transition-colors font-medium text-sm"
+                >
+                  Login
+                </a>
+              )}
               
               <a 
                 href="/order" 
@@ -151,6 +262,31 @@ export default function Header() {
           menuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}>
           <div className="flex flex-col h-full pt-24 pb-8 px-6">
+            {/* User Info (Mobile) */}
+            {user && (
+              <div className="mb-6 pb-6 border-b border-neutral-100">
+                <div className="flex items-center gap-3">
+                  {user.avatarUrl ? (
+                    <img 
+                      src={user.avatarUrl} 
+                      alt={user.name}
+                      className="w-12 h-12 rounded-full object-cover ring-2 ring-[#E54A4A]/20"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#E54A4A] to-[#ff7f7f] flex items-center justify-center">
+                      <span className="text-white text-lg font-bold">
+                        {user.name?.charAt(0)?.toUpperCase() || "U"}
+                      </span>
+                    </div>
+                  )}
+                  <div>
+                    <p className="font-bold text-[#1a1a1a]">{user.name}</p>
+                    <p className="text-sm text-neutral-500 truncate">{user.email}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Nav Links */}
             <nav className="flex-1 space-y-1">
               {[
@@ -180,19 +316,42 @@ export default function Header() {
             <div className={`space-y-3 transition-all duration-500 ${
               menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
             }`} style={{ transitionDelay: menuOpen ? '400ms' : '0ms' }}>
-              <a 
-                href="/login"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center justify-center gap-2 w-full py-3 text-[#1a1a1a] font-medium hover:text-[#E54A4A] transition-colors"
-              >
-                Login
-              </a>
+              {user ? (
+                <>
+                  <a 
+                    href="/admin"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center justify-center gap-2 w-full py-3 text-[#1a1a1a] font-medium hover:text-[#E54A4A] transition-colors"
+                  >
+                    <User className="w-5 h-5" />
+                    Dashboard
+                  </a>
+                  <button 
+                    onClick={() => {
+                      setMenuOpen(false);
+                      handleLogout();
+                    }}
+                    className="flex items-center justify-center gap-2 w-full py-3 text-red-600 font-medium hover:bg-red-50 rounded-xl transition-colors"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <a 
+                  href="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 w-full py-3 text-[#1a1a1a] font-medium hover:text-[#E54A4A] transition-colors"
+                >
+                  Login
+                </a>
+              )}
               <a 
                 href="/order"
                 onClick={() => setMenuOpen(false)}
                 className="flex items-center justify-center gap-2 w-full py-4 bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white font-bold rounded-2xl shadow-lg shadow-[#E54A4A]/25"
               >
-                <Sparkles className="w-5 h-5" />
+                <ShoppingCart className="w-5 h-5" />
                 Start Project
               </a>
               <a 
