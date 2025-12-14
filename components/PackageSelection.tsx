@@ -23,7 +23,7 @@ const DEFAULT_PRICES = {
 // Package images - Professional product photography examples
 const PACKAGE_IMAGES = {
   ecommerce: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=500&fit=crop&q=90",
-  lifestyle: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&h=500&fit=crop&q=90",
+  lifestyle: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=500&fit=crop&q=90",
   fullpackage: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&h=500&fit=crop&q=90",
 };
 
@@ -107,8 +107,8 @@ export default function PackageSelection() {
           </p>
         </motion.div>
 
-        {/* Package Cards - Bigger */}
-        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
+        {/* Package Cards - Equal Height */}
+        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
           {packages.map((pkg, index) => (
             <motion.div
               key={pkg.id}
@@ -116,17 +116,18 @@ export default function PackageSelection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
+              className="h-full"
             >
               <Link
                 href={`/order?package=${pkg.id}`}
                 onMouseEnter={() => setHoveredPackage(pkg.id)}
                 onMouseLeave={() => setHoveredPackage(null)}
-                className={`group relative block overflow-hidden rounded-3xl bg-white border-2 transition-all duration-500 ${
+                className={`group relative flex flex-col h-full overflow-hidden rounded-3xl bg-white border-2 transition-all duration-300 ${
                   hoveredPackage === pkg.id 
-                    ? "border-current shadow-2xl scale-[1.02]" 
+                    ? "shadow-2xl" 
                     : hoveredPackage 
-                      ? "opacity-50 scale-[0.98]" 
-                      : "border-neutral-200 hover:border-neutral-300 shadow-lg"
+                      ? "opacity-60" 
+                      : "border-neutral-200 hover:shadow-xl"
                 }`}
                 style={{ borderColor: hoveredPackage === pkg.id ? pkg.color : undefined }}
               >
@@ -162,12 +163,12 @@ export default function PackageSelection() {
                 </div>
 
                 {/* Content */}
-                <div className="p-6 lg:p-8">
+                <div className="p-6 lg:p-8 flex flex-col flex-grow">
                   <h3 className="text-2xl font-bold text-[#1a1a1a] mb-2">{pkg.name}</h3>
-                  <p className="text-neutral-600 mb-6">{pkg.description}</p>
+                  <p className="text-neutral-600 mb-6 min-h-[48px]">{pkg.description}</p>
 
                   {/* Features */}
-                  <div className="space-y-3 mb-6">
+                  <div className="space-y-3 mb-6 flex-grow">
                     {pkg.features.map((feature, i) => (
                       <div key={i} className="flex items-center gap-3">
                         <div 
