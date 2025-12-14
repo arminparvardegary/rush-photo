@@ -202,25 +202,44 @@ export default function OrderPage() {
     
     const packageParam = searchParams.get("package");
     if (packageParam && ["ecommerce", "lifestyle", "fullpackage"].includes(packageParam)) {
-      // Set order state directly instead of calling selectPackageType
       const type = packageParam as PackageType;
+      
+      if (type === "fullpackage") {
+        // Full package: automatically include ALL styles with ALL angles
+        const allAngles: Angle[] = ["front", "back", "left", "right"];
+        const fullCart: CartItem[] = ECOMMERCE_STYLES.map(style => ({
+          style: style.id,
+          angles: allAngles,
+          pricePerAngle: style.pricePerAngle || PRICES.ecommerce.perAngle,
+        }));
+        
       setOrder(prev => ({
         ...prev,
         packageType: type,
-        lifestyleIncluded: type === "lifestyle" || type === "fullpackage",
+          lifestyleIncluded: true,
+          cart: fullCart,
+        }));
+        setSelectedPackage(type);
+        setStep(4);
+        setCheckoutStep("information");
+      } else {
+        setOrder(prev => ({
+          ...prev,
+          packageType: type,
+          lifestyleIncluded: type === "lifestyle",
       }));
       setSelectedPackage(type);
       
       if (type === "lifestyle") {
         setStep(4);
       } else {
-        // For ecommerce and fullpackage, go to style selection
         setStep(2);
+        }
       }
       
       setHasInitialized(true);
     }
-  }, [searchParams, hasInitialized]);
+  }, [searchParams, hasInitialized, ECOMMERCE_STYLES, PRICES.ecommerce.perAngle]);
 
   // Load user data and pre-fill form (via API session), and restore checkout state after login redirects
   useEffect(() => {
@@ -324,16 +343,37 @@ export default function OrderPage() {
   };
 
   const selectPackageType = (type: PackageType) => {
+    if (type === "fullpackage") {
+      // Full package: automatically include ALL styles with ALL angles
+      const allAngles: Angle[] = ["front", "back", "left", "right"];
+      const fullCart: CartItem[] = ECOMMERCE_STYLES.map(style => ({
+        style: style.id,
+        angles: allAngles,
+        pricePerAngle: style.pricePerAngle || PRICES.ecommerce.perAngle,
+      }));
+      
     setOrder(prev => ({
       ...prev,
       packageType: type,
-      lifestyleIncluded: type === "lifestyle" || type === "fullpackage",
+        lifestyleIncluded: true,
+        cart: fullCart,
+      }));
+      setSelectedPackage(type);
+      setStep(4); // Go directly to checkout
+      setCheckoutStep("information");
+    } else {
+      setOrder(prev => ({
+        ...prev,
+        packageType: type,
+        lifestyleIncluded: type === "lifestyle",
+        cart: [], // Reset cart for other package types
     }));
     setSelectedPackage(type);
     if (type === "lifestyle") {
       setStep(4);
     } else {
       setStep(2);
+      }
     }
   };
 
