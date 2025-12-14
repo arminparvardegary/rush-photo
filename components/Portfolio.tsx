@@ -7,18 +7,22 @@ import { Reveal, Magnetic } from "./Motion";
 const categories = ["All", "Top Down", "Product", "Diagonal", "Lifestyle"];
 
 const images = [
-  { src: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&q=80", category: "Top Down", alt: "Makeup flat lay" },
-  { src: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=600&q=80", category: "Top Down", alt: "Skincare flat lay" },
-  { src: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=600&q=80", category: "Top Down", alt: "Perfume flat lay" },
-  { src: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600&q=80", category: "Product", alt: "Headphones studio" },
-  { src: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=600&q=80", category: "Product", alt: "Cosmetics studio" },
-  { src: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80", category: "Product", alt: "Bag studio" },
-  { src: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&q=80", category: "Diagonal", alt: "Sunglasses angle" },
-  { src: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=600&q=80", category: "Diagonal", alt: "Camera angle" },
-  { src: "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=600&q=80", category: "Diagonal", alt: "Perfume bottle" },
-  { src: "https://images.unsplash.com/photo-1560343090-f0409e92791a?w=600&q=80", category: "Lifestyle", alt: "Shoes lifestyle" },
-  { src: "https://images.unsplash.com/photo-1491637639811-60e2756cc1c7?w=600&q=80", category: "Lifestyle", alt: "Backpack lifestyle" },
-  { src: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=600&q=80", category: "Lifestyle", alt: "Sneakers lifestyle" },
+  // Top Down - Clean flat lay shots
+  { src: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&q=90", category: "Top Down", alt: "Skincare products flat lay" },
+  { src: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=600&q=90", category: "Top Down", alt: "Cosmetics flat lay" },
+  { src: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&q=90", category: "Top Down", alt: "Beauty products arrangement" },
+  // Product - Studio white background
+  { src: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=90", category: "Product", alt: "Watch on white background" },
+  { src: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=90", category: "Product", alt: "Headphones studio shot" },
+  { src: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=90", category: "Product", alt: "Nike sneaker product" },
+  // Diagonal - Dynamic angles
+  { src: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&q=90", category: "Diagonal", alt: "Sunglasses angled shot" },
+  { src: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=600&q=90", category: "Diagonal", alt: "Sneaker diagonal angle" },
+  { src: "https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=600&q=90", category: "Diagonal", alt: "Perfume bottle angle" },
+  // Lifestyle - In-context shots
+  { src: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&q=90", category: "Lifestyle", alt: "Coffee with products" },
+  { src: "https://images.unsplash.com/photo-1491553895911-0055uj6352d5?w=600&q=90", category: "Lifestyle", alt: "Skincare lifestyle" },
+  { src: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&q=90", category: "Lifestyle", alt: "Retail lifestyle shot" },
 ];
 
 // 3D Image Card

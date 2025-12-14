@@ -20,11 +20,11 @@ const DEFAULT_PRICES = {
   fullPackageDiscount: 10,
 };
 
-// Package images
+// Package images - Professional product photography examples
 const PACKAGE_IMAGES = {
-  ecommerce: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=600&fit=crop&q=80",
-  lifestyle: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=600&fit=crop&q=80",
-  fullpackage: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop&q=80",
+  ecommerce: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=500&fit=crop&q=90",
+  lifestyle: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=800&h=500&fit=crop&q=90",
+  fullpackage: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&h=500&fit=crop&q=90",
 };
 
 export default function PackageSelection() {

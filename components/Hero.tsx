@@ -202,8 +202,8 @@ export default function Hero() {
                       transition={{ delay: 0.3, duration: 0.8 }}
                     >
                   <img 
-                    src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&q=80" 
-                    alt="Top down flat-lay photography"
+                    src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=90" 
+                    alt="Watch product photography"
                         className="w-full h-full object-cover"
                   />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#E54A4A]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -218,8 +218,8 @@ export default function Hero() {
                       transition={{ delay: 0.5, duration: 0.8 }}
                     >
                   <img 
-                    src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&q=80" 
-                    alt="Product studio photography"
+                    src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=90" 
+                    alt="Sneaker product photography"
                         className="w-full h-full object-cover"
                   />
                     </motion.div>
@@ -235,8 +235,8 @@ export default function Hero() {
                       transition={{ delay: 0.4, duration: 0.8 }}
                     >
                   <img 
-                    src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&q=80" 
-                    alt="Diagonal product photography"
+                    src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=90" 
+                    alt="Headphones product photography"
                         className="w-full h-full object-cover"
                   />
                     </motion.div>
@@ -250,8 +250,8 @@ export default function Hero() {
                       transition={{ delay: 0.6, duration: 0.8 }}
                     >
                   <img 
-                    src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=600&q=80" 
-                    alt="Lifestyle product photography"
+                    src="https://images.unsplash.com/photo-1491553895911-0055uj6352d5?w=600&q=90" 
+                    alt="Skincare product photography"
                         className="w-full h-full object-cover"
                   />
                     </motion.div>
