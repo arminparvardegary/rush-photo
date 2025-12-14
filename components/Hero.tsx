@@ -204,7 +204,7 @@ export default function Hero() {
                   <img 
                     src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&q=80" 
                     alt="Top down flat-lay photography"
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        className="w-full h-full object-cover"
                   />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#E54A4A]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     </motion.div>
@@ -220,7 +220,7 @@ export default function Hero() {
                   <img 
                     src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400&q=80" 
                     alt="Product studio photography"
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        className="w-full h-full object-cover"
                   />
                     </motion.div>
                   </TiltCard>
@@ -237,7 +237,7 @@ export default function Hero() {
                   <img 
                     src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&q=80" 
                     alt="Diagonal product photography"
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        className="w-full h-full object-cover"
                   />
                     </motion.div>
                   </TiltCard>
@@ -252,7 +252,7 @@ export default function Hero() {
                   <img 
                     src="https://images.unsplash.com/photo-1560343090-f0409e92791a?w=600&q=80" 
                     alt="Lifestyle product photography"
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        className="w-full h-full object-cover"
                   />
                     </motion.div>
                   </TiltCard>

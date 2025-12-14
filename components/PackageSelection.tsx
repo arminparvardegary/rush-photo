@@ -78,7 +78,7 @@ export default function PackageSelection() {
               <img
                 src={PACKAGE_IMAGES.ecommerce}
                 alt="E-commerce Photography"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full object-cover"
               />
             </div>
             <div className="p-5">
@@ -111,7 +111,7 @@ export default function PackageSelection() {
               <img
                 src={PACKAGE_IMAGES.lifestyle}
                 alt="Lifestyle Photography"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full object-cover"
               />
             </div>
             <div className="p-5">
@@ -148,7 +148,7 @@ export default function PackageSelection() {
               <img
                 src={PACKAGE_IMAGES.fullpackage}
                 alt="Full Package Photography"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full object-cover"
               />
             </div>
             <div className="p-5">

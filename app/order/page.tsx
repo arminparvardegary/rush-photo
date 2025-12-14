@@ -716,7 +716,7 @@ export default function OrderPage() {
                   <img
                     src={PACKAGE_IMAGES.ecommerce}
                     alt="E-commerce Photography"
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                   
@@ -749,7 +749,7 @@ export default function OrderPage() {
                   <img
                     src={PACKAGE_IMAGES.lifestyle}
                     alt="Lifestyle Photography"
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-purple-900/90 via-purple-900/40 to-transparent" />
                   
@@ -786,7 +786,7 @@ export default function OrderPage() {
                   <img
                     src={PACKAGE_IMAGES.fullpackage}
                     alt="Full Package Photography"
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-amber-900/90 via-amber-900/40 to-transparent" />
                   
@@ -941,7 +941,7 @@ export default function OrderPage() {
                           <img
                             src={style.image}
                             alt={style.name}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            className="w-full h-full object-cover"
                             />
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/60 hidden md:block" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent md:hidden" />
