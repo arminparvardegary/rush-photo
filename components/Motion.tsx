@@ -374,7 +374,7 @@ export function CursorFollower() {
   return (
     <>
       <motion.div
-        className="fixed top-0 left-0 w-4 h-4 bg-[#E54A4A] rounded-full pointer-events-none z-[9999] mix-blend-difference hidden lg:block"
+        className="fixed top-0 left-0 w-4 h-4 bg-honey rounded-full pointer-events-none z-[9999] mix-blend-difference hidden lg:block"
         animate={{
           x: mousePos.x - 8,
           y: mousePos.y - 8,
@@ -387,7 +387,7 @@ export function CursorFollower() {
         }}
       />
       <motion.div
-        className="fixed top-0 left-0 w-10 h-10 border-2 border-[#E54A4A]/50 rounded-full pointer-events-none z-[9998] hidden lg:block"
+        className="fixed top-0 left-0 w-10 h-10 border-2 border-honey/50 rounded-full pointer-events-none z-[9998] hidden lg:block"
         animate={{
           x: mousePos.x - 20,
           y: mousePos.y - 20,
@@ -421,7 +421,7 @@ export function ParticleBackground() {
       {particles.map((particle) => (
         <motion.div
           key={particle.id}
-          className="absolute rounded-full bg-[#E54A4A]/20"
+          className="absolute rounded-full bg-honey/20"
           style={{
             left: `${particle.x}%`,
             top: `${particle.y}%`,
@@ -477,7 +477,7 @@ export function ScrollProgress() {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] origin-left z-50"
+      className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-honey to-honey-light origin-left z-50"
       style={{ scaleX }}
     />
   );

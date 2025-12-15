@@ -3,14 +3,16 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { 
+import {
   ArrowRight,
   Camera,
   Sparkles,
   Package,
-  Star,
   Check,
-  Zap
+  Star,
+  Clock,
+  Shield,
+  Zap,
 } from "lucide-react";
 
 // Default Pricing
@@ -20,11 +22,14 @@ const DEFAULT_PRICES = {
   fullPackageDiscount: 10,
 };
 
-// Package images - Professional product photography examples
+// Package images
 const PACKAGE_IMAGES = {
-  ecommerce: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=500&fit=crop&q=90",
-  lifestyle: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=500&fit=crop&q=90",
-  fullpackage: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&h=500&fit=crop&q=90",
+  ecommerce:
+    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=600&fit=crop&q=90",
+  lifestyle:
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop&q=90",
+  fullpackage:
+    "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&h=600&fit=crop&q=90",
 };
 
 export default function PackageSelection() {
@@ -56,174 +61,223 @@ export default function PackageSelection() {
       id: "ecommerce",
       name: "E-commerce",
       icon: Camera,
-      color: "#E54A4A",
+      accentColor: "honey",
       description: "Clean product shots on white background",
-      price: `From $${prices.ecommerce.perAngle}/angle`,
+      price: `$${prices.ecommerce.perAngle}`,
+      priceLabel: "per angle",
       image: PACKAGE_IMAGES.ecommerce,
-      features: ["White background", "Multiple angles", "High resolution", "Fast delivery"],
+      features: [
+        "White background shots",
+        "Multiple angles available",
+        "High-res files",
+        "2 revisions included",
+      ],
     },
     {
       id: "lifestyle",
       name: "Lifestyle",
       icon: Sparkles,
-      color: "#8B5CF6",
+      accentColor: "teal",
       description: "Styled scenes with props and creative direction",
-      price: `$${prices.lifestyle.flatRate} flat rate`,
+      price: `$${prices.lifestyle.flatRate}`,
+      priceLabel: "flat rate",
       image: PACKAGE_IMAGES.lifestyle,
-      features: ["Creative styling", "Props included", "Brand storytelling", "Social ready"],
+      features: [
+        "Creative styling",
+        "Props included",
+        "Brand storytelling",
+        "Social-ready formats",
+      ],
     },
     {
       id: "fullpackage",
       name: "Full Package",
       icon: Package,
-      color: "#F59E0B",
-      description: `E-commerce + Lifestyle with ${prices.fullPackageDiscount}% discount`,
+      accentColor: "honey",
+      description: `Everything included with ${prices.fullPackageDiscount}% discount`,
       price: "Best Value",
+      priceLabel: "",
       image: PACKAGE_IMAGES.fullpackage,
-      features: ["All styles included", `${prices.fullPackageDiscount}% savings`, "Priority support", "Unlimited revisions"],
+      features: [
+        "All e-commerce styles",
+        "Lifestyle included",
+        `${prices.fullPackageDiscount}% bundle savings`,
+        "Unlimited revisions",
+      ],
       badge: `SAVE ${prices.fullPackageDiscount}%`,
+      featured: true,
     },
   ];
 
   return (
-    <section id="pricing" className="py-24 lg:py-32 bg-gradient-to-b from-white to-[#FAFAFA]">
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+    <section id="pricing" className="relative py-32 bg-ink overflow-hidden">
+      {/* Background effects */}
+      <div className="absolute inset-0 bg-radial-glow-bottom" />
+      <div className="absolute inset-0 bg-grid-subtle opacity-50" />
+
+      <div className="container relative z-10">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          transition={{ duration: 0.6 }}
+          className="text-center mb-20"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#E54A4A]/10 rounded-full mb-6">
-            <Zap className="w-4 h-4 text-[#E54A4A]" />
-            <span className="text-sm font-semibold text-[#E54A4A]">Start Your Project</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-honey/10 border border-honey/20 mb-6">
+            <Zap className="w-4 h-4 text-honey" />
+            <span className="text-sm font-medium text-honey">Simple Pricing</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#1a1a1a] mb-6">
-            Choose Your Package
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-cloud mb-6">
+            Choose your <span className="text-gradient font-serif italic">package</span>
           </h2>
-          <p className="text-lg sm:text-xl text-neutral-600 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-mist max-w-2xl mx-auto">
             Professional product photography that converts. Pick the style that fits your brand.
           </p>
         </motion.div>
 
-        {/* Package Cards - Equal Height */}
-        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
-          {packages.map((pkg, index) => (
-            <motion.div
-              key={pkg.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="h-full"
-            >
-              <Link
-                href={`/order?package=${pkg.id}`}
-                onMouseEnter={() => setHoveredPackage(pkg.id)}
-                onMouseLeave={() => setHoveredPackage(null)}
-                className={`group relative flex flex-col h-full overflow-hidden rounded-3xl bg-white border-2 transition-all duration-300 ${
-                  hoveredPackage === pkg.id 
-                    ? "shadow-2xl" 
-                    : hoveredPackage 
-                      ? "opacity-60" 
-                      : "border-neutral-200 hover:shadow-xl"
-                }`}
-                style={{ borderColor: hoveredPackage === pkg.id ? pkg.color : undefined }}
+        {/* Package Cards */}
+        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
+          {packages.map((pkg, index) => {
+            const isHovered = hoveredPackage === pkg.id;
+            const isFaded = hoveredPackage !== null && !isHovered;
+
+            return (
+              <motion.div
+                key={pkg.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="h-full"
               >
-                {/* Badge */}
-                {pkg.badge && (
-                  <div 
-                    className="absolute top-4 right-4 z-10 px-3 py-1.5 rounded-full text-white text-xs font-bold flex items-center gap-1.5 shadow-lg"
-                    style={{ backgroundColor: pkg.color }}
-                  >
-                    <Star className="w-3.5 h-3.5" />
-                    {pkg.badge}
-                  </div>
-                )}
-
-                {/* Image */}
-                <div className="aspect-[16/10] relative overflow-hidden">
-                  <img
-                    src={pkg.image}
-                    alt={pkg.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                  
-                  {/* Overlay Icon */}
-                  <div className="absolute bottom-4 left-4">
-                    <div 
-                      className="w-12 h-12 rounded-2xl flex items-center justify-center backdrop-blur-md"
-                      style={{ backgroundColor: `${pkg.color}20` }}
-                    >
-                      <pkg.icon className="w-6 h-6" style={{ color: pkg.color }} />
+                <Link
+                  href={`/order?package=${pkg.id}`}
+                  onMouseEnter={() => setHoveredPackage(pkg.id)}
+                  onMouseLeave={() => setHoveredPackage(null)}
+                  className={`group relative flex flex-col h-full overflow-hidden rounded-3xl transition-all duration-500 ${
+                    pkg.featured
+                      ? "bg-gradient-to-b from-charcoal to-graphite ring-2 ring-honey/30"
+                      : "bg-charcoal"
+                  } ${isFaded ? "opacity-50 scale-[0.98]" : ""} ${
+                    isHovered ? "scale-[1.02] shadow-2xl shadow-black/50" : ""
+                  }`}
+                >
+                  {/* Badge */}
+                  {pkg.badge && (
+                    <div className="absolute top-4 right-4 z-10 px-3 py-1.5 rounded-full bg-honey text-ink text-xs font-bold flex items-center gap-1.5 shadow-lg">
+                      <Star className="w-3.5 h-3.5" />
+                      {pkg.badge}
                     </div>
-                  </div>
-                </div>
+                  )}
 
-                {/* Content */}
-                <div className="p-6 lg:p-8 flex flex-col flex-grow">
-                  <h3 className="text-2xl font-bold text-[#1a1a1a] mb-2">{pkg.name}</h3>
-                  <p className="text-neutral-600 mb-6 min-h-[48px]">{pkg.description}</p>
+                  {/* Image */}
+                  <div className="aspect-[4/3] relative overflow-hidden">
+                    <img
+                      src={pkg.image}
+                      alt={pkg.name}
+                      className={`w-full h-full object-cover transition-all duration-700 ${
+                        isHovered ? "scale-110" : "scale-100"
+                      }`}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/50 to-transparent" />
 
-                  {/* Features */}
-                  <div className="space-y-3 mb-6 flex-grow">
-                    {pkg.features.map((feature, i) => (
-                      <div key={i} className="flex items-center gap-3">
-                        <div 
-                          className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                          style={{ backgroundColor: `${pkg.color}15` }}
-                        >
-                          <Check className="w-3 h-3" style={{ color: pkg.color }} />
-                        </div>
-                        <span className="text-sm text-neutral-700">{feature}</span>
+                    {/* Icon overlay */}
+                    <div className="absolute bottom-4 left-4">
+                      <div
+                        className={`w-14 h-14 rounded-2xl flex items-center justify-center backdrop-blur-md border transition-colors ${
+                          pkg.accentColor === "teal"
+                            ? "bg-teal/20 border-teal/30"
+                            : "bg-honey/20 border-honey/30"
+                        }`}
+                      >
+                        <pkg.icon
+                          className={`w-7 h-7 ${
+                            pkg.accentColor === "teal" ? "text-teal" : "text-honey"
+                          }`}
+                        />
                       </div>
-                    ))}
-                  </div>
-
-                  {/* Price & CTA */}
-                  <div className="flex items-center justify-between pt-6 border-t border-neutral-100">
-                    <span className="text-xl font-bold" style={{ color: pkg.color }}>
-                      {pkg.price}
-                    </span>
-                    <div 
-                      className="flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm transition-all group-hover:gap-3"
-                      style={{ 
-                        backgroundColor: hoveredPackage === pkg.id ? pkg.color : `${pkg.color}10`,
-                        color: hoveredPackage === pkg.id ? 'white' : pkg.color
-                      }}
-                    >
-                      Get Started
-                      <ArrowRight className="w-4 h-4" />
                     </div>
                   </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+
+                  {/* Content */}
+                  <div className="p-6 lg:p-8 flex flex-col flex-grow">
+                    <h3 className="text-2xl font-bold text-cloud mb-2">{pkg.name}</h3>
+                    <p className="text-mist mb-6">{pkg.description}</p>
+
+                    {/* Features */}
+                    <div className="space-y-3 mb-8 flex-grow">
+                      {pkg.features.map((feature, i) => (
+                        <div key={i} className="flex items-center gap-3">
+                          <div
+                            className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
+                              pkg.accentColor === "teal" ? "bg-teal/20" : "bg-honey/20"
+                            }`}
+                          >
+                            <Check
+                              className={`w-3 h-3 ${
+                                pkg.accentColor === "teal" ? "text-teal" : "text-honey"
+                              }`}
+                              strokeWidth={3}
+                            />
+                          </div>
+                          <span className="text-sm text-cloud/80">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Price & CTA */}
+                    <div className="flex items-center justify-between pt-6 border-t border-white/10">
+                      <div>
+                        <span
+                          className={`text-2xl font-bold ${
+                            pkg.accentColor === "teal" ? "text-teal" : "text-honey"
+                          }`}
+                        >
+                          {pkg.price}
+                        </span>
+                        {pkg.priceLabel && (
+                          <span className="text-sm text-smoke ml-1">{pkg.priceLabel}</span>
+                        )}
+                      </div>
+                      <div
+                        className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm transition-all group-hover:gap-3 ${
+                          isHovered
+                            ? pkg.accentColor === "teal"
+                              ? "bg-teal text-ink"
+                              : "bg-honey text-ink"
+                            : "bg-white/10 text-cloud"
+                        }`}
+                      >
+                        Get Started
+                        <ArrowRight className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
 
         {/* Trust Badges */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          className="mt-16 flex flex-wrap items-center justify-center gap-8 text-neutral-500"
+          transition={{ delay: 0.4 }}
+          className="mt-20 flex flex-wrap items-center justify-center gap-8 lg:gap-12"
         >
-          <div className="flex items-center gap-2">
-            <Check className="w-5 h-5 text-green-500" />
-            <span className="text-sm">100% Satisfaction Guarantee</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Zap className="w-5 h-5 text-amber-500" />
-            <span className="text-sm">3-5 Day Delivery</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Star className="w-5 h-5 text-[#E54A4A]" />
-            <span className="text-sm">500+ Happy Brands</span>
-          </div>
+          {[
+            { icon: Shield, label: "100% Satisfaction Guarantee", color: "text-teal" },
+            { icon: Clock, label: "3-5 Day Delivery", color: "text-honey" },
+            { icon: Star, label: "500+ Happy Brands", color: "text-honey" },
+          ].map((item) => (
+            <div key={item.label} className="flex items-center gap-3">
+              <item.icon className={`w-5 h-5 ${item.color}`} />
+              <span className="text-sm text-mist">{item.label}</span>
+            </div>
+          ))}
         </motion.div>
       </div>
     </section>

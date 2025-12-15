@@ -31,17 +31,17 @@ export function useToast() {
 }
 
 const icons: Record<ToastType, ReactNode> = {
-  success: <CheckCircle className="w-5 h-5 text-green-500" />,
-  error: <XCircle className="w-5 h-5 text-red-500" />,
-  warning: <AlertCircle className="w-5 h-5 text-amber-500" />,
-  info: <Info className="w-5 h-5 text-blue-500" />,
+  success: <CheckCircle className="w-5 h-5 text-teal" />,
+  error: <XCircle className="w-5 h-5 text-red-400" />,
+  warning: <AlertCircle className="w-5 h-5 text-honey" />,
+  info: <Info className="w-5 h-5 text-blue-400" />,
 };
 
 const colors: Record<ToastType, string> = {
-  success: "border-green-200 bg-green-50",
-  error: "border-red-200 bg-red-50",
-  warning: "border-amber-200 bg-amber-50",
-  info: "border-blue-200 bg-blue-50",
+  success: "border-teal/30 bg-teal/10",
+  error: "border-red-500/30 bg-red-500/10",
+  warning: "border-honey/30 bg-honey/10",
+  info: "border-blue-500/30 bg-blue-500/10",
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
@@ -89,10 +89,10 @@ function ToastContainer() {
             )}
           >
             {icons[toast.type]}
-            <p className="flex-1 text-sm text-neutral-800">{toast.message}</p>
+            <p className="flex-1 text-sm text-white">{toast.message}</p>
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-neutral-400 hover:text-neutral-600 transition-colors"
+              className="text-white/40 hover:text-white transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -102,4 +102,3 @@ function ToastContainer() {
     </div>
   );
 }
-

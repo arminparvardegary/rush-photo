@@ -97,13 +97,13 @@ export const metadata: Metadata = {
   
   // Other
   other: {
-    "msapplication-TileColor": "#E54A4A",
-    "theme-color": "#E54A4A",
+    "msapplication-TileColor": "#f5a623",
+    "theme-color": "#0d0d0d",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#E54A4A",
+  themeColor: "#0d0d0d",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -374,6 +374,9 @@ const jsonLd = {
   ],
 };
 
+import ScrollToTop from "@/components/ScrollToTop";
+import MobileBottomNav from "@/components/MobileBottomNav";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -398,6 +401,8 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         {children}
+        <ScrollToTop />
+        <MobileBottomNav />
       </body>
     </html>
   );

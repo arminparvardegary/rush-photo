@@ -10,7 +10,7 @@ export function Skeleton({ className }: SkeletonProps) {
   return (
     <div
       className={cn(
-        "animate-pulse rounded-xl bg-gradient-to-r from-neutral-200 via-neutral-100 to-neutral-200 bg-[length:200%_100%]",
+        "animate-pulse rounded-xl bg-gradient-to-r from-white/10 via-white/5 to-white/10 bg-[length:200%_100%]",
         className
       )}
     />
@@ -19,7 +19,7 @@ export function Skeleton({ className }: SkeletonProps) {
 
 export function CardSkeleton() {
   return (
-    <div className="rounded-3xl border border-neutral-200 bg-white p-6 space-y-4">
+    <div className="rounded-3xl border border-white/10 bg-[#1a1a1a] p-6 space-y-4">
       <Skeleton className="h-48 w-full rounded-2xl" />
       <Skeleton className="h-6 w-3/4" />
       <Skeleton className="h-4 w-1/2" />
@@ -53,4 +53,3 @@ export function FormSkeleton() {
     </div>
   );
 }
-

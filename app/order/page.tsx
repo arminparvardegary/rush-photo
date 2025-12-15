@@ -620,33 +620,36 @@ export default function OrderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFF8F0] via-white to-[#fff0f0]">
+    <div className="min-h-screen bg-[#0d0d0d] relative">
+      {/* Background effects */}
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(245,166,35,0.08),transparent_50%)] pointer-events-none" />
+      <div className="fixed inset-0 bg-grid opacity-30 pointer-events-none" />
       {/* Global Progress Bar */}
       <StepProgress currentStep={getWizardProgress()} totalSteps={6} />
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-[#1a1a1a]/5 shadow-sm pt-1">
+      <header className="sticky top-0 z-50 bg-[#1a1a1a]/90 backdrop-blur-xl border-b border-white/10 shadow-sm pt-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#E54A4A] to-[#ff7f7f] flex items-center justify-center shadow-lg shadow-[#E54A4A]/20">
-                <Camera className="w-6 h-6 text-white" />
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-honey to-honey/80 flex items-center justify-center shadow-lg shadow-honey/20">
+                <Camera className="w-6 h-6 text-black" />
             </div>
-              <span className="font-bold text-xl text-[#1a1a1a]">Rush Photos</span>
+              <span className="font-bold text-xl text-white">Rush Photos</span>
           </Link>
           
               {step > 1 && step < 5 && (
               <div className="relative">
                 <button 
                   onClick={() => setShowMiniCart(!showMiniCart)}
-                  className="flex items-center gap-3 px-5 py-2.5 bg-white border-2 border-[#1a1a1a]/10 hover:border-[#E54A4A] rounded-full transition-all group"
+                  className="flex items-center gap-3 px-5 py-2.5 bg-[#1a1a1a] border-2 border-white/10 hover:border-honey rounded-full transition-all group"
                 >
-                  <ShoppingCart className="w-5 h-5 text-[#1a1a1a]/70 group-hover:text-[#E54A4A] transition-colors" />
-                  <span className="text-base font-semibold text-[#1a1a1a]">
+                  <ShoppingCart className="w-5 h-5 text-white/70 group-hover:text-honey transition-colors" />
+                  <span className="text-base font-semibold text-white">
                   ${calculateTotal()}
                     </span>
                   {getTotalItems() > 0 && (
-                    <span className="absolute -top-2 -right-2 w-6 h-6 bg-[#E54A4A] text-white text-xs font-bold rounded-full flex items-center justify-center">
+                    <span className="absolute -top-2 -right-2 w-6 h-6 bg-honey text-black text-xs font-bold rounded-full flex items-center justify-center">
                       {getTotalItems()}
                     </span>
                   )}
@@ -654,16 +657,16 @@ export default function OrderPage() {
 
                 {/* Mini Cart Dropdown */}
                 {showMiniCart && getTotalItems() > 0 && (
-                  <div className="absolute right-0 top-full mt-3 w-80 bg-white rounded-2xl shadow-2xl border border-[#1a1a1a]/10 overflow-hidden z-50">
-                    <div className="p-4 border-b border-[#1a1a1a]/5 bg-gradient-to-r from-[#E54A4A]/5 to-transparent">
-                      <h3 className="font-bold text-[#1a1a1a] flex items-center gap-2">
+                  <div className="absolute right-0 top-full mt-3 w-80 bg-[#1a1a1a] rounded-2xl shadow-2xl border border-white/10 overflow-hidden z-50">
+                    <div className="p-4 border-b border-white/10 bg-gradient-to-r from-honey/10 to-transparent">
+                      <h3 className="font-bold text-white flex items-center gap-2">
                         <ShoppingCart className="w-4 h-4" />
                         Your Cart
                       </h3>
                     </div>
                     <div className="max-h-60 overflow-y-auto">
                       {order.cart.map((item) => (
-                        <div key={item.style} className="flex items-center justify-between p-4 hover:bg-[#f5f5f5] transition-colors">
+                        <div key={item.style} className="flex items-center justify-between p-4 hover:bg-[#1a1a1a]/5 transition-colors">
                           <div className="flex items-center gap-3">
                             <img
                               src={ECOMMERCE_STYLES.find(s => s.id === item.style)?.image}
@@ -671,32 +674,32 @@ export default function OrderPage() {
                               className="w-12 h-12 rounded-lg object-cover"
                             />
                             <div>
-                              <p className="font-medium text-[#1a1a1a] text-sm">{getStyleName(item.style)}</p>
-                              <p className="text-xs text-[#1a1a1a]/50">{item.angles.length} angles</p>
+                              <p className="font-medium text-white text-sm">{getStyleName(item.style)}</p>
+                              <p className="text-xs text-white/50">{item.angles.length} angles</p>
                             </div>
                           </div>
-                          <span className="font-semibold text-[#1a1a1a]">${item.angles.length * item.pricePerAngle}</span>
+                          <span className="font-semibold text-honey">${item.angles.length * item.pricePerAngle}</span>
                         </div>
                       ))}
                       {order.lifestyleIncluded && (
-                        <div className="flex items-center justify-between p-4 hover:bg-[#f5f5f5] transition-colors">
+                        <div className="flex items-center justify-between p-4 hover:bg-[#1a1a1a]/5 transition-colors">
                           <div className="flex items-center gap-3">
                             <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
                               <Sparkles className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                              <p className="font-medium text-[#1a1a1a] text-sm">Lifestyle</p>
-                              <p className="text-xs text-[#1a1a1a]/50">Styled shoot</p>
+                              <p className="font-medium text-white text-sm">Lifestyle</p>
+                              <p className="text-xs text-white/50">Styled shoot</p>
                             </div>
                           </div>
-                          <span className="font-semibold text-[#1a1a1a]">${PRICES.lifestyle.flatRate}</span>
+                          <span className="font-semibold text-honey">${PRICES.lifestyle.flatRate}</span>
                         </div>
                       )}
                     </div>
-                    <div className="p-4 border-t border-[#1a1a1a]/5 bg-[#f9f9f9]">
+                    <div className="p-4 border-t border-white/10 bg-[#0d0d0d]">
                       <div className="flex justify-between items-center mb-3">
-                        <span className="text-[#1a1a1a]/60">Total</span>
-                        <span className="text-xl font-bold text-[#1a1a1a]">${calculateTotal()}</span>
+                        <span className="text-white/60">Total</span>
+                        <span className="text-xl font-bold text-honey">${calculateTotal()}</span>
                       </div>
                       <button 
                         onClick={() => {
@@ -704,7 +707,7 @@ export default function OrderPage() {
                           setStep(4);
                           setCheckoutStep("information");
                         }}
-                        className="w-full py-3 bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+                        className="w-full py-3 bg-gradient-to-r from-honey to-honey/80 text-black font-semibold rounded-xl hover:shadow-lg transition-all"
                       >
                         Checkout
                       </button>
@@ -730,14 +733,14 @@ export default function OrderPage() {
             className="py-10 sm:py-20"
           >
             <div className="text-center mb-12 sm:mb-16">
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#E54A4A]/10 text-[#E54A4A] font-medium text-sm mb-6">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-honey/10 text-honey font-medium text-sm mb-6">
                 <Zap className="w-4 h-4" />
                 Professional Product Photography
               </span>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-[#1a1a1a] mb-6">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6">
                 Choose Your Package
                   </h1>
-              <p className="text-lg sm:text-xl text-[#1a1a1a]/60 max-w-2xl mx-auto">
+              <p className="text-lg sm:text-xl text-white/60 max-w-2xl mx-auto">
                 Select the type of photography that best fits your brand and product needs
                   </p>
                 </div>
@@ -748,7 +751,7 @@ export default function OrderPage() {
                 onClick={() => selectPackageType("ecommerce")}
                 className={`group relative overflow-hidden rounded-3xl transition-all duration-500 ${
                   selectedPackage === "ecommerce" 
-                    ? "ring-4 ring-[#E54A4A] scale-[1.02]" 
+                    ? "ring-4 ring-honey scale-[1.02]" 
                     : selectedPackage ? "opacity-40 blur-[2px]" : "hover:scale-[1.02]"
                 }`}
               >
@@ -761,7 +764,7 @@ export default function OrderPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                   
                   <div className="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end text-left">
-                    <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-4 border border-white/30">
+                    <div className="w-14 h-14 rounded-2xl bg-[#1a1a1a]/20 backdrop-blur-md flex items-center justify-center mb-4 border border-white/30">
                       <Camera className="w-7 h-7 text-white" />
                         </div>
                     <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">E-commerce</h3>
@@ -794,7 +797,7 @@ export default function OrderPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-purple-900/90 via-purple-900/40 to-transparent" />
                   
                   <div className="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end text-left">
-                    <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-4 border border-white/30">
+                    <div className="w-14 h-14 rounded-2xl bg-[#1a1a1a]/20 backdrop-blur-md flex items-center justify-center mb-4 border border-white/30">
                   <Sparkles className="w-7 h-7 text-white" />
                       </div>
                     <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">Lifestyle</h3>
@@ -831,7 +834,7 @@ export default function OrderPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-amber-900/90 via-amber-900/40 to-transparent" />
                   
                   <div className="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end text-left">
-                    <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-4 border border-white/30">
+                    <div className="w-14 h-14 rounded-2xl bg-[#1a1a1a]/20 backdrop-blur-md flex items-center justify-center mb-4 border border-white/30">
                       <Package className="w-7 h-7 text-white" />
                     </div>
                     <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">Full Package</h3>
@@ -848,7 +851,7 @@ export default function OrderPage() {
                 </div>
 
             {/* Trust Badges */}
-            <div className="mt-16 flex flex-wrap items-center justify-center gap-8 text-[#1a1a1a]/50">
+            <div className="mt-16 flex flex-wrap items-center justify-center gap-8 text-white/50">
               <div className="flex items-center gap-2">
                 <Shield className="w-5 h-5" />
                 <span className="text-sm">Satisfaction Guaranteed</span>
@@ -878,7 +881,7 @@ export default function OrderPage() {
             {/* Back Button */}
                   <button
               onClick={() => { setStep(1); setSelectedPackage(null); }}
-              className="flex items-center gap-2 text-neutral-500 hover:text-[#E54A4A] transition-colors mb-6 text-sm"
+              className="flex items-center gap-2 text-white/500 hover:text-honey transition-colors mb-6 text-sm"
             >
               <ArrowLeft className="w-4 h-4" />
                     Back to packages
@@ -886,10 +889,10 @@ export default function OrderPage() {
 
             {/* Header */}
             <div className="mb-8">
-              <h1 className="text-2xl font-bold text-[#1a1a1a] mb-2">
+              <h1 className="text-2xl font-bold text-white mb-2">
                 {order.packageType === "fullpackage" ? "Build Your Full Package" : "Select Photography Style"}
               </h1>
-              <p className="text-neutral-500">
+              <p className="text-white/500">
                 {order.packageType === "fullpackage" 
                   ? "Choose styles and angles for your complete package"
                   : "Pick a style and add angles to your cart"
@@ -906,8 +909,8 @@ export default function OrderPage() {
                       <Package className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <p className="font-semibold text-[#1a1a1a]">Full Package Deal</p>
-                      <p className="text-sm text-neutral-600">E-commerce + Lifestyle included</p>
+                      <p className="font-semibold text-white">Full Package Deal</p>
+                      <p className="text-sm text-white/600">E-commerce + Lifestyle included</p>
                   </div>
                 </div>
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
@@ -943,7 +946,7 @@ export default function OrderPage() {
                       <span className="text-xl font-bold">${calculateTotal()}</span>
                         <button
                         onClick={() => { setStep(4); setCheckoutStep("information"); }}
-                        className="px-5 py-2.5 bg-[#E54A4A] text-white font-semibold rounded-lg hover:bg-[#d43d3d] transition-colors flex items-center gap-2"
+                        className="px-5 py-2.5 bg-honey text-white font-semibold rounded-lg hover:bg-[#d43d3d] transition-colors flex items-center gap-2"
                       >
                         Checkout <ArrowRight className="w-4 h-4" />
                         </button>
@@ -962,27 +965,27 @@ export default function OrderPage() {
                 const stylePrice = style.pricePerAngle || PRICES.ecommerce.perAngle;
                 
                     return (
-                  <div key={style.id} className="bg-white rounded-xl border border-neutral-200 overflow-hidden transition-all hover:border-neutral-300">
+                  <div key={style.id} className="bg-[#1a1a1a] rounded-xl border border-white/200 overflow-hidden transition-all hover:border-white/300">
                     {/* Style Header - Clickable */}
                     <button
                         onClick={() => selectStyle(style.id)}
-                      className="w-full p-4 flex items-center gap-4 text-left hover:bg-neutral-50 transition-colors"
+                      className="w-full p-4 flex items-center gap-4 text-left hover:bg-white/5 transition-colors"
                     >
                       <img src={style.image} alt={style.name} className="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <h3 className="font-semibold text-[#1a1a1a]">{style.name}</h3>
+                          <h3 className="font-semibold text-white">{style.name}</h3>
                           {inCart && (
                             <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full">
                               {inCart.angles.length} angles
                               </span>
                             )}
                             </div>
-                        <p className="text-sm text-neutral-500 truncate">{style.description}</p>
+                        <p className="text-sm text-white/500 truncate">{style.description}</p>
                           </div>
                       <div className="flex items-center gap-3 flex-shrink-0">
-                        <span className="text-[#E54A4A] font-bold">${stylePrice}/angle</span>
-                        <ChevronDown className={`w-5 h-5 text-neutral-400 transition-transform ${isSelected ? 'rotate-180' : ''}`} />
+                        <span className="text-honey font-bold">${stylePrice}/angle</span>
+                        <ChevronDown className={`w-5 h-5 text-white/400 transition-transform ${isSelected ? 'rotate-180' : ''}`} />
                       </div>
                     </button>
 
@@ -994,10 +997,10 @@ export default function OrderPage() {
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="border-t border-neutral-100 overflow-hidden"
+                        className="border-t border-white/100 overflow-hidden"
                       >
-                        <div className="p-4 bg-neutral-50">
-                          <p className="text-sm font-medium text-neutral-700 mb-3">Select angles:</p>
+                        <div className="p-4 bg-white/5">
+                          <p className="text-sm font-medium text-white/700 mb-3">Select angles:</p>
                           <div className="grid grid-cols-4 gap-2 mb-4">
                             {ANGLES.map((angle) => {
                               const isAngleSelected = selectedAngles.includes(angle.id);
@@ -1006,13 +1009,13 @@ export default function OrderPage() {
                                   key={angle.id}
                                   onClick={(e) => { e.stopPropagation(); toggleAngle(angle.id); }}
                                   className={`relative aspect-square rounded-lg overflow-hidden transition-all ${
-                                    isAngleSelected ? 'ring-2 ring-[#E54A4A]' : 'hover:opacity-80'
+                                    isAngleSelected ? 'ring-2 ring-honey' : 'hover:opacity-80'
                                   }`}
                                 >
                                   <img src={angle.image} alt={angle.name} className="w-full h-full object-cover" />
-                                  <div className={`absolute inset-0 ${isAngleSelected ? 'bg-[#E54A4A]/30' : 'bg-black/30'}`} />
+                                  <div className={`absolute inset-0 ${isAngleSelected ? 'bg-honey/30' : 'bg-black/30'}`} />
                                   {isAngleSelected && (
-                                    <div className="absolute top-1 right-1 w-5 h-5 bg-[#E54A4A] rounded-full flex items-center justify-center">
+                                    <div className="absolute top-1 right-1 w-5 h-5 bg-honey rounded-full flex items-center justify-center">
                                       <Check className="w-3 h-3 text-white" strokeWidth={3} />
                                   </div>
                                   )}
@@ -1025,16 +1028,16 @@ export default function OrderPage() {
                           {/* Add Button */}
                           <div className="flex items-center justify-between">
                             <div>
-                              <span className="text-sm text-neutral-500">{selectedAngles.length} selected = </span>
-                              <span className="font-bold text-[#1a1a1a]">${selectedAngles.length * stylePrice}</span>
+                              <span className="text-sm text-white/500">{selectedAngles.length} selected = </span>
+                              <span className="font-bold text-white">${selectedAngles.length * stylePrice}</span>
                             </div>
                   <button
                               onClick={(e) => { e.stopPropagation(); addToCart(); }}
                               disabled={selectedAngles.length === 0}
                               className={`px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 transition-all ${
                                 selectedAngles.length > 0
-                                  ? 'bg-[#E54A4A] text-white hover:bg-[#d43d3d]'
-                                  : 'bg-neutral-200 text-neutral-400 cursor-not-allowed'
+                                  ? 'bg-honey text-white hover:bg-[#d43d3d]'
+                                  : 'bg-neutral-200 text-white/400 cursor-not-allowed'
                               }`}
                             >
                               <Check className="w-4 h-4" />
@@ -1052,23 +1055,23 @@ export default function OrderPage() {
 
             {/* Cart Summary */}
             {order.cart.length > 0 && (
-              <div className="mt-8 p-4 bg-white rounded-xl border border-neutral-200">
-                <h3 className="text-sm font-semibold text-neutral-700 mb-3">Your selections:</h3>
+              <div className="mt-8 p-4 bg-[#1a1a1a] rounded-xl border border-white/200">
+                <h3 className="text-sm font-semibold text-white/700 mb-3">Your selections:</h3>
                 <div className="space-y-2">
                   {order.cart.map((item) => {
                     const styleInfo = ECOMMERCE_STYLES.find(s => s.id === item.style);
                     return (
-                      <div key={item.style} className="flex items-center justify-between py-2 border-b border-neutral-100 last:border-0">
+                      <div key={item.style} className="flex items-center justify-between py-2 border-b border-white/100 last:border-0">
                         <div className="flex items-center gap-3">
                           <img src={styleInfo?.image} alt="" className="w-10 h-10 rounded object-cover" />
                           <div>
-                            <p className="font-medium text-sm text-[#1a1a1a]">{getStyleName(item.style)}</p>
-                            <p className="text-xs text-neutral-500">{item.angles.map(a => ANGLES.find(x => x.id === a)?.name).join(', ')}</p>
+                            <p className="font-medium text-sm text-white">{getStyleName(item.style)}</p>
+                            <p className="text-xs text-white/500">{item.angles.map(a => ANGLES.find(x => x.id === a)?.name).join(', ')}</p>
                         </div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className="font-semibold text-[#1a1a1a]">${item.angles.length * item.pricePerAngle}</span>
-                          <button onClick={() => removeFromCart(item.style)} className="text-neutral-400 hover:text-red-500 transition-colors">
+                          <span className="font-semibold text-white">${item.angles.length * item.pricePerAngle}</span>
+                          <button onClick={() => removeFromCart(item.style)} className="text-white/400 hover:text-red-500 transition-colors">
                             <X className="w-4 h-4" />
                   </button>
                         </div>
@@ -1082,11 +1085,11 @@ export default function OrderPage() {
                           <Sparkles className="w-5 h-5 text-purple-600" />
                 </div>
                         <div>
-                          <p className="font-medium text-sm text-[#1a1a1a]">Lifestyle Photography</p>
-                          <p className="text-xs text-neutral-500">Included in package</p>
+                          <p className="font-medium text-sm text-white">Lifestyle Photography</p>
+                          <p className="text-xs text-white/500">Included in package</p>
                         </div>
                       </div>
-                      <span className="font-semibold text-[#1a1a1a]">${PRICES.lifestyle.flatRate}</span>
+                      <span className="font-semibold text-white">${PRICES.lifestyle.flatRate}</span>
               </div>
                 )}
                 </div>
@@ -1111,13 +1114,13 @@ export default function OrderPage() {
                   setCurrentStyle(null);
                   setStep(2);
                 }}
-                className="flex items-center gap-2 text-[#1a1a1a]/60 hover:text-[#E54A4A] transition-colors mb-8 group"
+                className="flex items-center gap-2 text-white/60 hover:text-honey transition-colors mb-8 group"
               >
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                 Back to styles
               </button>
 
-              <div className="bg-white rounded-3xl overflow-hidden shadow-2xl border border-[#1a1a1a]/5">
+              <div className="bg-[#1a1a1a] rounded-3xl overflow-hidden shadow-2xl border border-white/10">
                 {/* Style Header */}
                 <div className="relative h-48 sm:h-64">
                   <img 
@@ -1147,7 +1150,7 @@ export default function OrderPage() {
                       onClick={() => toggleAngle(angle.id)}
                           className={`relative aspect-square rounded-2xl overflow-hidden transition-all duration-300 ${
                         isSelected
-                              ? 'ring-4 ring-[#E54A4A] scale-[0.98]'
+                              ? 'ring-4 ring-honey scale-[0.98]'
                               : 'hover:scale-[1.02] hover:shadow-xl'
                           }`}
                         >
@@ -1157,14 +1160,14 @@ export default function OrderPage() {
                             className={`w-full h-full object-cover transition-all duration-300 ${isSelected ? 'brightness-90' : ''}`}
                           />
                           <div className={`absolute inset-0 transition-all duration-300 ${
-                            isSelected ? 'bg-[#E54A4A]/20' : 'bg-black/20 hover:bg-black/10'
+                            isSelected ? 'bg-honey/20' : 'bg-black/20 hover:bg-black/10'
                           }`} />
                           
                           {/* Selection Indicator */}
                           <div className={`absolute top-3 right-3 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all ${
                             isSelected
-                              ? 'border-[#E54A4A] bg-[#E54A4A]'
-                              : 'border-white bg-white/20'
+                              ? 'border-honey bg-honey'
+                              : 'border-white bg-[#1a1a1a]/20'
                           }`}>
                             {isSelected && <Check className="w-4 h-4 text-white" strokeWidth={3} />}
                     </div>
@@ -1179,24 +1182,24 @@ export default function OrderPage() {
                 </div>
 
                 {/* Pricing Summary */}
-                <div className="bg-[#f9f9f9] rounded-2xl p-6">
+                <div className="bg-[#0d0d0d] rounded-2xl p-6">
                   {(() => {
                     const styleConfig = ECOMMERCE_STYLES.find(s => s.id === currentStyle);
                     const pricePerAngle = styleConfig?.pricePerAngle || PRICES.ecommerce.perAngle;
                     return (
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#E54A4A] to-[#ff7f7f] flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-honey to-honey/80 flex items-center justify-center">
                             <Camera className="w-6 h-6 text-white" />
                           </div>
                   <div>
-                            <p className="font-bold text-[#1a1a1a]">{selectedAngles.length} angle{selectedAngles.length !== 1 ? 's' : ''} selected</p>
-                            <p className="text-sm text-[#1a1a1a]/50">${pricePerAngle} each</p>
+                            <p className="font-bold text-white">{selectedAngles.length} angle{selectedAngles.length !== 1 ? 's' : ''} selected</p>
+                            <p className="text-sm text-white/50">${pricePerAngle} each</p>
                           </div>
                     </div>
                   <div className="text-right">
-                          <p className="text-sm text-[#1a1a1a]/50">Subtotal</p>
-                          <p className="text-3xl font-bold text-[#E54A4A]">
+                          <p className="text-sm text-white/50">Subtotal</p>
+                          <p className="text-3xl font-bold text-honey">
                             ${selectedAngles.length * pricePerAngle}
                     </p>
                   </div>
@@ -1209,8 +1212,8 @@ export default function OrderPage() {
                 disabled={selectedAngles.length === 0}
                       className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all ${
                   selectedAngles.length > 0
-                    ? 'bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white hover:shadow-xl hover:shadow-[#E54A4A]/30'
-                    : 'bg-[#1a1a1a]/10 text-[#1a1a1a]/30 cursor-not-allowed'
+                    ? 'bg-gradient-to-r from-honey to-honey/80 text-black hover:shadow-xl hover:shadow-honey/30'
+                    : 'bg-[#1a1a1a]/10 text-white/30 cursor-not-allowed'
                 }`}
               >
                       <ShoppingCart className="w-5 h-5" />
@@ -1235,13 +1238,13 @@ export default function OrderPage() {
           >
             <div className="max-w-7xl mx-auto grid lg:grid-cols-12 min-h-[calc(100vh-80px)]">
               {/* Left: Form */}
-              <div className="lg:col-span-7 xl:col-span-8 bg-white px-6 sm:px-10 lg:px-14 py-8 sm:py-12 order-2 lg:order-1">
+              <div className="lg:col-span-7 xl:col-span-8 bg-[#1a1a1a] px-6 sm:px-10 lg:px-14 py-8 sm:py-12 order-2 lg:order-1">
                 {/* Back */}
                 <div className="mb-8">
                   {order.packageType !== "lifestyle" ? (
                   <button
                     onClick={() => setStep(2)}
-                      className="inline-flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
+                      className="inline-flex items-center gap-2 text-sm text-white/600 hover:text-white/900 transition-colors"
                   >
                       <ArrowLeft className="w-4 h-4" />
                       Back
@@ -1249,7 +1252,7 @@ export default function OrderPage() {
                   ) : (
                     <button
                       onClick={() => setStep(1)}
-                      className="inline-flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
+                      className="inline-flex items-center gap-2 text-sm text-white/600 hover:text-white/900 transition-colors"
                     >
                       <ArrowLeft className="w-4 h-4" />
                       Back
@@ -1267,10 +1270,10 @@ export default function OrderPage() {
                       disabled={index > stepIndex}
                         className={`flex-1 rounded-xl border px-3 py-3 text-left transition-colors ${
                         index === stepIndex 
-                            ? "border-neutral-900 bg-white"
+                            ? "border-white/900 bg-[#1a1a1a]"
                           : index < stepIndex 
-                              ? "border-neutral-200 bg-white hover:border-neutral-400"
-                              : "border-neutral-200 bg-neutral-50 text-neutral-400 cursor-not-allowed"
+                              ? "border-white/200 bg-[#1a1a1a] hover:border-white/400"
+                              : "border-white/200 bg-white/5 text-white/400 cursor-not-allowed"
                         }`}
                       >
                         <div className="flex items-center gap-3">
@@ -1280,14 +1283,14 @@ export default function OrderPage() {
                                 ? "bg-neutral-900 text-white"
                                 : index === stepIndex
                                   ? "bg-neutral-900 text-white"
-                                  : "bg-neutral-200 text-neutral-600"
+                                  : "bg-neutral-200 text-white/600"
                             }`}
                           >
                         {index < stepIndex ? <Check className="w-4 h-4" /> : index + 1}
                       </span>
                           <div className="min-w-0">
-                            <div className="text-sm font-semibold text-neutral-900 truncate">{s.label}</div>
-                            <div className="text-xs text-neutral-500 truncate">
+                            <div className="text-sm font-semibold text-white/900 truncate">{s.label}</div>
+                            <div className="text-xs text-white/500 truncate">
                               {s.key === "information"
                                 ? "Contact + product"
                                 : s.key === "shipping"
@@ -1306,15 +1309,15 @@ export default function OrderPage() {
                   <div className="space-y-10">
                     {/* Login */}
                   {!isLoggedIn ? (
-                      <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
+                      <div className="rounded-2xl border border-white/200 bg-white/5 p-5">
                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-white border border-neutral-200 flex items-center justify-center">
-                              <User className="w-5 h-5 text-neutral-700" />
+                            <div className="w-10 h-10 rounded-xl bg-[#1a1a1a] border border-white/200 flex items-center justify-center">
+                              <User className="w-5 h-5 text-white/700" />
                           </div>
                 <div>
-                              <div className="text-sm font-semibold text-neutral-900">Have an account?</div>
-                              <div className="text-sm text-neutral-600">Login for faster checkout.</div>
+                              <div className="text-sm font-semibold text-white/900">Have an account?</div>
+                              <div className="text-sm text-white/600">Login for faster checkout.</div>
                           </div>
                         </div>
                         <button
@@ -1327,16 +1330,16 @@ export default function OrderPage() {
                       </div>
                     </div>
                   ) : (
-                      <div className="rounded-2xl border border-neutral-200 bg-white p-5">
+                      <div className="rounded-2xl border border-white/200 bg-[#1a1a1a] p-5">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-xl bg-neutral-900 flex items-center justify-center">
                             <Check className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <div className="text-sm font-semibold text-neutral-900">
+                            <div className="text-sm font-semibold text-white/900">
                               Welcome back, {user?.name || user?.email?.split("@")[0]}!
                             </div>
-                            <div className="text-sm text-neutral-600">We pre-filled what we could.</div>
+                            <div className="text-sm text-white/600">We pre-filled what we could.</div>
                         </div>
                       </div>
                     </div>
@@ -1344,16 +1347,16 @@ export default function OrderPage() {
 
                     {/* Contact */}
                     <section>
-                      <h2 className="text-xl font-bold text-neutral-900 mb-5">Contact</h2>
+                      <h2 className="text-xl font-bold text-white/900 mb-5">Contact</h2>
                 <div className="space-y-4">
                     <div>
-                          <label className="block text-sm font-medium text-neutral-700 mb-2">Email</label>
+                          <label className="block text-sm font-medium text-white/700 mb-2">Email</label>
                       <input
                         type="email"
                         value={order.formData.email}
                         onChange={(e) => updateFormData("email", e.target.value)}
-                            className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900 ${
-                              errors.email ? "border-red-500" : "border-neutral-200"
+                            className={`w-full rounded-xl border bg-[#1a1a1a] px-4 py-3 text-[15px] text-white/900 placeholder:text-white/400 focus:outline-none focus:border-white/900 ${
+                              errors.email ? "border-red-500" : "border-white/200"
                             }`}
                             placeholder="you@company.com"
                           />
@@ -1370,29 +1373,29 @@ export default function OrderPage() {
                             type="button"
                         onClick={() => setEmailUpdates(!emailUpdates)}
                             className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors ${
-                              emailUpdates ? "bg-neutral-900 border-neutral-900" : "border-neutral-300 hover:border-neutral-500"
+                              emailUpdates ? "bg-neutral-900 border-white/900" : "border-white/300 hover:border-white/500"
                         }`}
                             aria-pressed={emailUpdates}
                       >
                           {emailUpdates && <Check className="w-4 h-4 text-white" strokeWidth={3} />}
                           </button>
-                          <span className="text-sm text-neutral-700">Email me updates and offers</span>
+                          <span className="text-sm text-white/700">Email me updates and offers</span>
                     </label>
                     </div>
                     </section>
                     
                     {/* Product */}
                     <section>
-                      <h2 className="text-xl font-bold text-neutral-900 mb-5">Product</h2>
+                      <h2 className="text-xl font-bold text-white/900 mb-5">Product</h2>
                     <div className="space-y-4">
                       <div>
-                          <label className="block text-sm font-medium text-neutral-700 mb-2">Product name *</label>
+                          <label className="block text-sm font-medium text-white/700 mb-2">Product name *</label>
                       <input
                         type="text"
                         value={order.formData.productName}
                         onChange={(e) => updateFormData("productName", e.target.value)}
-                            className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900 ${
-                              errors.productName ? "border-red-500" : "border-neutral-200"
+                            className={`w-full rounded-xl border bg-[#1a1a1a] px-4 py-3 text-[15px] text-white/900 placeholder:text-white/400 focus:outline-none focus:border-white/900 ${
+                              errors.productName ? "border-red-500" : "border-white/200"
                             }`}
                             placeholder="e.g. Leather wallet"
                           />
@@ -1404,12 +1407,12 @@ export default function OrderPage() {
                           )}
                       </div>
                       <div>
-                          <label className="block text-sm font-medium text-neutral-700 mb-2">Notes (optional)</label>
+                          <label className="block text-sm font-medium text-white/700 mb-2">Notes (optional)</label>
                     <textarea
                       value={order.formData.notes}
                       onChange={(e) => updateFormData("notes", e.target.value)}
                           rows={4}
-                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900 resize-none"
+                            className="w-full rounded-xl border border-white/200 bg-[#1a1a1a] px-4 py-3 text-[15px] text-white/900 placeholder:text-white/400 focus:outline-none focus:border-white/900 resize-none"
                             placeholder="Any preferences, references, or constraints?"
                         />
                       </div>
@@ -1430,129 +1433,129 @@ export default function OrderPage() {
                   <div className="space-y-10">
                     {/* Delivery */}
                     <section>
-                      <h2 className="text-xl font-bold text-neutral-900 mb-5">Delivery</h2>
-                      <div className="rounded-2xl border border-neutral-200 bg-white p-5">
+                      <h2 className="text-xl font-bold text-white/900 mb-5">Delivery</h2>
+                      <div className="rounded-2xl border border-white/200 bg-[#1a1a1a] p-5">
                         <div className="flex items-start gap-4">
                           <div className="w-10 h-10 rounded-xl bg-neutral-900 flex items-center justify-center">
                             <Mail className="w-5 h-5 text-white" />
                         </div>
                         <div className="flex-1">
-                            <div className="text-sm font-semibold text-neutral-900">Digital delivery</div>
-                            <div className="text-sm text-neutral-600">Final files delivered via email.</div>
+                            <div className="text-sm font-semibold text-white/900">Digital delivery</div>
+                            <div className="text-sm text-white/600">Final files delivered via email.</div>
                       </div>
-                          <div className="text-sm font-semibold text-neutral-900">Free</div>
+                          <div className="text-sm font-semibold text-white/900">Free</div>
                       </div>
                     </div>
                     </section>
 
                     {/* Billing */}
                     <section>
-                      <h2 className="text-xl font-bold text-neutral-900 mb-5">Billing details</h2>
+                      <h2 className="text-xl font-bold text-white/900 mb-5">Billing details</h2>
                   <div className="space-y-4">
                       <div className="relative">
-                          <label className="block text-sm font-medium text-neutral-700 mb-2">Country/Region</label>
+                          <label className="block text-sm font-medium text-white/700 mb-2">Country/Region</label>
                       <select
                         value={order.formData.country}
                         onChange={(e) => updateFormData("country", e.target.value)}
-                            className="w-full appearance-none rounded-xl border border-neutral-200 bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900"
+                            className="w-full appearance-none rounded-xl border border-white/200 bg-[#1a1a1a] px-4 py-3 text-[15px] text-white/900 focus:outline-none focus:border-white/900"
                       >
                         <option value="United States">United States</option>
                         <option value="Canada">Canada</option>
                         <option value="United Kingdom">United Kingdom</option>
                       </select>
-                          <ChevronDown className="absolute right-4 top-[46px] w-5 h-5 text-neutral-400 pointer-events-none" />
+                          <ChevronDown className="absolute right-4 top-[46px] w-5 h-5 text-white/400 pointer-events-none" />
                     </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-neutral-700 mb-2">First name</label>
+                            <label className="block text-sm font-medium text-white/700 mb-2">First name</label>
                       <input
                         type="text"
                         value={order.formData.firstName}
                         onChange={(e) => updateFormData("firstName", e.target.value)}
-                              className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900 ${
-                                errors.firstName ? "border-red-500" : "border-neutral-200"
+                              className={`w-full rounded-xl border bg-[#1a1a1a] px-4 py-3 text-[15px] text-white/900 focus:outline-none focus:border-white/900 ${
+                                errors.firstName ? "border-red-500" : "border-white/200"
                               }`}
                           />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-neutral-700 mb-2">Last name</label>
+                            <label className="block text-sm font-medium text-white/700 mb-2">Last name</label>
                       <input
                         type="text"
                         value={order.formData.lastName}
                         onChange={(e) => updateFormData("lastName", e.target.value)}
-                              className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900 ${
-                                errors.lastName ? "border-red-500" : "border-neutral-200"
+                              className={`w-full rounded-xl border bg-[#1a1a1a] px-4 py-3 text-[15px] text-white/900 focus:outline-none focus:border-white/900 ${
+                                errors.lastName ? "border-red-500" : "border-white/200"
                               }`}
                           />
                         </div>
                     </div>
 
                       <div>
-                          <label className="block text-sm font-medium text-neutral-700 mb-2">Company (optional)</label>
+                          <label className="block text-sm font-medium text-white/700 mb-2">Company (optional)</label>
                       <input
                         type="text"
                           value={order.formData.company}
                           onChange={(e) => updateFormData("company", e.target.value)}
-                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900"
+                            className="w-full rounded-xl border border-white/200 bg-[#1a1a1a] px-4 py-3 text-[15px] text-white/900 focus:outline-none focus:border-white/900"
                     />
                       </div>
 
                       <div>
-                          <label className="block text-sm font-medium text-neutral-700 mb-2">Address</label>
+                          <label className="block text-sm font-medium text-white/700 mb-2">Address</label>
                     <input
                       type="text"
                       value={order.formData.address}
                       onChange={(e) => updateFormData("address", e.target.value)}
-                            className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900 ${
-                              errors.address ? "border-red-500" : "border-neutral-200"
+                            className={`w-full rounded-xl border bg-[#1a1a1a] px-4 py-3 text-[15px] text-white/900 focus:outline-none focus:border-white/900 ${
+                              errors.address ? "border-red-500" : "border-white/200"
                             }`}
                         />
                       </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-neutral-700 mb-2">City</label>
+                            <label className="block text-sm font-medium text-white/700 mb-2">City</label>
                       <input
                         type="text"
                         value={order.formData.city}
                         onChange={(e) => updateFormData("city", e.target.value)}
-                              className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900 ${
-                                errors.city ? "border-red-500" : "border-neutral-200"
+                              className={`w-full rounded-xl border bg-[#1a1a1a] px-4 py-3 text-[15px] text-white/900 focus:outline-none focus:border-white/900 ${
+                                errors.city ? "border-red-500" : "border-white/200"
                               }`}
                           />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-neutral-700 mb-2">State</label>
+                            <label className="block text-sm font-medium text-white/700 mb-2">State</label>
                       <input
                         type="text"
                         value={order.formData.state}
                         onChange={(e) => updateFormData("state", e.target.value)}
-                              className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900 ${
-                                errors.state ? "border-red-500" : "border-neutral-200"
+                              className={`w-full rounded-xl border bg-[#1a1a1a] px-4 py-3 text-[15px] text-white/900 focus:outline-none focus:border-white/900 ${
+                                errors.state ? "border-red-500" : "border-white/200"
                               }`}
                           />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-neutral-700 mb-2">ZIP</label>
+                            <label className="block text-sm font-medium text-white/700 mb-2">ZIP</label>
                       <input
                         type="text"
                         value={order.formData.zipCode}
                         onChange={(e) => updateFormData("zipCode", e.target.value)}
-                              className={`w-full rounded-xl border bg-white px-4 py-3 text-[15px] text-neutral-900 focus:outline-none focus:border-neutral-900 ${
-                                errors.zipCode ? "border-red-500" : "border-neutral-200"
+                              className={`w-full rounded-xl border bg-[#1a1a1a] px-4 py-3 text-[15px] text-white/900 focus:outline-none focus:border-white/900 ${
+                                errors.zipCode ? "border-red-500" : "border-white/200"
                               }`}
                           />
                         </div>
                       </div>
 
                       <div>
-                          <label className="block text-sm font-medium text-neutral-700 mb-2">Phone (optional)</label>
+                          <label className="block text-sm font-medium text-white/700 mb-2">Phone (optional)</label>
                     <input
                       type="tel"
                       value={order.formData.phone}
                       onChange={(e) => updateFormData("phone", e.target.value)}
-                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900"
+                            className="w-full rounded-xl border border-white/200 bg-[#1a1a1a] px-4 py-3 text-[15px] text-white/900 placeholder:text-white/400 focus:outline-none focus:border-white/900"
                             placeholder="For updates"
                     />
                       </div>
@@ -1569,7 +1572,7 @@ export default function OrderPage() {
 
                   <button
                     onClick={() => setCheckoutStep("information")}
-                      className="w-full text-sm text-neutral-600 hover:text-neutral-900 transition-colors inline-flex items-center justify-center gap-2"
+                      className="w-full text-sm text-white/600 hover:text-white/900 transition-colors inline-flex items-center justify-center gap-2"
                   >
                     <ArrowLeft className="w-4 h-4" />
                       Back to information
@@ -1580,8 +1583,8 @@ export default function OrderPage() {
               {checkoutStep === "payment" && (
                   <div className="space-y-10">
                     <section>
-                      <h2 className="text-xl font-bold text-neutral-900 mb-2">Payment</h2>
-                      <p className="text-sm text-neutral-600">
+                      <h2 className="text-xl font-bold text-white/900 mb-2">Payment</h2>
+                      <p className="text-sm text-white/600">
                         Pay securely via hosted checkout. Apple Pay / Google Pay may be available depending on your device.
                       </p>
                     </section>
@@ -1594,14 +1597,14 @@ export default function OrderPage() {
 
                     <section className="space-y-4">
                       {/* Card (hosted) */}
-                      <div className="rounded-2xl border border-neutral-200 bg-white p-5">
+                      <div className="rounded-2xl border border-white/200 bg-[#1a1a1a] p-5">
                         <div className="flex items-start gap-3">
                           <div className="w-10 h-10 rounded-xl bg-neutral-900 flex items-center justify-center">
                             <CreditCard className="w-5 h-5 text-white" />
                         </div>
                           <div className="flex-1">
-                            <div className="text-sm font-semibold text-neutral-900">Pay by card</div>
-                            <div className="text-sm text-neutral-600">
+                            <div className="text-sm font-semibold text-white/900">Pay by card</div>
+                            <div className="text-sm text-white/600">
                               You’ll be redirected to a secure checkout to complete payment.
                           </div>
                           </div>
@@ -1627,21 +1630,21 @@ export default function OrderPage() {
                       </div>
 
                       {/* Invoice */}
-                      <div className="rounded-2xl border border-neutral-200 bg-white p-5">
+                      <div className="rounded-2xl border border-white/200 bg-[#1a1a1a] p-5">
                         <div className="flex items-start gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-neutral-100 border border-neutral-200 flex items-center justify-center">
-                            <Mail className="w-5 h-5 text-neutral-800" />
+                          <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/200 flex items-center justify-center">
+                            <Mail className="w-5 h-5 text-white/800" />
                           </div>
                           <div className="flex-1">
-                            <div className="text-sm font-semibold text-neutral-900">Request invoice</div>
-                            <div className="text-sm text-neutral-600">Place the order now and we’ll email payment details.</div>
+                            <div className="text-sm font-semibold text-white/900">Request invoice</div>
+                            <div className="text-sm text-white/600">Place the order now and we’ll email payment details.</div>
                           </div>
                         </div>
                         <button
                           type="button"
                           onClick={placeInvoiceOrder}
                           disabled={isSubmitting}
-                          className="mt-4 w-full rounded-xl border border-neutral-900 bg-white px-5 py-4 text-neutral-900 font-semibold hover:bg-neutral-50 transition-colors disabled:opacity-70 inline-flex items-center justify-center gap-2"
+                          className="mt-4 w-full rounded-xl border border-white/900 bg-[#1a1a1a] px-5 py-4 text-white/900 font-semibold hover:bg-white/5 transition-colors disabled:opacity-70 inline-flex items-center justify-center gap-2"
                         >
                           <Send className="w-4 h-4" />
                           Request invoice
@@ -1649,16 +1652,16 @@ export default function OrderPage() {
                       </div>
                     </section>
 
-                    <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-4 flex items-start gap-3">
-                      <Shield className="w-5 h-5 text-neutral-800 mt-0.5" />
-                      <p className="text-sm text-neutral-700">
+                    <div className="rounded-2xl border border-white/200 bg-white/5 p-4 flex items-start gap-3">
+                      <Shield className="w-5 h-5 text-white/800 mt-0.5" />
+                      <p className="text-sm text-white/700">
                         Secure checkout. We do not collect or store your card details on this site.
                       </p>
                     </div>
 
                   <button
                     onClick={() => setCheckoutStep("shipping")}
-                      className="w-full text-sm text-neutral-600 hover:text-neutral-900 transition-colors inline-flex items-center justify-center gap-2"
+                      className="w-full text-sm text-white/600 hover:text-white/900 transition-colors inline-flex items-center justify-center gap-2"
                   >
                     <ArrowLeft className="w-4 h-4" />
                       Back to billing
@@ -1668,34 +1671,34 @@ export default function OrderPage() {
                 </div>
 
               {/* Right: Summary */}
-              <aside className="lg:col-span-5 xl:col-span-4 border-t lg:border-t-0 lg:border-l border-neutral-200 bg-[#fafafa] order-1 lg:order-2">
+              <aside className="lg:col-span-5 xl:col-span-4 border-t lg:border-t-0 lg:border-l border-white/200 bg-[#fafafa] order-1 lg:order-2">
                 <div className="lg:sticky lg:top-20 px-6 sm:px-10 py-6 sm:py-10">
                   {/* Mobile toggle */}
                   <button
                     type="button"
                     onClick={() => setShowOrderSummary((v) => !v)}
-                    className="lg:hidden w-full flex items-center justify-between rounded-xl border border-neutral-200 bg-white px-4 py-3"
+                    className="lg:hidden w-full flex items-center justify-between rounded-xl border border-white/200 bg-[#1a1a1a] px-4 py-3"
                   >
                     <div className="text-left">
-                      <div className="text-sm font-semibold text-neutral-900">Order summary</div>
-                      <div className="text-sm text-neutral-600">${calculateTotal()}</div>
+                      <div className="text-sm font-semibold text-white/900">Order summary</div>
+                      <div className="text-sm text-white/600">${calculateTotal()}</div>
                     </div>
                     <ChevronDown
-                      className={`w-5 h-5 text-neutral-500 transition-transform ${showOrderSummary ? "rotate-180" : ""}`}
+                      className={`w-5 h-5 text-white/500 transition-transform ${showOrderSummary ? "rotate-180" : ""}`}
                     />
                   </button>
 
                   <div className={`${showOrderSummary ? "block" : "hidden"} lg:block mt-4 lg:mt-0`}>
-                    <div className="rounded-2xl border border-neutral-200 bg-white p-5">
+                    <div className="rounded-2xl border border-white/200 bg-[#1a1a1a] p-5">
                       <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-sm font-semibold text-neutral-900">Summary</h2>
-                        <span className="text-sm font-semibold text-neutral-900">${calculateTotal()}</span>
+                        <h2 className="text-sm font-semibold text-white/900">Summary</h2>
+                        <span className="text-sm font-semibold text-white/900">${calculateTotal()}</span>
                       </div>
 
-                      <div className="space-y-4 pb-4 border-b border-neutral-200">
+                      <div className="space-y-4 pb-4 border-b border-white/200">
                     {order.cart.map((item) => (
                           <div key={item.style} className="flex items-start gap-3">
-                            <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-neutral-100 border border-neutral-200 flex-shrink-0">
+                            <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-white/10 border border-white/200 flex-shrink-0">
                       <img
                                 src={ECOMMERCE_STYLES.find((s) => s.id === item.style)?.image}
                         alt={getStyleName(item.style)}
@@ -1706,12 +1709,12 @@ export default function OrderPage() {
               </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                              <div className="text-sm font-semibold text-neutral-900 truncate">{getStyleName(item.style)}</div>
-                              <div className="text-xs text-neutral-500">
+                              <div className="text-sm font-semibold text-white/900 truncate">{getStyleName(item.style)}</div>
+                              <div className="text-xs text-white/500">
                                 {item.angles.length} angles × ${item.pricePerAngle}
                     </div>
                             </div>
-                            <div className="text-sm font-semibold text-neutral-900">
+                            <div className="text-sm font-semibold text-white/900">
                               ${item.angles.length * item.pricePerAngle}
                             </div>
                       </div>
@@ -1723,10 +1726,10 @@ export default function OrderPage() {
                               <Sparkles className="w-6 h-6 text-white" />
                   </div>
                     <div className="flex-1 min-w-0">
-                              <div className="text-sm font-semibold text-neutral-900">Lifestyle</div>
-                              <div className="text-xs text-neutral-500">Styled shoot</div>
+                              <div className="text-sm font-semibold text-white/900">Lifestyle</div>
+                              <div className="text-xs text-white/500">Styled shoot</div>
                 </div>
-                            <div className="text-sm font-semibold text-neutral-900">${PRICES.lifestyle.flatRate}</div>
+                            <div className="text-sm font-semibold text-white/900">${PRICES.lifestyle.flatRate}</div>
                     </div>
                     )}
               </div>
@@ -1735,7 +1738,7 @@ export default function OrderPage() {
                       <div className="pt-4 space-y-3">
                         <div className="flex gap-2">
                   <div className="relative flex-1">
-                            <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                            <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/400" />
                     <input
                       type="text"
                       value={discountCode}
@@ -1744,7 +1747,7 @@ export default function OrderPage() {
                                 setDiscountCode(e.target.value);
                               }}
                               disabled={!!appliedPromo}
-                              className="w-full pl-10 pr-3 py-3 rounded-xl border border-neutral-200 bg-white text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900 disabled:bg-neutral-50 disabled:text-neutral-500"
+                              className="w-full pl-10 pr-3 py-3 rounded-xl border border-white/200 bg-[#1a1a1a] text-sm text-white/900 placeholder:text-white/400 focus:outline-none focus:border-white/900 disabled:bg-white/5 disabled:text-white/500"
                       placeholder="Discount code"
                     />
                   </div>
@@ -1756,7 +1759,7 @@ export default function OrderPage() {
                                 setDiscountCode("");
                                 setDiscountError("");
                               }}
-                              className="rounded-xl border border-neutral-900 bg-white px-4 py-3 text-sm font-semibold text-neutral-900 hover:bg-neutral-50 transition-colors"
+                              className="rounded-xl border border-white/900 bg-[#1a1a1a] px-4 py-3 text-sm font-semibold text-white/900 hover:bg-white/5 transition-colors"
                             >
                               Remove
                   </button>
@@ -1811,7 +1814,7 @@ export default function OrderPage() {
 
                         {discountError && <div className="text-sm text-red-600">{discountError}</div>}
                         {appliedPromo && (
-                          <div className="text-sm text-neutral-700">
+                          <div className="text-sm text-white/700">
                             Applied <span className="font-semibold">{appliedPromo.code}</span>
                 </div>
                         )}
@@ -1819,46 +1822,46 @@ export default function OrderPage() {
                         {(() => {
                           const b = calculateBreakdown();
                           return (
-                            <div className="space-y-2 pt-2 border-t border-neutral-200">
+                            <div className="space-y-2 pt-2 border-t border-white/200">
                               <div className="flex justify-between text-sm">
-                                <span className="text-neutral-600">Subtotal</span>
-                                <span className="text-neutral-900 font-medium">${b.itemsSubtotal}</span>
+                                <span className="text-white/600">Subtotal</span>
+                                <span className="text-white/900 font-medium">${b.itemsSubtotal}</span>
                       </div>
                               {b.bundleDiscount > 0 && (
                                 <div className="flex justify-between text-sm">
-                                  <span className="text-neutral-600">Bundle discount</span>
-                                  <span className="text-neutral-900 font-medium">-${b.bundleDiscount}</span>
+                                  <span className="text-white/600">Bundle discount</span>
+                                  <span className="text-white/900 font-medium">-${b.bundleDiscount}</span>
                                 </div>
                               )}
                               {b.promoDiscount > 0 && appliedPromo && (
                                 <div className="flex justify-between text-sm">
-                                  <span className="text-neutral-600">
+                                  <span className="text-white/600">
                                     Promo <span className="font-mono">{appliedPromo.code}</span>
                     </span>
-                                  <span className="text-neutral-900 font-medium">-${b.promoDiscount}</span>
+                                  <span className="text-white/900 font-medium">-${b.promoDiscount}</span>
                       </div>
                 )}
                               <div className="flex justify-between text-sm">
-                                <span className="text-neutral-600">Delivery</span>
-                                <span className="text-neutral-900 font-medium">Free</span>
+                                <span className="text-white/600">Delivery</span>
+                                <span className="text-white/900 font-medium">Free</span>
                     </div>
                       </div>
                           );
                         })()}
 
-                        <div className="pt-3 border-t border-neutral-200 flex items-center justify-between">
-                          <span className="text-sm font-semibold text-neutral-900">Total</span>
-                          <span className="text-lg font-bold text-neutral-900">${calculateTotal()}</span>
+                        <div className="pt-3 border-t border-white/200 flex items-center justify-between">
+                          <span className="text-sm font-semibold text-white/900">Total</span>
+                          <span className="text-lg font-bold text-white/900">${calculateTotal()}</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="mt-4 rounded-2xl border border-neutral-200 bg-white p-5">
+                    <div className="mt-4 rounded-2xl border border-white/200 bg-[#1a1a1a] p-5">
                 <div className="flex items-start gap-3">
-                        <Clock className="w-5 h-5 text-neutral-800 mt-0.5" />
+                        <Clock className="w-5 h-5 text-white/800 mt-0.5" />
                   <div>
-                          <div className="text-sm font-semibold text-neutral-900">3–5 business days</div>
-                          <div className="text-sm text-neutral-600 mt-1">
+                          <div className="text-sm font-semibold text-white/900">3–5 business days</div>
+                          <div className="text-sm text-white/600 mt-1">
                             Delivered digitally. 100% satisfaction guaranteed.
                   </div>
                 </div>
@@ -1886,51 +1889,51 @@ export default function OrderPage() {
                 <CheckCircle className="w-12 h-12 text-white" />
                 </div>
 
-              <h1 className="text-4xl font-bold text-[#1a1a1a] mb-4">
+              <h1 className="text-4xl font-bold text-white mb-4">
                 Order Confirmed!
               </h1>
               
-              <p className="text-lg text-[#1a1a1a]/60 mb-10">
+              <p className="text-lg text-white/60 mb-10">
                 Thank you for your order. We&apos;ll be in touch shortly to confirm details and get started on your project.
               </p>
 
-              <div className="bg-white rounded-3xl p-8 border border-[#1a1a1a]/5 shadow-xl mb-8">
-                <p className="text-sm text-[#1a1a1a]/60 mb-3">Tracking Number</p>
+              <div className="bg-[#1a1a1a] rounded-3xl p-8 border border-white/10 shadow-xl mb-8">
+                <p className="text-sm text-white/60 mb-3">Tracking Number</p>
                 <div className="flex items-center justify-center gap-4">
-                  <code className="text-2xl font-mono font-bold text-[#E54A4A]">
+                  <code className="text-2xl font-mono font-bold text-honey">
                     {trackingNumber}
                   </code>
                 <button
                     onClick={copyTrackingNumber}
                     className="p-3 rounded-xl bg-[#1a1a1a]/5 hover:bg-[#1a1a1a]/10 transition-colors"
                   >
-                    <Copy className="w-5 h-5 text-[#1a1a1a]/60" />
+                    <Copy className="w-5 h-5 text-white/60" />
                 </button>
               </div>
           </div>
 
-              <div className="bg-gradient-to-br from-[#E54A4A]/10 to-[#ff7f7f]/10 rounded-3xl p-8 mb-8 text-left">
-                <h3 className="font-bold text-[#1a1a1a] mb-4 text-lg">Order Summary</h3>
+              <div className="bg-gradient-to-br from-honey/10 to-honey/80/10 rounded-3xl p-8 mb-8 text-left">
+                <h3 className="font-bold text-white mb-4 text-lg">Order Summary</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-[#1a1a1a]/60">Package</span>
-                    <span className="font-medium text-[#1a1a1a] capitalize">{order.packageType}</span>
+                    <span className="text-white/60">Package</span>
+                    <span className="font-medium text-white capitalize">{order.packageType}</span>
               </div>
                   {order.cart.length > 0 && (
                     <div className="flex justify-between">
-                      <span className="text-[#1a1a1a]/60">E-commerce Styles</span>
-                      <span className="font-medium text-[#1a1a1a]">{order.cart.length}</span>
+                      <span className="text-white/60">E-commerce Styles</span>
+                      <span className="font-medium text-white">{order.cart.length}</span>
                 </div>
               )}
                   {order.lifestyleIncluded && (
                     <div className="flex justify-between">
-                      <span className="text-[#1a1a1a]/60">Lifestyle</span>
-                      <span className="font-medium text-[#1a1a1a]">Included</span>
+                      <span className="text-white/60">Lifestyle</span>
+                      <span className="font-medium text-white">Included</span>
               </div>
                   )}
-                  <div className="flex justify-between pt-3 border-t border-[#1a1a1a]/10">
-                    <span className="font-bold text-[#1a1a1a]">Total</span>
-                    <span className="font-bold text-[#E54A4A] text-xl">
+                  <div className="flex justify-between pt-3 border-t border-white/10">
+                    <span className="font-bold text-white">Total</span>
+                    <span className="font-bold text-honey text-xl">
                       ${confirmedTotal ?? calculateTotal()}
                     </span>
                   </div>
@@ -1940,13 +1943,13 @@ export default function OrderPage() {
               <div className="flex gap-4">
                 <button
                   onClick={resetOrder}
-                  className="flex-1 py-4 border-2 border-[#1a1a1a] text-[#1a1a1a] font-bold rounded-xl hover:bg-[#1a1a1a] hover:text-white transition-all"
+                  className="flex-1 py-4 border-2 border-[#1a1a1a] text-white font-bold rounded-xl hover:bg-[#1a1a1a] hover:text-white transition-all"
                 >
                   New Order
                 </button>
                 <Link
                   href="/"
-                  className="flex-1 py-4 bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white font-bold rounded-xl hover:shadow-xl hover:shadow-[#E54A4A]/30 transition-all text-center"
+                  className="flex-1 py-4 bg-gradient-to-r from-honey to-honey/80 text-black font-bold rounded-xl hover:shadow-xl hover:shadow-honey/30 transition-all text-center"
                 >
                   Back to Home
                 </Link>

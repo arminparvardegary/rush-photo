@@ -9,9 +9,9 @@ interface ProgressBarProps {
 
 export function ProgressBar({ progress, className = "" }: ProgressBarProps) {
   return (
-    <div className={`h-1 bg-neutral-200 overflow-hidden ${className}`}>
+    <div className={`h-1 bg-white/10 overflow-hidden ${className}`}>
       <motion.div
-        className="h-full bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f]"
+        className="h-full bg-gradient-to-r from-honey to-teal"
         initial={{ width: 0 }}
         animate={{ width: `${progress}%` }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -35,4 +35,3 @@ export function StepProgress({ currentStep, totalSteps, className = "" }: StepPr
     </div>
   );
 }
-

@@ -18,11 +18,11 @@ interface ButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    "bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white hover:shadow-xl hover:shadow-[#E54A4A]/30",
-  secondary: "bg-neutral-900 text-white hover:bg-neutral-800",
+    "bg-gradient-to-r from-honey to-honey/90 text-black hover:shadow-xl hover:shadow-honey/30",
+  secondary: "bg-white/10 text-white hover:bg-white/20 border border-white/20",
   outline:
-    "border-2 border-neutral-900 bg-white text-neutral-900 hover:bg-neutral-50",
-  ghost: "bg-transparent text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900",
+    "border-2 border-white/20 bg-transparent text-white hover:bg-white/10 hover:border-honey/50",
+  ghost: "bg-transparent text-white/60 hover:bg-white/10 hover:text-white",
 };
 
 const sizes: Record<ButtonSize, string> = {
@@ -79,4 +79,3 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 Button.displayName = "Button";
-

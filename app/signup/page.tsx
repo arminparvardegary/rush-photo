@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock, User, Phone, Eye, EyeOff, AlertCircle, CheckCircle } from "lucide-react";
+import { Mail, Lock, User, Phone, Eye, EyeOff, AlertCircle, CheckCircle, Camera, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -28,7 +28,6 @@ export default function SignupPage() {
     e.preventDefault();
     setError("");
 
-    // Validation
     if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
       setError("Please fill in all fields");
       return;
@@ -71,44 +70,49 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FFFAF5] via-[#fff5eb] to-[#ffe8d6] flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-ink flex items-center justify-center px-4 py-12 relative overflow-hidden">
+      {/* Background effects */}
+      <div className="absolute inset-0 bg-grid-subtle opacity-30" />
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-honey/10 rounded-full blur-[150px]" />
+      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-teal/10 rounded-full blur-[120px]" />
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="w-full max-w-md relative z-10"
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center justify-center gap-3 mb-8">
-          <div className="w-12 h-12 bg-gradient-to-br from-[#E54A4A] to-[#ff7f7f] rounded-xl flex items-center justify-center">
-            <span className="text-white font-bold text-xl">R</span>
+        <Link href="/" className="flex items-center justify-center gap-3 mb-10">
+          <div className="w-12 h-12 bg-honey rounded-xl flex items-center justify-center">
+            <Camera className="w-6 h-6 text-ink" />
           </div>
           <div>
-            <span className="text-[#1a1a1a] font-bold text-xl">Rush</span>
-            <span className="text-[#E54A4A] font-bold text-xl">.photo</span>
+            <span className="text-cloud font-bold text-2xl">Rush</span>
+            <span className="text-honey font-bold text-2xl">.photo</span>
           </div>
         </Link>
 
         {/* Signup Card */}
-        <div className="bg-white rounded-3xl shadow-2xl p-8">
-          <h1 className="text-3xl font-bold text-[#1a1a1a] mb-2">Create account</h1>
-          <p className="text-[#1a1a1a]/60 mb-8">Join Rush Photo today</p>
+        <div className="bg-charcoal rounded-3xl border border-white/10 p-8 shadow-2xl">
+          <h1 className="text-3xl font-bold text-cloud mb-2">Create account</h1>
+          <p className="text-mist mb-8">Join Rush Photo today</p>
 
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3"
+              className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3"
             >
-              <AlertCircle className="w-5 h-5 text-red-500" />
-              <span className="text-red-700 text-sm">{error}</span>
+              <AlertCircle className="w-5 h-5 text-red-400" />
+              <span className="text-red-400 text-sm">{error}</span>
             </motion.div>
           )}
 
           {/* Google Signup Button */}
           <a
             href="/api/auth/google"
-            className="w-full py-3.5 bg-white border border-[#1a1a1a]/10 text-[#1a1a1a] font-medium rounded-xl flex items-center justify-center gap-3 hover:bg-[#f5f5f5] hover:border-[#1a1a1a]/20 transition-all mb-6"
+            className="w-full py-3.5 bg-white text-ink font-medium rounded-xl flex items-center justify-center gap-3 hover:bg-cloud transition-all mb-6"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -134,27 +138,25 @@ export default function SignupPage() {
           {/* Divider */}
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[#1a1a1a]/10"></div>
+              <div className="w-full border-t border-white/10"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-[#1a1a1a]/40">or sign up with email</span>
+              <span className="px-4 bg-charcoal text-smoke">or sign up with email</span>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Name */}
             <div>
-              <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
-                Full Name
-              </label>
+              <label className="block text-sm font-medium text-cloud mb-2">Full Name</label>
               <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1a1a1a]/40" />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-smoke" />
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all"
+                  className="w-full pl-12 pr-4 py-3.5 bg-graphite border border-white/10 rounded-xl text-cloud placeholder:text-smoke focus:border-honey focus:outline-none focus:ring-2 focus:ring-honey/20 transition-all"
                   placeholder="John Doe"
                   required
                 />
@@ -163,17 +165,15 @@ export default function SignupPage() {
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
-                Email
-              </label>
+              <label className="block text-sm font-medium text-cloud mb-2">Email</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1a1a1a]/40" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-smoke" />
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all"
+                  className="w-full pl-12 pr-4 py-3.5 bg-graphite border border-white/10 rounded-xl text-cloud placeholder:text-smoke focus:border-honey focus:outline-none focus:ring-2 focus:ring-honey/20 transition-all"
                   placeholder="your@email.com"
                   required
                 />
@@ -182,17 +182,17 @@ export default function SignupPage() {
 
             {/* Phone */}
             <div>
-              <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
-                Phone <span className="text-[#1a1a1a]/40">(optional)</span>
+              <label className="block text-sm font-medium text-cloud mb-2">
+                Phone <span className="text-smoke">(optional)</span>
               </label>
               <div className="relative">
-                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1a1a1a]/40" />
+                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-smoke" />
                 <input
                   type="tel"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all"
+                  className="w-full pl-12 pr-4 py-3.5 bg-graphite border border-white/10 rounded-xl text-cloud placeholder:text-smoke focus:border-honey focus:outline-none focus:ring-2 focus:ring-honey/20 transition-all"
                   placeholder="+1 (555) 000-0000"
                 />
               </div>
@@ -200,30 +200,28 @@ export default function SignupPage() {
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
-                Password
-              </label>
+              <label className="block text-sm font-medium text-cloud mb-2">Password</label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1a1a1a]/40" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-smoke" />
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-12 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all"
+                  className="w-full pl-12 pr-12 py-3.5 bg-graphite border border-white/10 rounded-xl text-cloud placeholder:text-smoke focus:border-honey focus:outline-none focus:ring-2 focus:ring-honey/20 transition-all"
                   placeholder="••••••••"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#1a1a1a]/40 hover:text-[#1a1a1a] transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-smoke hover:text-cloud transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
               {formData.password && formData.password.length >= 8 && (
-                <p className="mt-2 text-xs text-green-600 flex items-center gap-1">
+                <p className="mt-2 text-xs text-teal flex items-center gap-1">
                   <CheckCircle className="w-3 h-3" />
                   Password is strong
                 </p>
@@ -232,30 +230,28 @@ export default function SignupPage() {
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
-                Confirm Password
-              </label>
+              <label className="block text-sm font-medium text-cloud mb-2">Confirm Password</label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#1a1a1a]/40" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-smoke" />
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full pl-12 pr-12 py-3 rounded-xl border border-[#1a1a1a]/10 focus:border-[#E54A4A] focus:ring-2 focus:ring-[#E54A4A]/20 outline-none transition-all"
+                  className="w-full pl-12 pr-12 py-3.5 bg-graphite border border-white/10 rounded-xl text-cloud placeholder:text-smoke focus:border-honey focus:outline-none focus:ring-2 focus:ring-honey/20 transition-all"
                   placeholder="••••••••"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#1a1a1a]/40 hover:text-[#1a1a1a] transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-smoke hover:text-cloud transition-colors"
                 >
                   {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
               {formData.confirmPassword && formData.password === formData.confirmPassword && (
-                <p className="mt-2 text-xs text-green-600 flex items-center gap-1">
+                <p className="mt-2 text-xs text-teal flex items-center gap-1">
                   <CheckCircle className="w-3 h-3" />
                   Passwords match
                 </p>
@@ -264,12 +260,20 @@ export default function SignupPage() {
 
             {/* Terms */}
             <label className="flex items-start gap-3 cursor-pointer">
-              <input type="checkbox" className="mt-1 w-4 h-4 rounded border-[#1a1a1a]/20 text-[#E54A4A] focus:ring-[#E54A4A]" required />
-              <span className="text-sm text-[#1a1a1a]/60">
+              <input
+                type="checkbox"
+                className="mt-1 w-4 h-4 rounded border-white/20 bg-graphite text-honey focus:ring-honey"
+                required
+              />
+              <span className="text-sm text-mist">
                 I agree to the{" "}
-                <Link href="/terms" className="text-[#E54A4A] hover:underline">Terms of Service</Link>{" "}
+                <Link href="/terms" className="text-honey hover:text-honey-light transition-colors">
+                  Terms of Service
+                </Link>{" "}
                 and{" "}
-                <Link href="/privacy" className="text-[#E54A4A] hover:underline">Privacy Policy</Link>
+                <Link href="/privacy" className="text-honey hover:text-honey-light transition-colors">
+                  Privacy Policy
+                </Link>
               </span>
             </label>
 
@@ -279,27 +283,27 @@ export default function SignupPage() {
               disabled={isLoading}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full py-4 bg-gradient-to-r from-[#E54A4A] to-[#ff7f7f] text-white font-semibold rounded-xl flex items-center justify-center gap-2 hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+              className="w-full py-4 bg-honey text-ink font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-honey-light transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-6"
             >
               {isLoading ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-ink/30 border-t-ink rounded-full animate-spin" />
                   Creating account...
                 </>
               ) : (
                 <>
                   Create Account
-                  <CheckCircle className="w-5 h-5" />
+                  <ArrowRight className="w-5 h-5" />
                 </>
               )}
             </motion.button>
           </form>
 
           {/* Login link */}
-          <div className="mt-6 text-center">
-            <p className="text-sm text-[#1a1a1a]/60">
+          <div className="mt-8 text-center">
+            <p className="text-sm text-mist">
               Already have an account?{" "}
-              <Link href="/login" className="text-[#E54A4A] font-semibold hover:underline">
+              <Link href="/login" className="text-honey font-semibold hover:text-honey-light transition-colors">
                 Sign in
               </Link>
             </p>
@@ -309,4 +313,3 @@ export default function SignupPage() {
     </div>
   );
 }
-
