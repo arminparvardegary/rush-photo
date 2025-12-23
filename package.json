@@ -9,12 +9,13 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.956.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11.0.0",
     "lucide-react": "^0.441.0",
-    "next": "^16.0.5",
-    "react": "^18",
-    "react-dom": "^18",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
