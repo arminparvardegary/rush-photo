@@ -750,8 +750,8 @@ export default function OrderPage() {
                 <button
                   onClick={() => selectPackageType("ecommerce")}
                   className={`group relative overflow-hidden rounded-3xl transition-all duration-500 ${selectedPackage === "ecommerce"
-                      ? "ring-4 ring-honey scale-[1.02]"
-                      : selectedPackage ? "opacity-40 blur-[2px]" : "hover:scale-[1.02]"
+                    ? "ring-4 ring-honey scale-[1.02]"
+                    : selectedPackage ? "opacity-40 blur-[2px]" : "hover:scale-[1.02]"
                     }`}
                 >
                   <div className="aspect-[4/5] relative">
@@ -782,8 +782,8 @@ export default function OrderPage() {
                 <button
                   onClick={() => selectPackageType("lifestyle")}
                   className={`group relative overflow-hidden rounded-3xl transition-all duration-500 ${selectedPackage === "lifestyle"
-                      ? "ring-4 ring-purple-500 scale-[1.02]"
-                      : selectedPackage ? "opacity-40 blur-[2px]" : "hover:scale-[1.02]"
+                    ? "ring-4 ring-purple-500 scale-[1.02]"
+                    : selectedPackage ? "opacity-40 blur-[2px]" : "hover:scale-[1.02]"
                     }`}
                 >
                   <div className="aspect-[4/5] relative">
@@ -814,8 +814,8 @@ export default function OrderPage() {
                 <button
                   onClick={() => selectPackageType("fullpackage")}
                   className={`group relative overflow-hidden rounded-3xl transition-all duration-500 ${selectedPackage === "fullpackage"
-                      ? "ring-4 ring-amber-500 scale-[1.02]"
-                      : selectedPackage ? "opacity-40 blur-[2px]" : "hover:scale-[1.02]"
+                    ? "ring-4 ring-amber-500 scale-[1.02]"
+                    : selectedPackage ? "opacity-40 blur-[2px]" : "hover:scale-[1.02]"
                     }`}
                 >
                   <div className="absolute top-4 right-4 z-10 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg flex items-center gap-1">
@@ -1031,8 +1031,8 @@ export default function OrderPage() {
                                   onClick={(e) => { e.stopPropagation(); addToCart(); }}
                                   disabled={selectedAngles.length === 0}
                                   className={`px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 transition-all ${selectedAngles.length > 0
-                                      ? 'bg-honey text-white hover:bg-[#d43d3d]'
-                                      : 'bg-neutral-200 text-white/40 cursor-not-allowed'
+                                    ? 'bg-honey text-white hover:bg-[#d43d3d]'
+                                    : 'bg-neutral-200 text-white/40 cursor-not-allowed'
                                     }`}
                                 >
                                   <Check className="w-4 h-4" />
@@ -1144,8 +1144,8 @@ export default function OrderPage() {
                             key={angle.id}
                             onClick={() => toggleAngle(angle.id)}
                             className={`relative aspect-square rounded-2xl overflow-hidden transition-all duration-300 ${isSelected
-                                ? 'ring-4 ring-honey scale-[0.98]'
-                                : 'hover:scale-[1.02] hover:shadow-xl'
+                              ? 'ring-4 ring-honey scale-[0.98]'
+                              : 'hover:scale-[1.02] hover:shadow-xl'
                               }`}
                           >
                             <img
@@ -1158,8 +1158,8 @@ export default function OrderPage() {
 
                             {/* Selection Indicator */}
                             <div className={`absolute top-3 right-3 w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all ${isSelected
-                                ? 'border-honey bg-honey'
-                                : 'border-white bg-charcoal/20'
+                              ? 'border-honey bg-honey'
+                              : 'border-white bg-charcoal/20'
                               }`}>
                               {isSelected && <Check className="w-4 h-4 text-white" strokeWidth={3} />}
                             </div>
@@ -1203,8 +1203,8 @@ export default function OrderPage() {
                         onClick={addToCart}
                         disabled={selectedAngles.length === 0}
                         className={`w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all ${selectedAngles.length > 0
-                            ? 'bg-gradient-to-r from-honey to-honey/80 text-black hover:shadow-xl hover:shadow-honey/30'
-                            : 'bg-charcoal/10 text-white/30 cursor-not-allowed'
+                          ? 'bg-gradient-to-r from-honey to-honey/80 text-black hover:shadow-xl hover:shadow-honey/30'
+                          : 'bg-charcoal/10 text-white/30 cursor-not-allowed'
                           }`}
                       >
                         <ShoppingCart className="w-5 h-5" />
@@ -1225,11 +1225,11 @@ export default function OrderPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="-mx-4 sm:-mx-6 bg-[#fafafa]"
+              className="-mx-4 sm:-mx-6"
             >
               <div className="max-w-7xl mx-auto grid lg:grid-cols-12 min-h-[calc(100vh-80px)]">
                 {/* Left: Form */}
-                <div className="lg:col-span-7 xl:col-span-8 bg-charcoal px-6 sm:px-10 lg:px-14 py-8 sm:py-12 order-2 lg:order-1">
+                <div className="lg:col-span-7 xl:col-span-8 bg-ink px-6 sm:px-10 lg:px-14 py-8 sm:py-12 order-2 lg:order-1">
                   {/* Back */}
                   <div className="mb-8">
                     {order.packageType !== "lifestyle" ? (
@@ -1260,19 +1260,19 @@ export default function OrderPage() {
                           onClick={() => index <= stepIndex && setCheckoutStep(s.key)}
                           disabled={index > stepIndex}
                           className={`flex-1 rounded-xl border px-3 py-3 text-left transition-colors ${index === stepIndex
-                              ? "border-white/90 bg-charcoal"
-                              : index < stepIndex
-                                ? "border-white/20 bg-charcoal hover:border-white/40"
-                                : "border-white/20 bg-white/5 text-white/40 cursor-not-allowed"
+                            ? "border-white/90 bg-charcoal"
+                            : index < stepIndex
+                              ? "border-white/20 bg-charcoal hover:border-white/40"
+                              : "border-white/20 bg-white/5 text-white/40 cursor-not-allowed"
                             }`}
                         >
                           <div className="flex items-center gap-3">
                             <span
                               className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold ${index < stepIndex
+                                ? "bg-neutral-900 text-white"
+                                : index === stepIndex
                                   ? "bg-neutral-900 text-white"
-                                  : index === stepIndex
-                                    ? "bg-neutral-900 text-white"
-                                    : "bg-neutral-200 text-white/600"
+                                  : "bg-neutral-200 text-white/600"
                                 }`}
                             >
                               {index < stepIndex ? <Check className="w-4 h-4" /> : index + 1}
@@ -1651,7 +1651,7 @@ export default function OrderPage() {
                 </div>
 
                 {/* Right: Summary */}
-                <aside className="lg:col-span-5 xl:col-span-4 border-t lg:border-t-0 lg:border-l border-white/20 bg-[#fafafa] order-1 lg:order-2">
+                <aside className="lg:col-span-5 xl:col-span-4 border-t lg:border-t-0 lg:border-l border-white/5 bg-charcoal order-1 lg:order-2">
                   <div className="lg:sticky lg:top-20 px-6 sm:px-10 py-6 sm:py-10">
                     {/* Mobile toggle */}
                     <button
@@ -1669,7 +1669,7 @@ export default function OrderPage() {
                     </button>
 
                     <div className={`${showOrderSummary ? "block" : "hidden"} lg:block mt-4 lg:mt-0`}>
-                      <div className="rounded-2xl border border-white/20 bg-charcoal p-5">
+                      <div className="order-summary-card p-5">
                         <div className="flex items-center justify-between mb-4">
                           <h2 className="text-sm font-semibold text-white/90">Summary</h2>
                           <span className="text-sm font-semibold text-white/90">${calculateTotal()}</span>
@@ -1829,21 +1829,19 @@ export default function OrderPage() {
                             );
                           })()}
 
-                          <div className="pt-3 border-t border-white/20 flex items-center justify-between">
-                            <span className="text-sm font-semibold text-white/90">Total</span>
-                            <span className="text-lg font-bold text-white/90">${calculateTotal()}</span>
+                          <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+                            <span className="font-semibold text-white">Total</span>
+                            <span className="text-xl font-bold text-honey">${calculateTotal()}</span>
                           </div>
                         </div>
                       </div>
 
-                      <div className="mt-4 rounded-2xl border border-white/20 bg-charcoal p-5">
-                        <div className="flex items-start gap-3">
-                          <Clock className="w-5 h-5 text-white/800 mt-0.5" />
-                          <div>
-                            <div className="text-sm font-semibold text-white/90">3–5 business days</div>
-                            <div className="text-sm text-white/600 mt-1">
-                              Delivered digitally. 100% satisfaction guaranteed.
-                            </div>
+                      <div className="trust-badge mt-4">
+                        <Clock className="w-5 h-5 text-honey" />
+                        <div>
+                          <div className="text-sm font-semibold text-white">3–5 business days</div>
+                          <div className="text-xs text-mist mt-0.5">
+                            Delivered digitally. 100% satisfaction guaranteed.
                           </div>
                         </div>
                       </div>
