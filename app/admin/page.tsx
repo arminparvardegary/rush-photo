@@ -27,16 +27,12 @@ import {
   Sparkles,
   ShoppingBag,
   TrendingUp,
-  Bell,
   Settings,
   HelpCircle,
-  ExternalLink,
   Copy,
   Check,
-  Tag,
-  Percent,
-  ImagePlus,
   Layers,
+  Percent,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -127,7 +123,7 @@ export default function AdminPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState<any>(null);
   const [copiedTracking, setCopiedTracking] = useState<string | null>(null);
-  
+
   // Pricing state
   const [pricing, setPricing] = useState<PricingSettings>(defaultPricing);
   const [pricingSaved, setPricingSaved] = useState(false);
@@ -217,7 +213,7 @@ export default function AdminPage() {
       ...prev,
       ecommerce: {
         ...prev.ecommerce,
-        styles: prev.ecommerce.styles.map(style => 
+        styles: prev.ecommerce.styles.map(style =>
           style.id === styleId ? { ...style, pricePerAngle: price } : style
         ),
       },
@@ -227,7 +223,7 @@ export default function AdminPage() {
   const updateAnglePrice = (angleId: string, price: number) => {
     setPricing(prev => ({
       ...prev,
-      angles: prev.angles.map(angle => 
+      angles: prev.angles.map(angle =>
         angle.id === angleId ? { ...angle, price } : angle
       ),
     }));
@@ -300,7 +296,7 @@ export default function AdminPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center">
+      <div className="min-h-screen bg-ink flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-honey border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -314,39 +310,36 @@ export default function AdminPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0d0d0d] relative">
-      {/* Background effects */}
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(245,166,35,0.08),transparent_50%)] pointer-events-none" />
-      <div className="fixed inset-0 bg-grid opacity-30 pointer-events-none" />
-      
+    <div className="min-h-screen bg-ink relative">
+      <div className="fixed inset-0 bg-grain opacity-30 pointer-events-none" />
+
       {/* Header */}
-      <header className="bg-[#1a1a1a]/80 backdrop-blur-lg border-b border-white/10 sticky top-0 z-50">
+      <header className="glass-panel sticky top-0 z-50 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-11 h-11 bg-gradient-to-br from-honey to-honey/80 rounded-xl flex items-center justify-center shadow-lg shadow-honey/20 group-hover:shadow-honey/30 transition-shadow">
-                <span className="text-black font-bold text-lg">R</span>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-honey to-honey-dark flex items-center justify-center shadow-lg shadow-honey/20 group-hover:scale-105 transition-transform">
+                <Camera className="w-5 h-5 text-ink" />
               </div>
-              <div>
-                <span className="text-white font-bold text-lg">Rush</span>
-                <span className="text-honey font-bold text-lg">.photo</span>
+              <div className="flex flex-col">
+                <span className="font-bold text-lg text-white tracking-tight">Rush</span>
+                <span className="text-[10px] font-medium text-mist tracking-[0.2em]">DASHBOARD</span>
               </div>
             </Link>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
               <div className="hidden sm:block text-right">
-                <p className="font-semibold text-white">{user.name || user.email?.split('@')[0] || 'User'}</p>
-                <p className="text-xs text-white/50">
-                  {isAdmin ? 'Admin Dashboard' : 'Customer Dashboard'}
+                <p className="font-semibold text-white text-sm">{user.name || user.email?.split('@')[0] || 'User'}</p>
+                <p className="text-xs text-mist">
+                  {isAdmin ? 'Admin Dashboard' : 'Customer Account'}
                 </p>
               </div>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-honey/20 hover:border-honey/30 text-white/70 hover:text-honey transition-all"
-                title="Logout"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 text-mist hover:text-white transition-all text-sm"
               >
                 <LogOut className="w-4 h-4" />
-                <span className="hidden sm:inline text-sm font-medium">Logout</span>
+                <span className="hidden sm:inline">Logout</span>
               </button>
             </div>
           </div>
@@ -355,16 +348,15 @@ export default function AdminPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         {/* Tabs */}
-        <div className="flex gap-2 mb-8 bg-[#1a1a1a]/80 backdrop-blur-sm rounded-2xl p-2 inline-flex border border-white/10 overflow-x-auto">
+        <div className="flex gap-2 mb-8 bg-charcoal/50 backdrop-blur-sm rounded-2xl p-1.5 inline-flex border border-white/5 overflow-x-auto">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all whitespace-nowrap ${
-                activeTab === tab.id
-                  ? "bg-gradient-to-r from-honey to-honey/90 text-black shadow-lg shadow-honey/20"
-                  : "text-white/60 hover:text-white hover:bg-white/5"
-              }`}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${activeTab === tab.id
+                  ? "bg-gradient-to-r from-honey to-honey-dark text-ink shadow-lg shadow-honey/20"
+                  : "text-mist hover:text-white hover:bg-white/5"
+                }`}
             >
               <tab.icon className="w-4 h-4" />
               <span className="hidden sm:inline">{tab.label}</span>
@@ -380,15 +372,14 @@ export default function AdminPage() {
             className="space-y-8"
           >
             {/* Welcome Banner */}
-            <div className="bg-gradient-to-r from-honey/20 to-teal/10 rounded-3xl p-8 text-white relative overflow-hidden border border-white/10">
-              <div className="absolute right-0 top-0 w-64 h-64 bg-honey/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-              <div className="absolute right-20 bottom-0 w-32 h-32 bg-teal/10 rounded-full translate-y-1/2" />
+            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-dark p-8 md:p-12">
+              <div className="absolute right-0 top-0 w-80 h-80 bg-honey/10 rounded-full blur-[80px]" />
               <div className="relative z-10">
-                <h1 className="text-3xl font-bold mb-2">Welcome back, {user.name || user.email?.split('@')[0] || 'User'}! 👋</h1>
-                <p className="text-white/60 mb-6">Here&apos;s what&apos;s happening with your photo orders.</p>
+                <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Welcome back, {user.name || 'User'}! 👋</h1>
+                <p className="text-mist mb-8 max-w-xl text-lg">Your production status, orders, and account details in one place.</p>
                 <Link
                   href="/order"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-honey to-honey/90 text-black font-semibold rounded-xl hover:shadow-xl hover:shadow-honey/20 transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-honey text-ink font-bold rounded-xl hover:bg-honey-light hover:scale-105 transition-all shadow-lg shadow-honey/20"
                 >
                   <Camera className="w-5 h-5" />
                   New Order
@@ -405,25 +396,25 @@ export default function AdminPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-[#1a1a1a] rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-colors"
+                  className="bg-charcoal rounded-2xl p-6 border border-white/5 hover:border-white/10 transition-colors group"
                 >
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-r ${stat.color} flex items-center justify-center mb-4 shadow-lg`}>
-                    <stat.icon className="w-7 h-7 text-black" />
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-4 shadow-lg opacity-80 group-hover:opacity-100 transition-opacity`}>
+                    <stat.icon className="w-6 h-6 text-ink" />
                   </div>
-                  <p className="text-3xl font-bold text-white mb-1">{stat.value}</p>
-                  <p className="text-sm text-white/50">{stat.label}</p>
+                  <p className="text-3xl font-bold text-white mb-1 tracking-tight">{stat.value}</p>
+                  <p className="text-sm text-mist font-medium uppercase tracking-wider">{stat.label}</p>
                 </motion.div>
               ))}
             </div>
 
             {/* Recent Orders */}
-            <div className="bg-[#1a1a1a] rounded-3xl border border-white/10 overflow-hidden">
-              <div className="p-6 border-b border-white/10 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-white">Recent Orders</h2>
+            <div className="bg-charcoal rounded-3xl border border-white/5 overflow-hidden">
+              <div className="p-6 border-b border-white/5 flex items-center justify-between">
+                <h2 className="text-xl font-bold text-white">Recent Activity</h2>
                 {orders.length > 0 && (
                   <button
                     onClick={() => setActiveTab("orders")}
-                    className="text-sm text-honey font-medium hover:underline flex items-center gap-1"
+                    className="text-sm text-honey font-bold hover:underline flex items-center gap-1"
                   >
                     View All
                     <ChevronRight className="w-4 h-4" />
@@ -431,62 +422,42 @@ export default function AdminPage() {
                 )}
               </div>
               {orders.length === 0 ? (
-                <div className="p-12 text-center">
+                <div className="p-16 text-center">
                   <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-6">
-                    <FileImage className="w-10 h-10 text-white/20" />
+                    <FileImage className="w-10 h-10 text-white/10" />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">No orders yet</h3>
-                  <p className="text-white/50 mb-6 max-w-sm mx-auto">
-                    Start your first professional product photo shoot today and elevate your brand.
+                  <h3 className="text-xl font-bold text-white mb-2">No active orders</h3>
+                  <p className="text-mist mb-6 max-w-sm mx-auto">
+                    Your recent project activity will appear here.
                   </p>
-                  <Link
-                    href="/order"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-honey to-honey/90 text-black font-semibold rounded-xl hover:shadow-lg hover:shadow-honey/20 transition-all"
-                  >
-                    <Sparkles className="w-5 h-5" />
-                    Place Your First Order
-                  </Link>
                 </div>
               ) : (
-                <div className="divide-y divide-white/10">
+                <div className="divide-y divide-white/5">
                   {orders.slice(0, 5).map((order) => (
                     <div
                       key={order.id}
-                      className="p-5 hover:bg-white/5 transition-colors flex items-center justify-between gap-4"
+                      className="p-5 hover:bg-white/[0.02] transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4"
                     >
                       <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 bg-honey/10 rounded-2xl flex items-center justify-center">
-                          <Camera className="w-6 h-6 text-honey" />
+                        <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center">
+                          <Package className="w-6 h-6 text-mist" />
                         </div>
                         <div>
-                          <p className="font-semibold text-white">{order.productName}</p>
-                          <p className="text-sm text-white/50 flex items-center gap-2">
-                            <span className="font-mono">{order.trackingNumber}</span>
-                            <button
-                              onClick={() => copyTracking(order.trackingNumber)}
-                              className="p-1 rounded hover:bg-white/10 transition-colors"
-                            >
-                              {copiedTracking === order.trackingNumber ? (
-                                <Check className="w-3 h-3 text-teal" />
-                              ) : (
-                                <Copy className="w-3 h-3 text-white/30" />
-                              )}
-                            </button>
+                          <p className="font-bold text-white mb-0.5">{order.productName}</p>
+                          <p className="text-xs text-mist flex items-center gap-2">
+                            <span className="font-mono text-white/40">{order.trackingNumber}</span>
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <span className={`px-3 py-1.5 rounded-full text-xs font-medium border flex items-center gap-1.5 ${getStatusColor(order.status)}`}>
+                      <div className="flex items-center justify-between md:justify-end gap-6 w-full md:w-auto">
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1.5 ${getStatusColor(order.status)}`}>
                           {getStatusIcon(order.status)}
                           <span className="capitalize">{order.status}</span>
                         </span>
-                        <p className="font-bold text-honey min-w-[60px] text-right">${order.total}</p>
-                        <button
-                          onClick={() => setSelectedOrder(order)}
-                          className="p-2 rounded-lg hover:bg-white/10 transition-colors text-white/50 hover:text-honey"
-                        >
-                          <Eye className="w-5 h-5" />
-                        </button>
+                        <div className="text-right">
+                          <p className="text-sm font-bold text-white">${order.total}</p>
+                          <p className="text-xs text-mist">{new Date(order.createdAt).toLocaleDateString()}</p>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -495,37 +466,29 @@ export default function AdminPage() {
             </div>
 
             {/* Quick Actions */}
-            <div className={`grid gap-4 ${isAdmin ? 'sm:grid-cols-4' : 'sm:grid-cols-3'}`}>
-              <Link href="/order" className="bg-[#1a1a1a] rounded-2xl p-6 border border-white/10 hover:border-honey/30 hover:bg-honey/5 transition-all group">
-                <div className="w-12 h-12 rounded-xl bg-honey/20 flex items-center justify-center mb-4 group-hover:bg-honey transition-colors">
-                  <Camera className="w-6 h-6 text-honey group-hover:text-black transition-colors" />
-                </div>
-                <h3 className="font-bold text-white mb-1">New Photo Order</h3>
-                <p className="text-sm text-white/50">Start a new product photo shoot</p>
-              </Link>
-              {isAdmin && (
-                <button onClick={() => setActiveTab("pricing")} className="bg-[#1a1a1a] rounded-2xl p-6 border border-white/10 hover:border-honey/30 hover:bg-honey/5 transition-all group text-left">
-                  <div className="w-12 h-12 rounded-xl bg-honey/20 flex items-center justify-center mb-4 group-hover:bg-honey transition-colors">
-                    <DollarSign className="w-6 h-6 text-honey group-hover:text-black transition-colors" />
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { title: "New Order", icon: Camera, desc: "Start a product shoot", href: "/order" },
+                { title: "Help & FAQ", icon: HelpCircle, desc: "Get support", href: "/#faq" },
+                ...(isAdmin ? [{ title: "Pricing", icon: DollarSign, desc: "Manage rates", action: () => setActiveTab("pricing") }] : []),
+                { title: "Settings", icon: Settings, desc: "Update profile", action: () => setActiveTab("profile") }
+              ].map((action: any, i) => {
+                const Content = (
+                  <div className="bg-charcoal p-6 rounded-2xl border border-white/5 hover:border-honey/20 hover:bg-white/[0.02] transition-all group h-full">
+                    <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center mb-4 group-hover:bg-honey text-mist group-hover:text-ink transition-colors">
+                      <action.icon className="w-5 h-5" />
+                    </div>
+                    <h3 className="font-bold text-white mb-1">{action.title}</h3>
+                    <p className="text-xs text-mist">{action.desc}</p>
                   </div>
-                  <h3 className="font-bold text-white mb-1">Manage Pricing</h3>
-                  <p className="text-sm text-white/50">Set product prices</p>
-                </button>
-              )}
-              <Link href="/#faq" className="bg-[#1a1a1a] rounded-2xl p-6 border border-white/10 hover:border-teal/30 hover:bg-teal/5 transition-all group">
-                <div className="w-12 h-12 rounded-xl bg-teal/20 flex items-center justify-center mb-4 group-hover:bg-teal transition-colors">
-                  <HelpCircle className="w-6 h-6 text-teal group-hover:text-black transition-colors" />
-                </div>
-                <h3 className="font-bold text-white mb-1">Help & FAQ</h3>
-                <p className="text-sm text-white/50">Get answers to common questions</p>
-              </Link>
-              <button onClick={() => setActiveTab("profile")} className="bg-[#1a1a1a] rounded-2xl p-6 border border-white/10 hover:border-purple-500/30 hover:bg-purple-500/5 transition-all group text-left">
-                <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4 group-hover:bg-purple-500 transition-colors">
-                  <Settings className="w-6 h-6 text-purple-400 group-hover:text-white transition-colors" />
-                </div>
-                <h3 className="font-bold text-white mb-1">Account Settings</h3>
-                <p className="text-sm text-white/50">Manage your profile</p>
-              </button>
+                );
+
+                return action.href ? (
+                  <Link key={i} href={action.href} className="block">{Content}</Link>
+                ) : (
+                  <button key={i} onClick={action.action} className="text-left w-full h-full">{Content}</button>
+                );
+              })}
             </div>
           </motion.div>
         )}
@@ -538,10 +501,10 @@ export default function AdminPage() {
             className="space-y-6"
           >
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-white">All Orders</h2>
+              <h2 className="text-2xl font-bold text-white">Order History</h2>
               <Link
                 href="/order"
-                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-honey to-honey/90 text-black font-semibold rounded-xl hover:shadow-lg hover:shadow-honey/20 transition-all"
+                className="flex items-center gap-2 px-5 py-2.5 bg-honey text-ink font-bold rounded-xl hover:bg-honey-light transition-all text-sm"
               >
                 <Camera className="w-4 h-4" />
                 New Order
@@ -549,93 +512,35 @@ export default function AdminPage() {
             </div>
 
             {orders.length === 0 ? (
-              <div className="bg-[#1a1a1a] rounded-3xl border border-white/10 p-12 text-center">
-                <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-6">
-                  <FileImage className="w-10 h-10 text-white/20" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">No orders yet</h3>
-                <p className="text-white/50 mb-6">Start your first professional product photo shoot today.</p>
-                <Link
-                  href="/order"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-honey to-honey/90 text-black font-semibold rounded-xl hover:shadow-lg transition-all"
-                >
-                  Place Your First Order
-                </Link>
+              <div className="bg-charcoal rounded-3xl border border-white/5 p-12 text-center">
+                <p className="text-mist">No orders found.</p>
               </div>
             ) : (
-              <div className="space-y-4">
-                {orders.map((order, index) => (
-                  <motion.div
-                    key={order.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="bg-[#1a1a1a] rounded-2xl border border-white/10 overflow-hidden hover:border-white/20 transition-all"
-                  >
-                    <div className="p-6">
-                      <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
-                        <div className="flex items-start gap-4">
-                          <div className="w-16 h-16 bg-honey/10 rounded-2xl flex items-center justify-center flex-shrink-0">
-                            <Camera className="w-8 h-8 text-honey" />
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-bold text-white mb-1">{order.productName}</h3>
-                            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-white/50">
-                              <span className="flex items-center gap-1.5">
-                                <Calendar className="w-4 h-4" />
-                                {new Date(order.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                              </span>
-                              <span className="flex items-center gap-1.5">
-                                <Clock className="w-4 h-4" />
-                                Est. {order.estimatedDelivery}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className={`px-4 py-2 rounded-full text-sm font-medium border flex items-center gap-1.5 ${getStatusColor(order.status)}`}>
-                            {getStatusIcon(order.status)}
-                            <span className="capitalize">{order.status}</span>
-                          </span>
-                          <p className="text-2xl font-bold text-honey">${order.total}</p>
-                        </div>
+              <div className="grid gap-4">
+                {orders.map((order) => (
+                  <div key={order.id} className="bg-charcoal rounded-2xl p-6 border border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div className="flex items-center gap-4 w-full md:w-auto">
+                      <div className="w-16 h-16 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0">
+                        <Package className="w-8 h-8 text-white/20" />
                       </div>
-                      
-                      <div className="flex flex-wrap items-center justify-between pt-4 border-t border-white/10 gap-4">
-                        <div>
-                          <p className="text-xs text-white/40 mb-1">Tracking Number</p>
-                          <div className="flex items-center gap-2">
-                            <code className="font-mono font-semibold text-white">{order.trackingNumber}</code>
-                            <button
-                              onClick={() => copyTracking(order.trackingNumber)}
-                              className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
-                            >
-                              {copiedTracking === order.trackingNumber ? (
-                                <Check className="w-4 h-4 text-teal" />
-                              ) : (
-                                <Copy className="w-4 h-4 text-white/30" />
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <button 
-                            onClick={() => setSelectedOrder(order)}
-                            className="px-4 py-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-sm font-medium text-white transition-colors flex items-center gap-2 border border-white/10"
-                          >
-                            <Eye className="w-4 h-4" />
-                            View Details
-                          </button>
-                          {order.status === "completed" && (
-                            <button className="px-4 py-2.5 bg-gradient-to-r from-honey to-honey/90 text-black rounded-xl text-sm font-semibold hover:shadow-lg hover:shadow-honey/20 transition-all flex items-center gap-2">
-                              <Download className="w-4 h-4" />
-                              Download Photos
-                            </button>
-                          )}
+                      <div>
+                        <h3 className="font-bold text-white text-lg">{order.productName}</h3>
+                        <div className="flex items-center gap-3 text-sm text-mist mt-1">
+                          <span>{new Date(order.createdAt).toLocaleDateString()}</span>
+                          <span>•</span>
+                          <span className="font-mono">{order.trackingNumber}</span>
                         </div>
                       </div>
                     </div>
-                  </motion.div>
+
+                    <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1.5 ${getStatusColor(order.status)}`}>
+                        {getStatusIcon(order.status)}
+                        <span className="capitalize">{order.status}</span>
+                      </span>
+                      <p className="text-xl font-bold text-white min-w-[80px] text-right">${order.total}</p>
+                    </div>
+                  </div>
                 ))}
               </div>
             )}
@@ -651,171 +556,50 @@ export default function AdminPage() {
           >
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-white">Pricing Management</h2>
-                <p className="text-white/50">Set prices for all photography packages and styles</p>
+                <h2 className="text-2xl font-bold text-white">Global Pricing</h2>
+                <p className="text-mist text-sm">Update prices across the platform</p>
               </div>
               <button
                 onClick={handleSavePricing}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${
-                  pricingSaved 
-                    ? 'bg-teal text-black' 
-                    : 'bg-gradient-to-r from-honey to-honey/90 text-black hover:shadow-lg hover:shadow-honey/20'
-                }`}
+                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${pricingSaved
+                    ? 'bg-teal text-ink'
+                    : 'bg-honey text-ink hover:bg-honey-light'
+                  }`}
               >
                 {pricingSaved ? (
                   <>
-                    <Check className="w-5 h-5" />
-                    Saved!
+                    <Check className="w-4 h-4" />
+                    Saved
                   </>
                 ) : (
                   <>
-                    <Save className="w-5 h-5" />
+                    <Save className="w-4 h-4" />
                     Save Changes
                   </>
                 )}
               </button>
             </div>
 
-            {/* E-commerce Styles Pricing */}
-            <div className="bg-[#1a1a1a] rounded-3xl border border-white/10 overflow-hidden">
-              <div className="p-6 border-b border-white/10 bg-honey/5">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-honey flex items-center justify-center">
-                    <Camera className="w-6 h-6 text-black" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">E-commerce Photography Styles</h3>
-                    <p className="text-sm text-white/50">Set price per angle for each style</p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="grid sm:grid-cols-3 gap-6">
-                  {pricing.ecommerce.styles.map((style) => (
-                    <div key={style.id} className="border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all">
-                      <div className="aspect-video relative">
-                        <img src={style.image} alt={style.name} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                        <h4 className="absolute bottom-3 left-3 text-white font-bold text-lg">{style.name}</h4>
-                      </div>
-                      <div className="p-4 bg-[#0d0d0d]">
-                        <p className="text-sm text-white/50 mb-3">{style.description}</p>
-                        <div>
-                          <label className="block text-xs text-white/50 mb-1">Price per angle</label>
-                          <div className="relative">
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 font-bold">$</span>
-                            <input
-                              type="number"
-                              value={style.pricePerAngle}
-                              onChange={(e) => updateStylePrice(style.id, Number(e.target.value))}
-                              className="w-full pl-9 pr-4 py-3 bg-white/5 border-2 border-transparent rounded-xl text-white focus:border-honey focus:bg-white/10 focus:outline-none transition-all font-bold text-lg"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Angles Pricing */}
-            <div className="bg-[#1a1a1a] rounded-3xl border border-white/10 overflow-hidden">
-              <div className="p-6 border-b border-white/10 bg-teal/5">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-teal flex items-center justify-center">
-                    <Layers className="w-6 h-6 text-black" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">Angle Options</h3>
-                    <p className="text-sm text-white/50">Individual pricing for each shooting angle</p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {pricing.angles.map((angle) => (
-                    <div key={angle.id} className="border border-white/10 rounded-2xl p-4 hover:border-white/20 transition-all bg-[#0d0d0d]">
-                      <div className="w-20 h-20 rounded-xl overflow-hidden mx-auto mb-3">
-                        <img src={angle.image} alt={angle.name} className="w-full h-full object-cover" />
-                      </div>
-                      <h4 className="font-bold text-white text-center mb-3">{angle.name}</h4>
-                      <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 font-bold">$</span>
-                        <input
-                          type="number"
-                          value={angle.price}
-                          onChange={(e) => updateAnglePrice(angle.id, Number(e.target.value))}
-                          className="w-full pl-8 pr-4 py-2.5 bg-white/5 border-2 border-transparent rounded-xl text-white focus:border-honey focus:bg-white/10 focus:outline-none transition-all font-bold text-center"
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Lifestyle & Package Pricing */}
-            <div className="grid sm:grid-cols-2 gap-6">
-              {/* Lifestyle Pricing */}
-              <div className="bg-[#1a1a1a] rounded-3xl border border-white/10 overflow-hidden">
-                <div className="p-6 border-b border-white/10 bg-purple-500/5">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-purple-500 flex items-center justify-center">
-                      <Sparkles className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white">Lifestyle Photography</h3>
-                      <p className="text-sm text-white/50">Flat rate for styled shoots</p>
+            {/* Simple input fields refactored with new styling */}
+            <div className="bg-charcoal rounded-3xl border border-white/5 p-8">
+              <h3 className="font-bold text-white mb-6 flex items-center gap-2">
+                <Camera className="w-5 h-5 text-honey" /> E-commerce Rates
+              </h3>
+              <div className="grid sm:grid-cols-3 gap-6">
+                {pricing.ecommerce.styles.map((style) => (
+                  <div key={style.id} className="p-4 rounded-xl bg-ink border border-white/5">
+                    <p className="text-sm font-bold text-white mb-1">{style.name}</p>
+                    <div className="relative mt-2">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-mist">$</span>
+                      <input
+                        type="number"
+                        value={style.pricePerAngle}
+                        onChange={(e) => updateStylePrice(style.id, Number(e.target.value))}
+                        className="w-full bg-charcoal rounded-lg py-2 pl-7 pr-3 text-white font-bold border border-white/10 focus:border-honey focus:outline-none"
+                      />
                     </div>
                   </div>
-                </div>
-                <div className="p-6">
-                  <label className="block text-sm font-medium text-white/70 mb-2">Flat Rate Price</label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50 font-bold text-xl">$</span>
-                    <input
-                      type="number"
-                      value={pricing.lifestyle.flatRate}
-                      onChange={(e) => setPricing(prev => ({
-                        ...prev,
-                        lifestyle: { flatRate: Number(e.target.value) }
-                      }))}
-                      className="w-full pl-10 pr-4 py-4 bg-white/5 border-2 border-transparent rounded-xl text-white focus:border-purple-500 focus:bg-white/10 focus:outline-none transition-all font-bold text-2xl"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Full Package Discount */}
-              <div className="bg-[#1a1a1a] rounded-3xl border border-white/10 overflow-hidden">
-                <div className="p-6 border-b border-white/10 bg-honey/5">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-honey flex items-center justify-center">
-                      <Percent className="w-6 h-6 text-black" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-white">Full Package Discount</h3>
-                      <p className="text-sm text-white/50">Bundle discount percentage</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <label className="block text-sm font-medium text-white/70 mb-2">Discount Percentage</label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      value={pricing.fullPackageDiscount}
-                      onChange={(e) => setPricing(prev => ({
-                        ...prev,
-                        fullPackageDiscount: Number(e.target.value)
-                      }))}
-                      className="w-full pl-4 pr-10 py-4 bg-white/5 border-2 border-transparent rounded-xl text-white focus:border-honey focus:bg-white/10 focus:outline-none transition-all font-bold text-2xl"
-                    />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 font-bold text-xl">%</span>
-                  </div>
-                  <p className="text-sm text-white/40 mt-2">Applied when customers choose the Full Package</p>
-                </div>
+                ))}
               </div>
             </div>
           </motion.div>
@@ -826,231 +610,45 @@ export default function AdminPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-2xl"
+            className="max-w-2xl mx-auto space-y-8"
           >
-            <div className="bg-[#1a1a1a] rounded-3xl border border-white/10 overflow-hidden">
-              <div className="p-8 border-b border-white/10 bg-honey/5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-5">
-                    <div className="w-20 h-20 bg-gradient-to-br from-honey to-honey/80 rounded-2xl flex items-center justify-center shadow-lg shadow-honey/20">
-                      <User className="w-10 h-10 text-black" />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-white">{user.name || user.email?.split('@')[0] || 'User'}</h2>
-                      <p className="text-white/50">{user.email}</p>
-                      {isAdmin && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-honey/20 text-honey rounded-full text-xs font-medium mt-1">
-                          <Settings className="w-3 h-3" />
-                          Admin
-                        </span>
-                      )}
-                    </div>
+            <div className="bg-charcoal rounded-3xl border border-white/5 p-8">
+              <h2 className="text-2xl font-bold text-white mb-6">Profile Settings</h2>
+              <div className="space-y-6">
+                {[
+                  { label: "Full Name", field: "name", type: "text" },
+                  { label: "Email Address", field: "email", type: "email" },
+                  { label: "Phone Number", field: "phone", type: "tel" },
+                  { label: "Company", field: "company", type: "text" }
+                ].map((item) => (
+                  <div key={item.field}>
+                    <label className="block text-xs font-bold text-mist uppercase tracking-wider mb-2">{item.label}</label>
+                    <input
+                      type={item.type}
+                      value={editedUser?.[item.field] || ""}
+                      onChange={(e) => setEditedUser({ ...editedUser, [item.field]: e.target.value })}
+                      disabled={!isEditing}
+                      className="w-full bg-ink border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-honey disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
                   </div>
-                  {!isEditing && (
-                    <button
-                      onClick={() => setIsEditing(true)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium transition-colors border border-white/10"
-                    >
-                      <Edit3 className="w-4 h-4" />
-                      Edit
-                    </button>
+                ))}
+
+                <div className="flex justify-end gap-4 pt-4">
+                  {isEditing ? (
+                    <>
+                      <button onClick={() => setIsEditing(false)} className="px-6 py-2.5 rounded-xl border border-white/10 text-white font-bold hover:bg-white/5">Cancel</button>
+                      <button onClick={handleSaveProfile} className="px-6 py-2.5 rounded-xl bg-honey text-ink font-bold hover:bg-honey-light">Save Changes</button>
+                    </>
+                  ) : (
+                    <button onClick={() => setIsEditing(true)} className="px-6 py-2.5 rounded-xl bg-white/5 text-white font-bold hover:bg-white/10 border border-white/5">Edit Profile</button>
                   )}
                 </div>
-              </div>
-
-              <div className="p-8 space-y-6">
-                {isEditing ? (
-                  <>
-                    <div className="grid sm:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-white/70 mb-2">Full Name</label>
-                        <input
-                          type="text"
-                          value={editedUser.name || ''}
-                          onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })}
-                          className="w-full px-4 py-3 bg-white/5 border-2 border-transparent rounded-xl text-white focus:border-honey focus:bg-white/10 focus:outline-none transition-all"
-                          placeholder="Enter your name"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-white/70 mb-2">Email</label>
-                        <input
-                          type="email"
-                          value={editedUser.email || ''}
-                          onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
-                          className="w-full px-4 py-3 bg-white/5 border-2 border-transparent rounded-xl text-white focus:border-honey focus:bg-white/10 focus:outline-none transition-all"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-white/70 mb-2">Phone</label>
-                        <input
-                          type="tel"
-                          value={editedUser.phone || ''}
-                          onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })}
-                          className="w-full px-4 py-3 bg-white/5 border-2 border-transparent rounded-xl text-white focus:border-honey focus:bg-white/10 focus:outline-none transition-all"
-                          placeholder="Enter your phone"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-white/70 mb-2">Company</label>
-                        <input
-                          type="text"
-                          value={editedUser.company || ''}
-                          onChange={(e) => setEditedUser({ ...editedUser, company: e.target.value })}
-                          className="w-full px-4 py-3 bg-white/5 border-2 border-transparent rounded-xl text-white focus:border-honey focus:bg-white/10 focus:outline-none transition-all"
-                          placeholder="Enter company name"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 pt-4">
-                      <button
-                        onClick={handleSaveProfile}
-                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-honey to-honey/90 text-black font-semibold rounded-xl hover:shadow-lg hover:shadow-honey/20 transition-all"
-                      >
-                        <Save className="w-4 h-4" />
-                        Save Changes
-                      </button>
-                      <button
-                        onClick={() => {
-                          setIsEditing(false);
-                          setEditedUser(user);
-                        }}
-                        className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 text-white font-medium rounded-xl transition-colors border border-white/10"
-                      >
-                        <X className="w-4 h-4" />
-                        Cancel
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <div className="grid sm:grid-cols-2 gap-6">
-                    <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                      <div className="flex items-center gap-3 mb-1">
-                        <User className="w-5 h-5 text-white/40" />
-                        <span className="text-sm text-white/50">Full Name</span>
-                      </div>
-                      <p className="font-medium text-white pl-8">{user.name || 'Not set'}</p>
-                    </div>
-                    <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                      <div className="flex items-center gap-3 mb-1">
-                        <Mail className="w-5 h-5 text-white/40" />
-                        <span className="text-sm text-white/50">Email</span>
-                      </div>
-                      <p className="font-medium text-white pl-8">{user.email}</p>
-                    </div>
-                    <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                      <div className="flex items-center gap-3 mb-1">
-                        <Phone className="w-5 h-5 text-white/40" />
-                        <span className="text-sm text-white/50">Phone</span>
-                      </div>
-                      <p className="font-medium text-white pl-8">{user.phone || 'Not set'}</p>
-                    </div>
-                    <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                      <div className="flex items-center gap-3 mb-1">
-                        <Package className="w-5 h-5 text-white/40" />
-                        <span className="text-sm text-white/50">Account Type</span>
-                      </div>
-                      <p className="font-medium text-white pl-8 capitalize">{user.role || 'Customer'}</p>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </motion.div>
         )}
+
       </div>
-
-      {/* Order Details Modal */}
-      <AnimatePresence>
-        {selectedOrder && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={() => setSelectedOrder(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-[#1a1a1a] border border-white/10 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-[#1a1a1a] rounded-t-3xl">
-                <h3 className="text-xl font-bold text-white">Order Details</h3>
-                <button
-                  onClick={() => setSelectedOrder(null)}
-                  className="p-2 rounded-xl hover:bg-white/10 transition-colors"
-                >
-                  <X className="w-5 h-5 text-white/60" />
-                </button>
-              </div>
-              
-              <div className="p-6 space-y-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-honey/10 rounded-2xl flex items-center justify-center">
-                    <Camera className="w-8 h-8 text-honey" />
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-bold text-white">{selectedOrder.productName}</h4>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium border inline-flex items-center gap-1 mt-1 ${getStatusColor(selectedOrder.status)}`}>
-                      {getStatusIcon(selectedOrder.status)}
-                      <span className="capitalize">{selectedOrder.status}</span>
-                    </span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                    <p className="text-xs text-white/50 mb-1">Tracking Number</p>
-                    <p className="font-mono font-semibold text-white">{selectedOrder.trackingNumber}</p>
-                  </div>
-                  <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                    <p className="text-xs text-white/50 mb-1">Package Type</p>
-                    <p className="font-semibold text-white capitalize">{selectedOrder.package}</p>
-                  </div>
-                  <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                    <p className="text-xs text-white/50 mb-1">Order Date</p>
-                    <p className="font-semibold text-white">
-                      {new Date(selectedOrder.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                    </p>
-                  </div>
-                  <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                    <p className="text-xs text-white/50 mb-1">Est. Delivery</p>
-                    <p className="font-semibold text-white">{selectedOrder.estimatedDelivery}</p>
-                  </div>
-                </div>
-
-                {selectedOrder.styles && selectedOrder.styles.length > 0 && (
-                  <div>
-                    <p className="text-sm text-white/50 mb-2">Styles Included</p>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedOrder.styles.map((style) => (
-                        <span key={style} className="px-3 py-1.5 bg-honey/20 text-honey rounded-full text-sm font-medium">
-                          {style}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div className="p-4 bg-honey/10 rounded-xl border border-honey/30 flex items-center justify-between">
-                  <span className="font-medium text-white">Total Amount</span>
-                  <span className="text-2xl font-bold text-honey">${selectedOrder.total}</span>
-                </div>
-
-                {selectedOrder.status === "completed" && (
-                  <button className="w-full py-4 bg-gradient-to-r from-honey to-honey/90 text-black font-semibold rounded-xl hover:shadow-lg hover:shadow-honey/20 transition-all flex items-center justify-center gap-2">
-                    <Download className="w-5 h-5" />
-                    Download All Photos
-                  </button>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
