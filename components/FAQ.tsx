@@ -2,185 +2,148 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, MessageCircle, HelpCircle, Mail, Phone } from "lucide-react";
+import { Plus, Minus, Search, MessageCircle } from "lucide-react";
 
-const faqs = [
+const FAQ_DATA = [
   {
-    question: "How long does it take to receive my product photos?",
-    answer:
-      "Standard turnaround is 3-5 business days from when we receive your product. Rush delivery (24-48 hours) is available for an additional fee. Most clients receive their professional product photos within one week of shipping their items to us.",
+    category: "Service",
+    question: "Do I need to be present for the photoshoot?",
+    answer: "No, you don't! Most of our clients ship their products to us. We handle everything efficiently and keep you updated throughout the process."
   },
   {
-    question: "What happens to my product after the photo shoot?",
-    answer:
-      "We carefully package and ship your product back to you within 24 hours of completing the shoot. Return shipping is included in all packages at no extra cost. We treat every product with the utmost care and use professional packaging materials.",
+    category: "Service",
+    question: "How long does the entire process take?",
+    answer: "Standard turnaround is 3-5 business days from when we receive your products. We also offer a 24-hour rush service for urgent deadlines."
   },
   {
-    question: "Can I request revisions on my product photos?",
-    answer:
-      "Yes! Our Full Package includes unlimited revisions until you're 100% satisfied. E-commerce and Lifestyle packages include 2 revisions each. We want you to be completely happy with your professional product photography.",
+    category: "Delivery",
+    question: "What file formats will I receive?",
+    answer: "We deliver high-resolution JPEGs for web use and TIFFs for print. If you choose our Pro package, we also include the RAW files."
   },
   {
-    question: "What file formats do I receive for my product photos?",
-    answer:
-      "You'll receive high-resolution JPG files (4K+) optimized for both web and print use. Files are delivered via secure download link. RAW files are included with the Full Package for maximum editing flexibility.",
+    category: "Pricing",
+    question: "Are there any hidden fees?",
+    answer: "Absolutely not. Our pricing is all-inclusive covering studio time, equipment, photographer, styling, and retouching. Return shipping is calculated at checkout."
   },
   {
-    question: "Do you offer bulk discounts for multiple products?",
-    answer:
-      "Yes! Contact us for custom pricing on orders of 10+ products. We also offer ongoing partnership rates for brands with regular photography needs, including monthly retainer packages for ecommerce businesses.",
-  },
-  {
-    question: "What if I'm not satisfied with my product photos?",
-    answer:
-      "We offer a 100% satisfaction guarantee on all packages. If you're not happy with the results, we'll reshoot for free or provide a full refund. Your satisfaction is our top priority, and we've maintained a 4.9/5 rating from over 500 brands.",
-  },
+    category: "Revisions",
+    question: "What if I don't like the photos?",
+    answer: "We offer a 100% satisfaction guarantee. If the photos don't match your approved moodboard, we'll reshoot them for free. We also include revisions for retouching."
+  }
 ];
 
+const CATEGORIES = ["All", "Service", "Delivery", "Pricing", "Revisions"];
+
 export default function FAQ() {
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
+  const filteredFAQs = FAQ_DATA.filter(item => {
+    const matchesCategory = activeCategory === "All" || item.category === activeCategory;
+    const matchesSearch = item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.answer.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
   return (
-    <section 
-      id="faq" 
-      className="relative py-32 bg-ink overflow-hidden"
-      aria-labelledby="faq-heading"
-      itemScope 
-      itemType="https://schema.org/FAQPage"
-    >
-      {/* Background effects */}
-      <div className="absolute inset-0 bg-grid-subtle opacity-30" />
-      <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-teal/5 rounded-full blur-[150px]" />
-      
-      <div className="container relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-          {/* Left - Header */}
-          <motion.header
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="lg:sticky lg:top-32"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal/10 border border-teal/20 mb-6">
-              <HelpCircle className="w-4 h-4 text-teal" />
-              <span className="text-sm font-medium text-teal">FAQ</span>
-            </div>
-            <h2
-              id="faq-heading"
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-cloud mb-6"
-            >
-              Common{" "}
-              <span className="text-gradient-cool font-serif italic">questions</span>
-            </h2>
-            <p className="text-lg text-mist mb-10 max-w-md">
-              Everything you need to know about our professional product photography
-              service. Can&apos;t find what you&apos;re looking for?
-            </p>
+    <section id="faq" className="relative py-32 bg-ink overflow-hidden opacity-100">
+      <div className="container max-w-4xl relative z-10">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+            Common <span className="text-honey font-serif italic">Questions</span>
+          </h2>
+          <p className="text-mist">Everything you need to know about our process.</p>
+        </div>
 
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-3 px-6 py-3 bg-teal text-ink font-semibold rounded-full hover:bg-teal-light transition-all hover:shadow-[0_10px_30px_rgba(45,212,191,0.25)]"
-              aria-label="Contact us for more questions"
-            >
-              <MessageCircle className="w-5 h-5" aria-hidden="true" />
-              Contact Us
-            </a>
-            
-            {/* Contact info */}
-            <div className="mt-10 p-6 rounded-2xl bg-charcoal border border-white/10">
-              <p className="font-semibold text-cloud mb-4">Need quick answers?</p>
-              <div className="space-y-3">
-                <a
-                  href="tel:+19734279393"
-                  className="flex items-center gap-3 text-mist hover:text-teal transition-colors"
-                >
-                  <Phone className="w-4 h-4" />
-                  973-427-9393
-                </a>
-                <a
-                  href="mailto:hello@rush.photos"
-                  className="flex items-center gap-3 text-mist hover:text-teal transition-colors"
-                >
-                  <Mail className="w-4 h-4" />
-                  hello@rush.photos
-                </a>
-              </div>
-              <p className="mt-4 text-sm text-smoke">Mon-Fri, 9am-6pm EST</p>
-            </div>
-          </motion.header>
-
-          {/* Right - Accordion */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="space-y-4"
-            role="list"
-            aria-label="Frequently asked questions"
-          >
-            {faqs.map((faq, index) => {
-              const isOpen = openIndex === index;
-              return (
-              <article
-                key={index}
-                  className={`rounded-2xl overflow-hidden transition-all duration-300 ${
-                    isOpen
-                      ? "bg-charcoal border border-teal/20"
-                      : "bg-charcoal border border-white/5 hover:border-white/10"
-                }`}
-                itemScope
-                itemProp="mainEntity"
-                itemType="https://schema.org/Question"
-                role="listitem"
+        {/* Search & Filter */}
+        <div className="flex flex-col md:flex-row gap-6 mb-12">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-mist" />
+            <input
+              type="text"
+              placeholder="Search questions..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-charcoal border border-white/10 rounded-full py-3 pl-12 pr-6 text-white placeholder-mist focus:outline-none focus:border-honey/50 transition-colors"
+            />
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 hide-scrollbar">
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all ${activeCategory === cat
+                    ? "bg-white text-ink"
+                    : "bg-white/5 text-mist hover:bg-white/10"
+                  }`}
               >
-                <h3>
-                  <button
-                      onClick={() => setOpenIndex(isOpen ? null : index)}
-                    className="w-full px-6 py-5 flex items-center justify-between text-left"
-                      aria-expanded={isOpen}
-                    aria-controls={`faq-answer-${index}`}
-                    id={`faq-question-${index}`}
-                  >
-                      <span className="font-semibold text-cloud pr-4" itemProp="name">
-                      {faq.question}
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* FAQ List */}
+        <div className="space-y-4">
+          <AnimatePresence mode="wait">
+            {filteredFAQs.map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <button
+                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                  className={`w-full text-left p-6 rounded-2xl transition-all duration-300 ${openIndex === index
+                      ? "bg-charcoal border border-honey/20"
+                      : "bg-transparent border border-white/5 hover:border-white/10"
+                    }`}
+                >
+                  <div className="flex justify-between items-center gap-4">
+                    <span className={`font-medium text-lg ${openIndex === index ? "text-white" : "text-cloud"}`}>
+                      {item.question}
                     </span>
-                    <ChevronDown 
-                        className={`w-5 h-5 text-teal flex-shrink-0 transition-transform duration-300 ${
-                          isOpen ? "rotate-180" : ""
-                      }`}
-                      aria-hidden="true"
-                    />
-                  </button>
-                </h3>
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
+                    <span className={`p-2 rounded-full ${openIndex === index ? "bg-honey text-ink" : "bg-white/5 text-mist"}`}>
+                      {openIndex === index ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                    </span>
+                  </div>
+                  <AnimatePresence>
+                    {openIndex === index && (
                       <motion.div
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                  id={`faq-answer-${index}`}
-                  itemScope
-                  itemProp="acceptedAnswer"
-                  itemType="https://schema.org/Answer"
-                  role="region"
-                  aria-labelledby={`faq-question-${index}`}
+                        className="overflow-hidden"
                       >
-                        <p
-                          className="px-6 pb-5 text-mist leading-relaxed"
-                          itemProp="text"
-                >
-                    {faq.answer}
-                  </p>
+                        <p className="pt-4 text-mist leading-relaxed pr-8">
+                          {item.answer}
+                        </p>
+                        <div className="pt-6 mt-4 border-t border-white/5 flex items-center gap-4">
+                          <span className="text-xs text-smoke">Was this helpful?</span>
+                          <div className="flex gap-2">
+                            <button className="px-3 py-1 rounded-full bg-white/5 text-xs hover:bg-white/10 text-mist transition-colors">Yes</button>
+                            <button className="px-3 py-1 rounded-full bg-white/5 text-xs hover:bg-white/10 text-mist transition-colors">No</button>
+                          </div>
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
-              </article>
-              );
-            })}
-          </motion.div>
+                </button>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {filteredFAQs.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-mist mb-4">No matching questions found.</p>
+              <button className="inline-flex items-center gap-2 text-honey font-medium hover:underline">
+                <MessageCircle className="w-4 h-4" /> Chat with us
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>

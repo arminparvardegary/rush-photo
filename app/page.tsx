@@ -1,8 +1,11 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import SocialProof from "@/components/SocialProof";
 import Portfolio from "@/components/Portfolio";
+import BeforeAfterShowcase from "@/components/BeforeAfterShowcase";
 import Process from "@/components/Process";
-import PackageSelection from "@/components/PackageSelection";
+import VideoTestimonial from "@/components/VideoTestimonial";
+import Pricing from "@/components/Pricing";
 import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
@@ -14,9 +17,12 @@ export default function Home() {
       <GlobalEffects />
       <Header />
       <Hero />
+      <SocialProof />
       <Portfolio />
+      <BeforeAfterShowcase />
       <Process />
-      <PackageSelection />
+      <VideoTestimonial />
+      <Pricing />
       <Testimonials />
       <FAQ />
       <Footer />

@@ -6,32 +6,38 @@
 
 :root {
   /* Core palette - Editorial dark theme */
-  --ink: #0d0d0d;
-  --charcoal: #1a1a1a;
-  --graphite: #2a2a2a;
-  --slate: #3d3d3d;
-  --smoke: #6b6b6b;
-  --mist: #a0a0a0;
-  --cloud: #e5e5e5;
-  --snow: #fafafa;
-  --paper: #fff;
-  
-  /* Accent - Warm amber/honey */
-  --honey: #f5a623;
-  --honey-light: #ffc857;
-  --honey-dark: #d4920d;
-  --honey-glow: rgba(245, 166, 35, 0.15);
-  
-  /* Secondary accent - Cool teal */
-  --teal: #2dd4bf;
-  --teal-light: #5eead4;
-  --teal-dark: #14b8a6;
-  
+  --ink: #050505;
+  /* Darker, richer black */
+  --charcoal: #0F0F0F;
+  --graphite: #1A1A1A;
+  --slate: #2A2A2A;
+  --smoke: #737373;
+  --mist: #A3A3A3;
+  --cloud: #E5E5E5;
+  --snow: #F5F5F5;
+  --paper: #FFFFFF;
+
+  /* Accent - Warm amber/honey (Refined) */
+  --honey: #FFB84C;
+  --honey-light: #FFD699;
+  --honey-dark: #cc841c;
+  --honey-glow: rgba(255, 184, 76, 0.15);
+
+  /* Secondary accent - Cinema Teal */
+  --teal: #2DD4BF;
+  --teal-light: #99F6E4;
+  --teal-dark: #115E59;
+
   /* Gradients */
-  --gradient-warm: linear-gradient(135deg, var(--honey) 0%, #ff8a00 100%);
-  --gradient-cool: linear-gradient(135deg, var(--teal) 0%, #0d9488 100%);
-  --gradient-dark: linear-gradient(180deg, var(--charcoal) 0%, var(--ink) 100%);
-  --gradient-glow: radial-gradient(ellipse at center, var(--honey-glow) 0%, transparent 70%);
+  --gradient-warm: linear-gradient(135deg, #FFB84C 0%, #FF8A00 100%);
+  --gradient-cool: linear-gradient(135deg, #2DD4BF 0%, #06B6D4 100%);
+  --gradient-dark: linear-gradient(180deg, #0F0F0F 0%, #050505 100%);
+  --gradient-glow: radial-gradient(circle at center, var(--honey-glow) 0%, transparent 70%);
+  --gradient-surface: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.00) 100%);
+
+  /* Borders */
+  --border-dim: rgba(255, 255, 255, 0.05);
+  --border-light: rgba(255, 255, 255, 0.1);
 }
 
 * {
@@ -59,7 +65,12 @@ body {
   font-family: 'Instrument Serif', Georgia, serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Outfit', sans-serif;
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -172,7 +183,7 @@ img {
 }
 
 .bg-grid-subtle {
-  background-image: 
+  background-image:
     linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 64px 64px;
@@ -195,25 +206,36 @@ img {
    GLASSMORPHISM
    ========================================= */
 
+/* =========================================
+   GLASSMORPHISM & SURFACES
+   ========================================= */
+
 .glass {
-  background: rgba(26, 26, 26, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 15, 15, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-light);
 }
 
-.glass-light {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.glass-panel {
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid var(--border-dim);
+  box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-dim);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.glass-card:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border-color: var(--border-light);
 }
 
 /* =========================================
@@ -347,131 +369,147 @@ img {
    ANIMATIONS
    ========================================= */
 
+/* =========================================
+   CINEMATIC ANIMATIONS
+   ========================================= */
+
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  33% {
+    transform: translateY(-12px) rotate(0.5deg);
+  }
+
+  66% {
+    transform: translateY(-8px) rotate(-0.5deg);
+  }
 }
 
 .animate-float {
-  animation: float 6s ease-in-out infinite;
+  animation: float 10s ease-in-out infinite;
 }
 
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+@keyframes float-slow {
 
-.animate-fade-up {
-  animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.6s ease forwards;
-}
-
-@keyframes scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-scale-in {
-  animation: scale-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.shimmer {
-  position: relative;
-  overflow: hidden;
-}
-
-.shimmer::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-  animation: shimmer 2.5s infinite;
-}
-
-@keyframes pulse-ring {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
+  0%,
   100% {
-    transform: scale(1.5);
-    opacity: 0;
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(-10px, -15px);
   }
 }
 
-.pulse-ring::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 2px solid var(--honey);
-  animation: pulse-ring 2s infinite;
+.animate-float-slow {
+  animation: float-slow 15s ease-in-out infinite;
 }
 
-@keyframes rotate-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+@keyframes title-reveal {
+  from {
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  to {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-.animate-rotate-slow {
-  animation: rotate-slow 30s linear infinite;
+.animate-title {
+  animation: title-reveal 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
 }
 
-/* Staggered animation delays */
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
-.delay-600 { animation-delay: 600ms; }
-.delay-700 { animation-delay: 700ms; }
-.delay-800 { animation-delay: 800ms; }
+@keyframes fade-scale-up {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+    filter: blur(10px);
+  }
 
-/* =========================================
-   MARQUEE
-   ========================================= */
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
 
+.animate-fade-scale {
+  animation: fade-scale-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes grain {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  10% {
+    transform: translate(-5%, -10%);
+  }
+
+  20% {
+    transform: translate(-15%, 5%);
+  }
+
+  30% {
+    transform: translate(7%, -25%);
+  }
+
+  40% {
+    transform: translate(-5%, 25%);
+  }
+
+  50% {
+    transform: translate(-15%, 10%);
+  }
+
+  60% {
+    transform: translate(15%, 0%);
+  }
+
+  70% {
+    transform: translate(0%, 15%);
+  }
+
+  80% {
+    transform: translate(3%, 35%);
+  }
+
+  90% {
+    transform: translate(-10%, 10%);
+  }
+}
+
+.animate-grain {
+  animation: grain 8s steps(10) infinite;
+}
+
+/* Marquee */
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .animate-marquee {
-  animation: marquee 40s linear infinite;
+  animation: marquee 60s linear infinite;
 }
 
-@keyframes marquee-reverse {
-  from { transform: translateX(-50%); }
-  to { transform: translateX(0); }
-}
-
-.animate-marquee-reverse {
-  animation: marquee-reverse 40s linear infinite;
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
 
 /* =========================================
@@ -480,7 +518,7 @@ img {
 
 .divider-gradient {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
 }
 
 .divider-glow {
@@ -502,6 +540,7 @@ textarea:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -681,8 +720,13 @@ textarea:focus-visible {
 }
 
 @keyframes img-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* =========================================
@@ -690,15 +734,20 @@ textarea:focus-visible {
    ========================================= */
 
 .skeleton {
-  background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 100%);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 100%);
   background-size: 200% 100%;
   animation: skeleton-pulse 1.5s ease-in-out infinite;
   border-radius: 8px;
 }
 
 @keyframes skeleton-pulse {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* Spinner */
@@ -724,7 +773,9 @@ textarea:focus-visible {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* =========================================

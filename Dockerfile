@@ -1,72 +1,63 @@
-# syntax=docker/dockerfile:1
+# ============================================
+# Rush Photo - Production Dockerfile
+# Multi-stage build for optimized image size
+# ============================================
 
-# ===== Base Stage =====
+# Stage 1: Base
 FROM node:20-alpine AS base
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# ===== Dependencies Stage =====
+# Stage 2: Dependencies
 FROM base AS deps
 COPY package.json package-lock.json* ./
 RUN npm ci --legacy-peer-deps
 
-# ===== Builder Stage =====
+# Stage 3: Builder
 FROM base AS builder
+WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Disable telemetry during build
-ENV NEXT_TELEMETRY_DISABLED=1
-
-# Build arguments for environment variables (needed at build time)
-ARG NEXT_PUBLIC_BASE_URL
-ARG NEXT_PUBLIC_SUPABASE_URL
-ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
-
 # Set environment variables for build
-ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
-ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
-ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
 
-# Build the application
+# Build arguments for env vars needed at build time
+ARG NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+
 RUN npm run build
 
-# ===== Production Runner Stage =====
-FROM node:20-alpine AS runner
+# Stage 4: Runner (Production)
+FROM base AS runner
 WORKDIR /app
 
 # Install curl for health checks
 RUN apk add --no-cache curl
 
-# Set production environment
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV HOSTNAME="0.0.0.0"
+ENV PORT=3000
 
-# Create non-root user for security
+# Create non-root user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy public assets
+# Copy necessary files
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
-# Set correct permissions for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+# Permissions
+RUN chown -R nextjs:nodejs /app
 
-# Copy standalone build output
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# Switch to non-root user
 USER nextjs
 
-# Expose port
-EXPOSE 3002
+EXPOSE 3000
 
-# Set host and port (3002 for rush-photo)
-ENV PORT=3002
-ENV HOSTNAME="0.0.0.0"
+HEALTHCHECK --interval=60s --timeout=10s --start-period=60s --retries=2 \
+  CMD curl -f http://localhost:3000/api/health || exit 1
 
-# Start the application
 CMD ["node", "server.js"]
-

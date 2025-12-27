@@ -1,143 +1,139 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import { Star, Quote, Play } from "lucide-react";
+import Image from "next/image";
 
 const TESTIMONIALS = [
   {
     id: 1,
-    name: "Sarah Chen",
-    role: "Founder",
-    company: "Bloom Skincare",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop&q=90",
-    quote:
-      "Rush Photo transformed our product images. Our conversion rate increased by 40% after updating our store with their photos. The quality is outstanding.",
+    name: "Sarah Jenkins",
+    role: "Marketing Director",
+    company: "Luxe Skin",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&q=80",
+    content: "The quality of the photos blew us away. Our conversion rate increased by 40% after updating our product pages.",
     rating: 5,
+    type: "text"
   },
   {
     id: 2,
-    name: "Marcus Johnson",
-    role: "Creative Director",
-    company: "Altitude Gear",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&q=90",
-    quote:
-      "We've worked with many photography studios, but Rush delivers consistently exceptional results. Fast turnaround, great communication, and stunning images every time.",
+    name: "David Chen",
+    role: "Founder",
+    company: "TechGear",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&q=80",
+    content: "Fastest turnaround in the industry without compromising on quality. The team understood our brand aesthetic perfectly.",
     rating: 5,
+    type: "video",
+    videoThumbnail: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=400&fit=crop&q=80"
   },
   {
     id: 3,
-    name: "Emily Rodriguez",
-    role: "E-commerce Manager",
-    company: "Urban Threads",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=120&fit=crop&q=90",
-    quote:
-      "The lifestyle shots Rush created for our new collection were exactly what we envisioned. They truly understand brand storytelling through photography.",
+    name: "Emily Watson",
+    role: "Brand Manager",
+    company: "Organic Life",
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&q=80",
+    content: "Professional, responsive, and incredibly talented. Rush Photos has become our go-to partner for all visual content.",
     rating: 5,
+    type: "text"
   },
-];
-
-const BRANDS = [
-  "Shopify",
-  "Amazon",
-  "Etsy",
-  "WooCommerce",
-  "BigCommerce",
-  "Squarespace",
+  {
+    id: 4,
+    name: "Michael Ross",
+    role: "E-commerce Lead",
+    company: "FitFlex",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&q=80",
+    content: "They made our products look million-dollar worthy. The investment paid off in the first week of launch.",
+    rating: 5,
+    type: "text"
+  },
+  {
+    id: 5,
+    name: "Jessica Lee",
+    role: "Creative Director",
+    company: "Modern Home",
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&q=80",
+    content: "The attention to detail is unmatched. Every shadow, every highlight is intentional. Truly world-class work.",
+    rating: 5,
+    type: "video",
+    videoThumbnail: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop&q=80"
+  }
 ];
 
 export default function Testimonials() {
   return (
-    <section className="relative py-32 bg-charcoal overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-grain" />
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-honey/5 rounded-full blur-[150px]" />
-      <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-teal/5 rounded-full blur-[120px]" />
+    <section id="testimonials" className="relative py-32 bg-ink overflow-hidden">
+      <div className="absolute inset-0 bg-grain opacity-30 pointer-events-none" />
 
       <div className="container relative z-10">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-cloud mb-6">
-            Loved by <span className="text-gradient font-serif italic">500+</span> brands
-          </h2>
-          <p className="text-lg text-mist max-w-2xl mx-auto">
-            See what our clients say about working with Rush Photo
-          </p>
-        </motion.div>
+        <div className="text-center max-w-2xl mx-auto mb-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+          >
+            <h2 className="text-5xl md:text-7xl font-bold text-white mb-6">
+              Client <span className="text-honey font-serif italic">Love</span>
+            </h2>
+            <p className="text-lg text-mist">
+              Don't just take our word for it. Trusted by over 500+ brands worldwide.
+            </p>
+          </motion.div>
+        </div>
 
-        {/* Testimonials Grid */}
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto mb-20">
-          {TESTIMONIALS.map((testimonial, index) => (
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
+          {TESTIMONIALS.map((item, i) => (
             <motion.div
-              key={testimonial.id}
-              initial={{ opacity: 0, y: 30 }}
+              key={item.id}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="relative group"
+              transition={{ delay: i * 0.1 }}
+              className="break-inside-avoid"
             >
-              <div className="h-full p-8 rounded-3xl bg-graphite border border-white/5 hover:border-honey/20 transition-all duration-300 hover:shadow-xl hover:shadow-honey/5">
-                {/* Quote icon */}
-                <Quote className="w-10 h-10 text-honey/20 mb-6" />
+              <div className={`relative p-8 rounded-3xl border border-white/5 bg-charcoal group hover:border-honey/20 transition-colors duration-500 overflow-hidden ${item.type === 'video' ? 'bg-black' : ''}`}>
 
-                {/* Quote */}
-                <p className="text-cloud/90 leading-relaxed mb-8">
-                  &ldquo;{testimonial.quote}&rdquo;
-                </p>
+                {item.type === 'video' ? (
+                  <>
+                    <div className="absolute inset-0 opacity-60 group-hover:opacity-40 transition-opacity duration-500">
+                      <img src={item.videoThumbnail} alt="Thumbnail" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="relative z-10 flex flex-col items-center justify-center h-64 text-center">
+                      <button className="w-16 h-16 rounded-full bg-honey/90 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-xl shadow-honey/20">
+                        <Play className="w-6 h-6 text-ink fill-current ml-1" />
+                      </button>
+                      <p className="font-serif italic text-2xl text-white">"{item.content}"</p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="mb-6 flex gap-1">
+                      {[...Array(item.rating)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 text-honey fill-current" />
+                      ))}
+                    </div>
 
-                {/* Rating */}
-                <div className="flex gap-1 mb-6">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-honey fill-honey" />
-                  ))}
-                </div>
+                    <Quote className="w-8 h-8 text-white/10 mb-6" />
 
-                {/* Author */}
-                <div className="flex items-center gap-4">
+                    <p className="text-lg text-cloud leading-relaxed mb-8">
+                      "{item.content}"
+                    </p>
+                  </>
+                )}
+
+                <div className="flex items-center gap-4 relative z-10">
                   <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-cover ring-2 ring-honey/20"
+                    src={item.image}
+                    alt={item.name}
+                    className="w-12 h-12 rounded-full object-cover ring-2 ring-white/10"
                   />
                   <div>
-                    <p className="font-semibold text-cloud">{testimonial.name}</p>
-                    <p className="text-sm text-smoke">
-                      {testimonial.role}, {testimonial.company}
-                    </p>
+                    <h4 className="font-bold text-white text-sm">{item.name}</h4>
+                    <p className="text-xs text-mist">{item.role}, {item.company}</p>
                   </div>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
-
-        {/* Trusted By Brands */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          className="text-center"
-        >
-          <p className="text-sm text-smoke uppercase tracking-wider mb-8">
-            Photos optimized for all major platforms
-          </p>
-          <div className="flex flex-wrap justify-center gap-8 lg:gap-12">
-            {BRANDS.map((brand) => (
-              <div
-                key={brand}
-                className="text-2xl font-bold text-white/10 hover:text-white/20 transition-colors cursor-default"
-              >
-                {brand}
-              </div>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </section>
   );
