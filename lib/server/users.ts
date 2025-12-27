@@ -219,17 +219,17 @@ export async function resetPassword(token: string, newPassword: string): Promise
   const user = await findUserByEmail(email);
   if (!user) return false;
 
-  // Hash new password - DISABLED as we moved to NextAuth/Google
-  // const { hashPassword } = await import("@/lib/server/auth");
-  // const { salt, hash } = await hashPassword(newPassword);
+  // Hash new password
+  const { hashPassword } = await import("@/lib/server/auth-utils");
+  const hash = await hashPassword(newPassword);
 
   // Update user password
   const users = await getAllUsers();
   const idx = users.findIndex((u) => u.id === user.id);
   if (idx === -1) return false;
 
-  // users[idx].passwordHash = hash;
-  // users[idx].passwordSalt = salt;
+  users[idx].passwordHash = hash;
+  delete users[idx].passwordSalt;
   users[idx].authProvider = "email"; // Ensure they can login with email
   users[idx].updatedAt = new Date().toISOString();
 
@@ -242,5 +242,3 @@ export async function resetPassword(token: string, newPassword: string): Promise
 
   return true;
 }
-
-
