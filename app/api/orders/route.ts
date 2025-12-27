@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { SESSION_COOKIE_NAME, verifySessionToken } from "@/lib/server/auth";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/route";
 import { getPricing } from "@/lib/server/pricing";
 import { getDiscountCodes, normalizeDiscountCode } from "@/lib/server/discounts";
 import {
@@ -11,14 +11,8 @@ import {
   type PackageType,
   type OrderRecord,
 } from "@/lib/server/orders";
-import { findUserById } from "@/lib/server/users";
 
 export const runtime = "nodejs";
-
-async function getSession() {
-  const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
-  return verifySessionToken(token);
-}
 
 function toPublicOrder(order: OrderRecord) {
   return {
@@ -38,17 +32,19 @@ function toPublicOrder(order: OrderRecord) {
 }
 
 export async function GET() {
-  const session = await getSession();
+  const session = await getServerSession(authOptions);
+  // @ts-ignore
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const orders = await getAllOrders();
-  const filtered = session.role === "admin" ? orders : orders.filter((o) => o.userId === session.sub);
+  // @ts-ignore
+  const filtered = session.user?.role === "admin" ? orders : orders.filter((o) => o.userId === session.user?.id);
 
   return NextResponse.json({ orders: filtered.map(toPublicOrder) });
 }
 
 export async function POST(req: Request) {
-  const session = await getSession();
+  const session = await getServerSession(authOptions);
   const body = await req.json().catch(() => null);
 
   const packageType = body?.packageType as PackageType | undefined;
@@ -78,13 +74,11 @@ export async function POST(req: Request) {
   let userCompany = companyInput;
   let userId: string | null = null;
 
-  if (session) {
-    const user = await findUserById(session.sub);
-    userId = user?.id ?? null;
-    userEmail = user?.email || userEmail;
-    userName = user?.name || userName;
-    userPhone = user?.phone || userPhone;
-    userCompany = user?.company || userCompany;
+  if (session && session.user) {
+    // @ts-ignore
+    userId = session.user.id;
+    userEmail = session.user.email || userEmail;
+    userName = session.user.name || userName;
   }
 
   if (!userEmail) {

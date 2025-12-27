@@ -184,13 +184,13 @@ export async function createPasswordResetToken(email: string): Promise<string | 
 
   // Read existing tokens
   const file = await readDataFile<ResetTokensFile>(RESET_TOKENS_FILE, DEFAULT_RESET_TOKENS);
-  
+
   // Remove any existing tokens for this email
   file.tokens = file.tokens.filter((t) => t.email.toLowerCase() !== email.toLowerCase());
-  
+
   // Add new token
   file.tokens.push({ token, email: email.toLowerCase(), expiresAt });
-  
+
   await writeDataFile(RESET_TOKENS_FILE, file);
   return token;
 }
@@ -198,9 +198,9 @@ export async function createPasswordResetToken(email: string): Promise<string | 
 export async function verifyPasswordResetToken(token: string): Promise<string | null> {
   const file = await readDataFile<ResetTokensFile>(RESET_TOKENS_FILE, DEFAULT_RESET_TOKENS);
   const record = file.tokens.find((t) => t.token === token);
-  
+
   if (!record) return null;
-  
+
   // Check if expired
   if (new Date(record.expiresAt) < new Date()) {
     // Remove expired token
@@ -208,38 +208,38 @@ export async function verifyPasswordResetToken(token: string): Promise<string | 
     await writeDataFile(RESET_TOKENS_FILE, file);
     return null;
   }
-  
+
   return record.email;
 }
 
 export async function resetPassword(token: string, newPassword: string): Promise<boolean> {
   const email = await verifyPasswordResetToken(token);
   if (!email) return false;
-  
+
   const user = await findUserByEmail(email);
   if (!user) return false;
-  
-  // Hash new password
-  const { hashPassword } = await import("@/lib/server/auth");
-  const { salt, hash } = await hashPassword(newPassword);
-  
+
+  // Hash new password - DISABLED as we moved to NextAuth/Google
+  // const { hashPassword } = await import("@/lib/server/auth");
+  // const { salt, hash } = await hashPassword(newPassword);
+
   // Update user password
   const users = await getAllUsers();
   const idx = users.findIndex((u) => u.id === user.id);
   if (idx === -1) return false;
-  
-  users[idx].passwordHash = hash;
-  users[idx].passwordSalt = salt;
+
+  // users[idx].passwordHash = hash;
+  // users[idx].passwordSalt = salt;
   users[idx].authProvider = "email"; // Ensure they can login with email
   users[idx].updatedAt = new Date().toISOString();
-  
+
   await saveAllUsers(users);
-  
+
   // Remove used token
   const file = await readDataFile<ResetTokensFile>(RESET_TOKENS_FILE, DEFAULT_RESET_TOKENS);
   file.tokens = file.tokens.filter((t) => t.token !== token);
   await writeDataFile(RESET_TOKENS_FILE, file);
-  
+
   return true;
 }
 

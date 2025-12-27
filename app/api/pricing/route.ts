@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { getPricing, setPricing } from "@/lib/server/pricing";
 import type { PricingSettings } from "@/lib/shared/pricing";
-import { cookies } from "next/headers";
-import { SESSION_COOKIE_NAME, verifySessionToken } from "@/lib/server/auth";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 export const runtime = "nodejs";
 
@@ -12,9 +12,9 @@ export async function GET() {
 }
 
 export async function PUT(req: Request) {
-  const token = (await cookies()).get(SESSION_COOKIE_NAME)?.value;
-  const session = verifySessionToken(token);
-  if (!session || session.role !== "admin") {
+  const session = await getServerSession(authOptions);
+  // @ts-ignore
+  if (!session || session?.user?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
