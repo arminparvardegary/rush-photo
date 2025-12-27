@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getPricing, setPricing } from "@/lib/server/pricing";
 import type { PricingSettings } from "@/lib/shared/pricing";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/server/auth";
 
 export const runtime = "nodejs";
 

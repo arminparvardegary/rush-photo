@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/server/auth";
 import { getPricing } from "@/lib/server/pricing";
 import { getDiscountCodes, normalizeDiscountCode } from "@/lib/server/discounts";
 import {
