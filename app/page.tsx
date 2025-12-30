@@ -5,11 +5,8 @@ import Hero from "@/components/Hero";
 // import BeforeAfterShowcase from "@/components/BeforeAfterShowcase";
 // import Process from "@/components/Process";
 // import VideoTestimonial from "@/components/VideoTestimonial";
-import Pricing from "@/components/Pricing";
+import PackageSelection from "@/components/PackageSelection";
 import Testimonials from "@/components/Testimonials";
-import FAQ from "@/components/FAQ";
-import Footer from "@/components/Footer";
-import GlobalEffects from "@/components/GlobalEffects";
 
 export default function Home() {
   return (
@@ -26,7 +23,7 @@ export default function Home() {
         <Process />
         <VideoTestimonial />
       */}
-      <Pricing />
+      <PackageSelection />
       <Testimonials />
       <FAQ />
       <Footer />
