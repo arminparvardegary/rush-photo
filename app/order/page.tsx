@@ -233,21 +233,21 @@ export default function OrderPage() {
   const getTotalItems = () => (order.cart.length + (order.lifestyleIncluded ? 1 : 0));
 
   const selectPackageType = (type: PackageType) => {
-    if (type === "fullpackage") {
-      const allAngles: Angle[] = ["front", "back", "left", "right"];
-      const fullCart: CartItem[] = ECOMMERCE_STYLES.map(style => ({
-        style: style.id,
-        angles: allAngles,
-        pricePerAngle: style.pricePerAngle || PRICES.ecommerce.perAngle,
-      }));
-      setOrder(prev => ({ ...prev, packageType: type, lifestyleIncluded: true, cart: fullCart }));
-      setStep(4);
-      setCheckoutStep("information");
-    } else {
-      setOrder(prev => ({ ...prev, packageType: type, lifestyleIncluded: type === "lifestyle", cart: [] }));
-      setStep(type === "lifestyle" ? 4 : 2);
-    }
+    setOrder(prev => ({
+      ...prev,
+      packageType: type,
+      lifestyleIncluded: type === "lifestyle" || type === "fullpackage",
+      cart: []
+    }));
     setSelectedPackage(type);
+
+    if (type === "lifestyle") {
+      // Lifestyle: go to info page (Step 3)
+      setStep(3);
+    } else {
+      // E-commerce or Full Package: go to style selection (Step 2)
+      setStep(2);
+    }
   };
 
   const selectStyle = (style: EcommerceStyle) => {
@@ -501,6 +501,73 @@ export default function OrderPage() {
                   </button>
                 </div>
               )}
+            </motion.div>
+          )}
+
+          {/* STEP 3: LIFESTYLE INFO PAGE */}
+          {step === 3 && (
+            <motion.div key="3" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="max-w-3xl mx-auto">
+              <button onClick={() => setStep(1)} className="flex items-center gap-2 text-rush-gray font-bold text-sm mb-8 hover:text-rush-dark transition-colors">
+                <ArrowLeft className="w-4 h-4" /> Back to packages
+              </button>
+
+              <div className="bg-white rounded-[2.5rem] border border-rush-border shadow-xl overflow-hidden">
+                {/* Hero Image */}
+                <div className="h-64 relative">
+                  <img src={PACKAGE_IMAGES.lifestyle} alt="Lifestyle Photography" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white text-sm font-bold mb-3">
+                      <Sparkles className="w-4 h-4" /> Premium Service
+                    </div>
+                    <h1 className="text-4xl font-black text-white">Lifestyle Photography</h1>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-8 md:p-12">
+                  <p className="text-lg text-rush-gray font-medium leading-relaxed mb-8">
+                    Lifestyle refers to <strong className="text-rush-dark">tabletop styled photography</strong> with props, simple sets, and creative direction. Our team will develop a concept based on your product, get approval from you, then execute the shoot.
+                  </p>
+
+                  <div className="grid sm:grid-cols-3 gap-6 mb-10">
+                    {[
+                      { icon: Camera, title: "Custom Concept", desc: "Tailored creative direction for your brand" },
+                      { icon: Sparkles, title: "Styled Props", desc: "Professional prop selection and arrangement" },
+                      { icon: CheckCircle, title: "Client Approval", desc: "Concept review before production" },
+                    ].map((item, i) => (
+                      <div key={i} className="bg-rush-light/50 p-5 rounded-2xl border border-rush-border">
+                        <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center mb-4">
+                          <item.icon className="w-5 h-5 text-[#E63946]" />
+                        </div>
+                        <h4 className="font-bold text-rush-dark mb-1">{item.title}</h4>
+                        <p className="text-xs text-rush-gray font-medium">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="bg-rush-light rounded-2xl p-6 mb-8 border border-rush-border">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-black text-rush-gray uppercase tracking-widest mb-1">Flat Rate Pricing</p>
+                        <p className="text-4xl font-black text-rush-dark">${PRICES.lifestyle.flatRate}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs font-bold text-rush-gray">Includes</p>
+                        <p className="text-sm font-bold text-rush-dark">Concept + Shoot + Editing</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => { setStep(4); setCheckoutStep('information'); }}
+                    className="w-full bg-[#E63946] text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-[#E63946]/20 hover:scale-[1.02] transition-all flex items-center justify-center gap-3"
+                  >
+                    Continue to Checkout
+                    <ArrowRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
             </motion.div>
           )}
 
