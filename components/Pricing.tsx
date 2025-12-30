@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { Check, X, Star, Zap, Sparkles, Gem } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 interface PackageFeatures {
@@ -18,7 +17,6 @@ interface Package {
   description: string;
   features: PackageFeatures;
   popular: boolean;
-  gradient: string;
   isPro?: boolean;
 }
 
@@ -36,7 +34,6 @@ const packages: Package[] = [
       turnaround: "5 days",
     },
     popular: false,
-    gradient: "from-white/10 to-white/5",
   },
   {
     id: 2,
@@ -51,7 +48,6 @@ const packages: Package[] = [
       turnaround: "4 days",
     },
     popular: true,
-    gradient: "from-honey/20 to-honey/5",
   },
   {
     id: 3,
@@ -67,7 +63,6 @@ const packages: Package[] = [
       turnaround: "3 days",
     },
     popular: false,
-    gradient: "from-teal/20 to-teal/5",
     isPro: true,
   },
 ];
@@ -78,8 +73,8 @@ const PricingCard = ({ pkg, index }: { pkg: Package; index: number }) => {
   const mouseXStart = useSpring(x, { stiffness: 300, damping: 30 });
   const mouseYStart = useSpring(y, { stiffness: 300, damping: 30 });
 
-  const rotateX = useTransform(mouseYStart, [-0.5, 0.5], ["7deg", "-7deg"]);
-  const rotateY = useTransform(mouseXStart, [-0.5, 0.5], ["-7deg", "7deg"]);
+  const rotateX = useTransform(mouseYStart, [-0.5, 0.5], ["3deg", "-3deg"]);
+  const rotateY = useTransform(mouseXStart, [-0.5, 0.5], ["-3deg", "3deg"]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -107,55 +102,54 @@ const PricingCard = ({ pkg, index }: { pkg: Package; index: number }) => {
     >
       <motion.div
         style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        className={`relative h-full rounded-3xl border border-white/10 bg-charcoal p-8 overflow-hidden group ${pkg.popular ? "shadow-2xl shadow-honey/10 ring-1 ring-honey/30" : "hover:shadow-xl hover:shadow-white/5"
+        className={`relative h-full rounded-3xl p-8 overflow-hidden group transition-all duration-300 ${pkg.popular
+          ? "bg-white border-2 border-[#E63946] shadow-2xl shadow-[#E63946]/10"
+          : "bg-white border border-rush-border hover:border-[#E63946]/50 hover:shadow-xl hover:shadow-black/5"
           }`}
       >
-        {/* Ambient Gradient */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${pkg.gradient} opacity-20 group-hover:opacity-40 transition-opacity duration-500`} />
-
         {/* Content */}
         <div className="relative z-10 transform-gpu translate-z-20 h-full flex flex-col">
           {pkg.popular && (
             <div className="absolute top-0 right-0">
-              <span className="bg-honey text-ink text-xs font-bold px-3 py-1.5 rounded-bl-xl">POPULAR</span>
+              <span className="bg-[#E63946] text-white text-xs font-bold px-3 py-1.5 rounded-bl-xl shadow-sm">MOST POPULAR</span>
             </div>
           )}
 
           <div className="mb-6">
-            <h3 className="text-xl font-medium text-white mb-2">{pkg.name}</h3>
+            <h3 className="text-xl font-bold text-rush-dark mb-2">{pkg.name}</h3>
             <div className="flex items-baseline gap-1">
-              <span className="text-4xl md:text-5xl font-bold text-white tracking-tight">${pkg.price}</span>
-              <span className="text-mist text-sm">/ product</span>
+              <span className="text-4xl md:text-5xl font-black text-rush-dark tracking-tight">${pkg.price}</span>
+              <span className="text-rush-gray text-sm font-medium">/ product</span>
             </div>
             {pkg.originalPrice && (
-              <div className="mt-2 text-sm text-mist line-through opacity-60">
+              <div className="mt-2 text-sm text-rush-gray line-through opacity-60 font-medium">
                 ${pkg.originalPrice}
               </div>
             )}
           </div>
 
-          <p className="text-mist text-sm mb-8 leading-relaxed">
+          <p className="text-rush-gray text-sm mb-8 leading-relaxed font-medium">
             {pkg.description}
           </p>
 
           <div className="space-y-4 mb-8 flex-grow">
             {Object.entries(pkg.features).map(([key, value]) => (
               <div key={key} className="flex items-center gap-3">
-                <div className={`w-5 h-5 rounded-full flex items-center justify-center ${pkg.popular ? "bg-honey text-ink" : "bg-white/10 text-white"}`}>
-                  <Check className="w-3 h-3" />
+                <div className={`w-5 h-5 rounded-full flex items-center justify-center ${pkg.popular ? "bg-[#E63946]/10 text-[#E63946]" : "bg-rush-light text-rush-dark"}`}>
+                  <Check className="w-3 h-3" strokeWidth={3} />
                 </div>
-                <span className="text-sm text-cloud">
-                  <strong className="text-white">{value}</strong> {key}
+                <span className="text-sm text-rush-gray">
+                  <strong className="text-rush-dark">{value}</strong> {key}
                 </span>
               </div>
             ))}
             {pkg.isPro && (
               <div className="flex items-center gap-3">
-                <div className="w-5 h-5 rounded-full bg-teal text-ink flex items-center justify-center">
+                <div className="w-5 h-5 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
                   <Sparkles className="w-3 h-3" />
                 </div>
-                <span className="text-sm text-cloud">
-                  <strong className="text-white">RAW</strong> Files Included
+                <span className="text-sm text-rush-gray">
+                  <strong className="text-rush-dark">RAW</strong> Files Included
                 </span>
               </div>
             )}
@@ -164,8 +158,8 @@ const PricingCard = ({ pkg, index }: { pkg: Package; index: number }) => {
           <Link
             href="/order"
             className={`w-full py-4 rounded-xl font-bold text-sm text-center transition-all duration-300 transform translate-z-30 ${pkg.popular
-                ? "bg-honey text-ink hover:bg-honey-light hover:shadow-lg hover:shadow-honey/20"
-                : "bg-white/10 text-white hover:bg-white hover:text-ink"
+              ? "bg-[#E63946] text-white hover:bg-[#D62839] shadow-lg shadow-[#E63946]/20"
+              : "bg-rush-light text-rush-dark hover:bg-rush-gray/10"
               }`}
           >
             Choose {pkg.name}
@@ -178,20 +172,18 @@ const PricingCard = ({ pkg, index }: { pkg: Package; index: number }) => {
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="relative py-32 bg-ink overflow-hidden">
-      <div className="absolute inset-0 bg-grid-subtle opacity-20 pointer-events-none" />
-
+    <section id="pricing" className="relative py-32 bg-rush-light overflow-hidden">
       <div className="container relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
           >
-            <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tighter">
+            <h2 className="text-5xl md:text-7xl font-black text-rush-dark mb-6 tracking-tighter">
               Transparent <br />
-              <span className="text-transparent bg-clip-text bg-gradient-warm font-serif italic">Pricing</span>
+              <span className="text-[#E63946]">Pricing</span>
             </h2>
-            <p className="text-lg text-mist">
+            <p className="text-lg text-rush-gray font-medium">
               Simple packages for every stage of your brand.
               No hidden fees, no surprise charges.
             </p>
@@ -205,9 +197,9 @@ export default function Pricing() {
         </div>
 
         <div className="mt-16 text-center">
-          <div className="inline-flex items-center gap-4 p-4 rounded-full bg-charcoal border border-white/5">
-            <span className="text-sm text-mist">Need more than 10 products?</span>
-            <a href="#contact" className="text-sm font-bold text-white hover:text-honey transition-colors">
+          <div className="inline-flex items-center gap-4 p-4 rounded-full bg-white border border-rush-border shadow-sm">
+            <span className="text-sm text-rush-gray font-medium">Need more than 10 products?</span>
+            <a href="#contact" className="text-sm font-bold text-[#E63946] hover:text-[#D62839] transition-colors">
               Get a bulk quote →
             </a>
           </div>
