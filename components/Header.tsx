@@ -17,7 +17,7 @@ interface UserInfo {
 const NAV_LINKS = [
   { name: "Portfolio", href: "/#portfolio" },
   { name: "Process", href: "/#process" },
-  { name: "Pricing", href: "/#pricing" },
+  { name: "Pricing", href: "/#packages" },
   { name: "FAQ", href: "/#faq" },
 ];
 

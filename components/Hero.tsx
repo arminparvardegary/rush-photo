@@ -35,7 +35,7 @@ export default function Hero() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             <Link
-              href="#pricing"
+              href="#packages"
               className="px-8 py-4 bg-[#E63946] text-white text-lg font-bold rounded-2xl hover:bg-[#D62839] hover:scale-105 transition-all shadow-xl shadow-[#E63946]/30 flex items-center gap-2"
             >
               View Packages <ArrowDown className="w-5 h-5" />
