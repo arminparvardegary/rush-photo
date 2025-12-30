@@ -171,6 +171,14 @@ export default function OrderPage() {
     load();
   }, []);
 
+  // Handle URL params
+  useEffect(() => {
+    const pkgParam = searchParams.get("package");
+    if (pkgParam && (pkgParam === "ecommerce" || pkgParam === "lifestyle" || pkgParam === "fullpackage")) {
+      selectPackageType(pkgParam as PackageType);
+    }
+  }, [searchParams]);
+
   // Sync user
   useEffect(() => {
     const loadUser = async () => {
