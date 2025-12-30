@@ -7,6 +7,9 @@ import Hero from "@/components/Hero";
 // import VideoTestimonial from "@/components/VideoTestimonial";
 import PackageSelection from "@/components/PackageSelection";
 import Testimonials from "@/components/Testimonials";
+import FAQ from "@/components/FAQ";
+import Footer from "@/components/Footer";
+import GlobalEffects from "@/components/GlobalEffects";
 
 export default function Home() {
   return (
