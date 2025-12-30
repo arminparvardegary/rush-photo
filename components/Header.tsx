@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowRight, Menu, ShoppingCart, User, LogOut } from "lucide-react";
+import { X, ArrowRight, Menu, User, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -67,17 +67,17 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
       <div className="mx-4 sm:mx-6 mt-4">
-        <div className={`max-w-6xl mx-auto transition-all duration-300 ${scrolled ? "bg-white/80 backdrop-blur-xl border border-black/5 shadow-sm" : "bg-white/5 backdrop-blur-xl border border-white/10"} rounded-2xl px-4 sm:px-6 py-3`}>
+        <div className={`max-w-6xl mx-auto transition-all duration-300 bg-white/90 backdrop-blur-xl border border-rush-border shadow-sm rounded-2xl px-4 sm:px-6 py-3`}>
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group">
               <motion.div
                 whileHover={{ scale: 1.05, rotate: -5 }}
-                className="w-10 h-10 bg-gradient-to-br from-[#E63946] to-[#FF6B6B] rounded-xl flex items-center justify-center shadow-lg shadow-[#E63946]/30"
+                className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#E63946] to-[#D62839] rounded-xl flex items-center justify-center shadow-lg shadow-[#E63946]/20"
               >
-                <span className="text-white font-black text-lg">R</span>
+                <span className="text-white font-black text-base sm:text-lg">R</span>
               </motion.div>
-              <span className={`font-bold text-lg hidden sm:block ${scrolled ? "text-rush-dark" : "text-rush-dark sm:text-white"}`}>
+              <span className="font-bold text-base sm:text-lg text-rush-dark">
                 Rush Photo
               </span>
             </Link>
@@ -88,7 +88,7 @@ export default function Header() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${scrolled ? "text-rush-gray hover:text-rush-dark hover:bg-black/5" : "text-black/60 hover:text-black hover:bg-white/10"}`}
+                  className="px-4 py-2 text-sm font-medium rounded-full transition-colors text-rush-gray hover:text-rush-dark hover:bg-rush-light"
                 >
                   {link.name}
                 </Link>
@@ -103,7 +103,7 @@ export default function Header() {
                     <div className="relative">
                       <button
                         onClick={() => setShowUserMenu(!showUserMenu)}
-                        className={`flex items-center gap-2 pl-1 pr-3 py-1 rounded-full border transition-all group ${scrolled ? "border-black/10 hover:border-black/20 hover:bg-black/5" : "border-white/10 hover:border-white/20 hover:bg-white/5"}`}
+                        className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full border border-rush-border hover:border-rush-gray/30 hover:bg-rush-light transition-all group"
                       >
                         {user.avatarUrl ? (
                           <img
@@ -112,11 +112,11 @@ export default function Header() {
                             className="w-7 h-7 rounded-full object-cover"
                           />
                         ) : (
-                          <div className="w-7 h-7 bg-gradient-to-br from-[#E63946] to-[#FF6B6B] rounded-full flex items-center justify-center text-xs font-bold text-white">
+                          <div className="w-7 h-7 bg-gradient-to-br from-[#E63946] to-[#D62839] rounded-full flex items-center justify-center text-xs font-bold text-white">
                             {user.name?.charAt(0)?.toUpperCase()}
                           </div>
                         )}
-                        <span className={`text-sm font-medium ${scrolled ? "text-rush-dark" : "text-white"}`}>
+                        <span className="text-sm font-medium text-rush-dark">
                           {user.name?.split(" ")[0]}
                         </span>
                       </button>
@@ -129,15 +129,15 @@ export default function Header() {
                               initial={{ opacity: 0, y: 10, scale: 0.95 }}
                               animate={{ opacity: 1, y: 0, scale: 1 }}
                               exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                              className="absolute right-0 top-full mt-4 w-64 bg-white rounded-2xl p-2 z-50 overflow-hidden shadow-xl border border-black/5"
+                              className="absolute right-0 top-full mt-4 w-64 bg-white rounded-2xl p-2 z-50 overflow-hidden shadow-xl border border-rush-border"
                             >
-                              <div className="px-4 py-3 border-b border-black/5 mb-2">
+                              <div className="px-4 py-3 border-b border-rush-border mb-2">
                                 <p className="font-medium text-sm text-rush-dark truncate">{user.name}</p>
                                 <p className="text-xs text-rush-gray truncate">{user.email}</p>
                               </div>
                               <Link
                                 href="/admin"
-                                className="flex items-center gap-3 px-4 py-3 text-sm text-rush-gray hover:text-rush-dark hover:bg-black/5 rounded-xl transition-colors"
+                                className="flex items-center gap-3 px-4 py-3 text-sm text-rush-gray hover:text-rush-dark hover:bg-rush-light rounded-xl transition-colors"
                               >
                                 <User className="w-4 h-4" />
                                 Dashboard
@@ -157,7 +157,7 @@ export default function Header() {
                   ) : (
                     <Link
                       href="/login"
-                      className={`text-sm font-medium transition-colors px-3 py-2 ${scrolled ? "text-rush-gray hover:text-rush-dark" : "text-white/60 hover:text-white"}`}
+                      className="text-sm font-medium transition-colors px-3 py-2 text-rush-gray hover:text-rush-dark"
                     >
                       Log In
                     </Link>
@@ -167,17 +167,17 @@ export default function Header() {
 
               <Link
                 href="/order"
-                className="bg-[#E63946] text-white text-sm font-semibold px-4 sm:px-5 py-2.5 rounded-xl hover:bg-[#D62839] transition-all flex items-center gap-2 shadow-lg shadow-[#E63946]/20"
+                className="bg-[#E63946] text-white text-sm font-bold px-4 sm:px-5 py-2.5 rounded-xl hover:bg-[#D62839] transition-all flex items-center gap-2 shadow-lg shadow-[#E63946]/20"
               >
-                <span className="hidden sm:inline">Get Started</span>
-                <span className="sm:hidden">Start</span>
+                <span className="hidden xs:inline sm:inline">Get Started</span>
+                <span className="xs:hidden sm:hidden">Start</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
 
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className={`lg:hidden w-10 h-10 flex items-center justify-center rounded-full border transition-colors z-50 ${scrolled ? "border-black/10 text-rush-dark" : "border-white/10 text-white"}`}
+                className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full border border-rush-border text-rush-dark hover:bg-rush-light transition-colors z-50"
                 aria-label="Menu"
               >
                 <motion.div
@@ -199,9 +199,9 @@ export default function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-white/95 backdrop-blur-xl lg:hidden flex flex-col items-center justify-center p-4"
+            className="fixed inset-0 z-40 bg-white lg:hidden flex flex-col items-center justify-center p-6"
           >
-            <nav className="flex flex-col items-center gap-6 mb-12 w-full max-w-sm">
+            <nav className="flex flex-col items-center gap-8 mb-12 w-full max-w-sm">
               {NAV_LINKS.map((link, i) => (
                 <motion.div
                   key={link.name}
@@ -212,7 +212,7 @@ export default function Header() {
                   <Link
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className="text-3xl font-bold text-rush-dark hover:text-[#E63946] transition-colors tracking-tight"
+                    className="text-2xl sm:text-3xl font-black text-rush-dark hover:text-[#E63946] transition-colors tracking-tight"
                   >
                     {link.name}
                   </Link>
