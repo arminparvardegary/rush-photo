@@ -30,11 +30,11 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-ink flex relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-ink via-ink to-charcoal" />
-        <div className="absolute bottom-0 left-0 w-full h-full bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-rush-gray/10 via-transparent to-transparent opacity-30 blur-3xl" />
+    <div className="min-h-screen bg-rush-light flex relative overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#E63946]/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-rush-gray/5 rounded-full blur-[100px]" />
       </div>
 
       <div className="container relative z-10 flex items-center justify-center min-h-screen px-4">
@@ -46,28 +46,28 @@ export default function ForgotPasswordPage() {
         >
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
-              <div className="w-10 h-10 bg-rush-red rounded-xl flex items-center justify-center shadow-lg shadow-rush-red/20 group-hover:scale-105 transition-transform">
-                <Camera className="w-5 h-5 text-white" />
+              <div className="w-12 h-12 bg-[#E63946] rounded-2xl flex items-center justify-center shadow-xl shadow-[#E63946]/20 group-hover:scale-105 transition-transform">
+                <Camera className="w-6 h-6 text-white" />
               </div>
             </Link>
-            <h1 className="text-3xl font-bold text-white mb-2">Reset Password</h1>
-            <p className="text-rush-gray">Enter your email to receive recovery instructions</p>
+            <h1 className="text-3xl font-black text-rush-dark mb-2">Reset Password</h1>
+            <p className="text-rush-gray font-medium">Enter your email to receive recovery instructions</p>
           </div>
 
-          <div className="glass-panel p-8 md:p-10 rounded-3xl relative overflow-hidden border border-white/5 shadow-2xl shadow-black/50">
+          <div className="bg-white p-8 md:p-10 rounded-3xl shadow-xl shadow-black/5 border border-rush-border relative overflow-hidden">
 
             {success ? (
-              <div className="text-center py-8">
-                <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-green-500" />
+              <div className="text-center py-4">
+                <div className="w-16 h-16 bg-teal-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle className="w-8 h-8 text-teal-500" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Check your email</h3>
-                <p className="text-rush-gray mb-6">
+                <h3 className="text-xl font-bold text-rush-dark mb-2">Check your email</h3>
+                <p className="text-rush-gray font-medium mb-8">
                   If an account exists with {email}, we have sent password reset instructions.
                 </p>
                 <Link
                   href="/login"
-                  className="text-rush-red font-medium hover:text-white transition-colors flex items-center justify-center gap-2"
+                  className="inline-flex items-center justify-center gap-2 w-full bg-rush-dark text-white py-3.5 rounded-xl font-bold hover:bg-rush-dark/90 transition-all"
                 >
                   <ArrowRight className="w-4 h-4 rotate-180" />
                   Back to Login
@@ -76,13 +76,13 @@ export default function ForgotPasswordPage() {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-rush-gray ml-1">Email Address</label>
+                  <label className="text-xs font-bold text-rush-dark ml-1">Email Address</label>
                   <div className="relative group">
-                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-rush-gray group-focus-within:text-rush-red transition-colors" />
+                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-rush-gray group-focus-within:text-[#E63946] transition-colors" />
                     <input
                       type="email"
                       required
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-rush-red/50 focus:ring-1 focus:ring-rush-red/50 transition-all text-sm"
+                      className="w-full bg-rush-light border border-rush-border rounded-xl py-3 pl-10 pr-4 text-rush-dark placeholder-rush-gray/50 focus:outline-none focus:border-[#E63946] focus:bg-white transition-all text-sm font-medium"
                       placeholder="name@company.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -93,20 +93,20 @@ export default function ForgotPasswordPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-rush-red hover:bg-red-600 text-white font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed group shadow-lg shadow-rush-red/20"
+                  className="w-full bg-[#E63946] hover:bg-[#D62839] text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed group shadow-lg shadow-[#E63946]/20"
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <>
-                      Send Info
+                      Send Link
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
                 </button>
 
                 <div className="text-center">
-                  <Link href="/login" className="text-sm text-rush-gray hover:text-white transition-colors">
+                  <Link href="/login" className="text-sm text-rush-gray font-bold hover:text-rush-dark transition-colors">
                     Back to Login
                   </Link>
                 </div>

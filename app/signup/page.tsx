@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Camera, ArrowRight, Mail, Lock, User, Loader2, Check } from "lucide-react";
+import { Camera, ArrowRight, Mail, Lock, User, Loader2 } from "lucide-react";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -46,11 +46,11 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-ink flex relative overflow-hidden">
-      {/* Cinematic Background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-ink via-ink to-charcoal" />
-        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-rush-red/5 via-transparent to-transparent opacity-50 blur-3xl" />
+    <div className="min-h-screen bg-rush-light flex relative overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#E63946]/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-rush-gray/5 rounded-full blur-[100px]" />
       </div>
 
       <div className="container relative z-10 flex items-center justify-center min-h-screen px-4 p-8">
@@ -62,31 +62,31 @@ export default function SignupPage() {
         >
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
-              <div className="w-10 h-10 bg-rush-red rounded-xl flex items-center justify-center shadow-lg shadow-rush-red/20 group-hover:scale-105 transition-transform">
-                <Camera className="w-5 h-5 text-white" />
+              <div className="w-12 h-12 bg-[#E63946] rounded-2xl flex items-center justify-center shadow-xl shadow-[#E63946]/20 group-hover:scale-105 transition-transform">
+                <Camera className="w-6 h-6 text-white" />
               </div>
             </Link>
-            <h1 className="text-3xl font-bold text-white mb-2">Join Rush Studios</h1>
-            <p className="text-rush-gray">Start your journey with premium photography</p>
+            <h1 className="text-3xl font-black text-rush-dark mb-2">Join Rush Photo</h1>
+            <p className="text-rush-gray font-medium">Start your journey with premium photography</p>
           </div>
 
-          <div className="glass-panel p-8 md:p-10 rounded-3xl relative overflow-hidden border border-white/5 shadow-2xl shadow-black/50">
+          <div className="bg-white p-8 md:p-10 rounded-3xl shadow-xl shadow-black/5 border border-rush-border relative overflow-hidden">
 
             {error && (
-              <div className="mb-6 p-3 rounded-lg bg-rush-red/10 border border-rush-red/20 text-rush-red text-sm font-medium text-center">
+              <div className="mb-6 p-3 rounded-xl bg-[#E63946]/10 border border-[#E63946]/20 text-[#E63946] text-sm font-bold text-center">
                 {error}
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-rush-gray ml-1">Full Name</label>
+                <label className="text-xs font-bold text-rush-dark ml-1">Full Name</label>
                 <div className="relative group">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-rush-gray group-focus-within:text-rush-red transition-colors" />
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-rush-gray group-focus-within:text-[#E63946] transition-colors" />
                   <input
                     type="text"
                     required
-                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-rush-red/50 focus:ring-1 focus:ring-rush-red/50 transition-all text-sm"
+                    className="w-full bg-rush-light border border-rush-border rounded-xl py-3 pl-10 pr-4 text-rush-dark placeholder-rush-gray/50 focus:outline-none focus:border-[#E63946] focus:bg-white transition-all text-sm font-medium"
                     placeholder="John Doe"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -95,13 +95,13 @@ export default function SignupPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-rush-gray ml-1">Email Address</label>
+                <label className="text-xs font-bold text-rush-dark ml-1">Email Address</label>
                 <div className="relative group">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-rush-gray group-focus-within:text-rush-red transition-colors" />
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-rush-gray group-focus-within:text-[#E63946] transition-colors" />
                   <input
                     type="email"
                     required
-                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-rush-red/50 focus:ring-1 focus:ring-rush-red/50 transition-all text-sm"
+                    className="w-full bg-rush-light border border-rush-border rounded-xl py-3 pl-10 pr-4 text-rush-dark placeholder-rush-gray/50 focus:outline-none focus:border-[#E63946] focus:bg-white transition-all text-sm font-medium"
                     placeholder="name@company.com"
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -110,26 +110,26 @@ export default function SignupPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-rush-gray ml-1">Password</label>
+                <label className="text-xs font-bold text-rush-dark ml-1">Password</label>
                 <div className="relative group">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-rush-gray group-focus-within:text-rush-red transition-colors" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-rush-gray group-focus-within:text-[#E63946] transition-colors" />
                   <input
                     type="password"
                     required
                     minLength={8}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-rush-red/50 focus:ring-1 focus:ring-rush-red/50 transition-all text-sm"
+                    className="w-full bg-rush-light border border-rush-border rounded-xl py-3 pl-10 pr-4 text-rush-dark placeholder-rush-gray/50 focus:outline-none focus:border-[#E63946] focus:bg-white transition-all text-sm font-medium"
                     placeholder="••••••••"
                     value={form.password}
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
                   />
                 </div>
-                <p className="text-[10px] text-rush-gray ml-1">Must be at least 8 characters</p>
+                <p className="text-[10px] text-rush-gray font-medium ml-1">Must be at least 8 characters</p>
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-rush-red hover:bg-red-600 text-white font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed group shadow-lg shadow-rush-red/20"
+                className="w-full bg-[#E63946] hover:bg-[#D62839] text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed group shadow-lg shadow-[#E63946]/20"
               >
                 {loading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -142,11 +142,11 @@ export default function SignupPage() {
               </button>
             </form>
 
-            <div className="mt-8 text-center pt-6 border-t border-white/5">
-              <p className="text-sm text-rush-gray mb-6">Or continue with</p>
+            <div className="mt-8 text-center pt-6 border-t border-rush-border">
+              <p className="text-sm text-rush-gray mb-6 font-medium">Or continue with</p>
               <button
                 onClick={() => signIn("google", { callbackUrl: "/admin" })}
-                className="w-full flex items-center justify-center gap-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-medium py-3 rounded-xl transition-all mb-6"
+                className="w-full flex items-center justify-center gap-3 bg-white border border-rush-border hover:bg-rush-light text-rush-dark font-bold py-3 rounded-xl transition-all mb-6"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path
@@ -169,9 +169,9 @@ export default function SignupPage() {
                 Google
               </button>
 
-              <p className="text-sm text-rush-gray">
+              <p className="text-sm text-rush-gray font-medium">
                 Already have an account?{" "}
-                <Link href="/login" className="text-white font-medium hover:text-rush-red transition-colors">
+                <Link href="/login" className="text-[#E63946] font-bold hover:underline transition-colors">
                   Sign in
                 </Link>
               </p>

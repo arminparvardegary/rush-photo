@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Rush Photo", url: "https://rush.photos" }],
   creator: "Rush Graphics",
   publisher: "Rush Photo",
-  
+
   // Robots
   robots: {
     index: true,
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  
+
   // Open Graph
   openGraph: {
     type: "website",
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
       },
     ],
   },
-  
+
   // Twitter
   twitter: {
     card: "summary_large_image",
@@ -67,12 +67,12 @@ export const metadata: Metadata = {
     images: ["https://rush.photos/twitter-image.jpg"],
     creator: "@rushgraphics",
   },
-  
+
   // Verification
   verification: {
     google: "google3fe7499eab7d2d59",
   },
-  
+
   // Alternate Languages
   alternates: {
     canonical: "https://rush.photos",
@@ -80,10 +80,10 @@ export const metadata: Metadata = {
       "en-US": "https://rush.photos",
     },
   },
-  
+
   // Category
   category: "Photography",
-  
+
   // Icons
   icons: {
     icon: [
@@ -91,10 +91,10 @@ export const metadata: Metadata = {
     ],
     apple: "/favicon.svg",
   },
-  
+
   // Manifest
   manifest: "/site.webmanifest",
-  
+
   // Other
   other: {
     "msapplication-TileColor": "#f5a623",
@@ -377,29 +377,37 @@ const jsonLd = {
 import ScrollToTop from "@/components/ScrollToTop";
 import MobileBottomNav from "@/components/MobileBottomNav";
 
+import { Outfit } from "next/font/google";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+  display: "swap",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" dir="ltr">
+    <html lang="en" dir="ltr" className={outfit.variable}>
       <head>
         {/* Preconnect to important domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://images.unsplash.com" />
-        
+
         {/* DNS Prefetch */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-        
+
         {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="antialiased">
+      <body className="antialiased font-sans">
         {children}
         <ScrollToTop />
         <MobileBottomNav />

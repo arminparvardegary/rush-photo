@@ -26,10 +26,9 @@ export default function LoginPage() {
       });
 
       if (res?.error) {
-        // Handle error toast
         console.error("Login failed");
       } else {
-        router.push("/admin"); // Or dashboard/home
+        router.push("/admin");
       }
     } finally {
       setLoading(false);
@@ -41,19 +40,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-ink flex relative overflow-hidden">
-      {/* Cinematic Background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-ink via-ink to-charcoal" />
-        <div className="absolute top-0 right-0 w-2/3 h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-rush-red/10 via-transparent to-transparent opacity-50 blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-rush-black/20 via-transparent to-transparent opacity-50 blur-3xl" />
+    <div className="min-h-screen bg-rush-light flex relative overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#E63946]/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-rush-gray/5 rounded-full blur-[100px]" />
       </div>
 
-      {/* Split Layout */}
       <div className="container relative z-10 flex items-center justify-center min-h-screen px-4">
-        <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-8 items-center">
+        <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-12 items-center">
 
-          {/* Left Side: Brand/Visual */}
+          {/* Left Side: Brand */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -61,31 +58,20 @@ export default function LoginPage() {
             className="hidden lg:flex flex-col justify-center space-y-8"
           >
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-rush-red rounded-xl flex items-center justify-center shadow-lg shadow-rush-red/20">
-                <Camera className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 bg-[#E63946] rounded-2xl flex items-center justify-center shadow-xl shadow-[#E63946]/20">
+                <span className="text-white font-black text-xl">R</span>
               </div>
-              <span className="text-3xl font-bold text-white tracking-tight">Rush Studios</span>
+              <span className="text-3xl font-bold text-rush-dark tracking-tight">Rush Photo</span>
             </div>
 
-            <h1 className="text-5xl font-bold text-white leading-tight">
+            <h1 className="text-5xl font-black text-rush-dark leading-tight">
               Professional <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rush-red to-orange-500">
-                Product Photography
-              </span>
+              <span className="text-[#E63946]">Product Photography</span>
             </h1>
 
-            <p className="text-lg text-rush-gray max-w-md">
+            <p className="text-lg text-rush-gray max-w-md font-medium">
               Elevate your brand with cinematic, high-conversion imagery delivered at the speed of business.
             </p>
-
-            <div className="flex gap-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="w-24 h-24 rounded-2xl overflow-hidden glass-panel relative">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent z-10" />
-                  {/* Placeholder for showcase images */}
-                </div>
-              ))}
-            </div>
           </motion.div>
 
           {/* Right Side: Form */}
@@ -95,22 +81,22 @@ export default function LoginPage() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="w-full max-w-md mx-auto"
           >
-            <div className="glass-panel p-8 md:p-10 rounded-3xl relative overflow-hidden border border-white/5 shadow-2xl shadow-black/50">
+            <div className="bg-white p-8 md:p-10 rounded-3xl shadow-2xl shadow-black/5 border border-rush-border relative overflow-hidden">
 
               <div className="mb-8 text-center lg:text-left">
-                <h2 className="text-2xl font-bold text-white mb-2">Welcome Back</h2>
-                <p className="text-rush-gray text-sm">Sign in to manage your orders</p>
+                <h2 className="text-2xl font-bold text-rush-dark mb-2">Welcome Back</h2>
+                <p className="text-rush-gray text-sm font-medium">Sign in to manage your orders</p>
               </div>
 
               {error && (
-                <div className="mb-6 p-3 rounded-lg bg-rush-red/10 border border-rush-red/20 text-rush-red text-sm font-medium text-center">
+                <div className="mb-6 p-3 rounded-xl bg-[#E63946]/10 border border-[#E63946]/20 text-[#E63946] text-sm font-bold text-center">
                   Authentication failed. Please check your credentials.
                 </div>
               )}
 
               <button
                 onClick={handleGoogleLogin}
-                className="w-full flex items-center justify-center gap-3 bg-white text-ink font-semibold py-3.5 rounded-xl hover:bg-gray-100 transition-all mb-6 group"
+                className="w-full flex items-center justify-center gap-3 bg-white border border-rush-border text-rush-dark font-bold py-3.5 rounded-xl hover:bg-rush-light transition-all mb-6 group shadow-sm hover:shadow-md"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path
@@ -135,22 +121,22 @@ export default function LoginPage() {
 
               <div className="relative mb-6">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-white/10" />
+                  <div className="w-full border-t border-rush-border" />
                 </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-[#151515] px-2 text-rush-gray">Or continue with email</span>
+                <div className="relative flex justify-center text-xs uppercase font-bold tracking-wider">
+                  <span className="bg-white px-2 text-rush-gray-light">Or continue with email</span>
                 </div>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-rush-gray ml-1">Email Address</label>
+                  <label className="text-xs font-bold text-rush-dark ml-1">Email Address</label>
                   <div className="relative group">
-                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-rush-gray group-focus-within:text-rush-red transition-colors" />
+                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-rush-gray group-focus-within:text-[#E63946] transition-colors" />
                     <input
                       type="email"
                       required
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-rush-red/50 focus:ring-1 focus:ring-rush-red/50 transition-all text-sm"
+                      className="w-full bg-rush-light border border-rush-border rounded-xl py-3 pl-10 pr-4 text-rush-dark placeholder-rush-gray/50 focus:outline-none focus:border-[#E63946] focus:bg-white transition-all text-sm font-medium"
                       placeholder="name@company.com"
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -160,17 +146,17 @@ export default function LoginPage() {
 
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center ml-1">
-                    <label className="text-xs font-medium text-rush-gray">Password</label>
-                    <Link href="/forgot-password" className="text-xs text-rush-red hover:text-white transition-colors">
+                    <label className="text-xs font-bold text-rush-dark">Password</label>
+                    <Link href="/forgot-password" className="text-xs font-bold text-[#E63946] hover:text-[#D62839] transition-colors">
                       Forgot password?
                     </Link>
                   </div>
                   <div className="relative group">
-                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-rush-gray group-focus-within:text-rush-red transition-colors" />
+                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-rush-gray group-focus-within:text-[#E63946] transition-colors" />
                     <input
                       type="password"
                       required
-                      className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-rush-red/50 focus:ring-1 focus:ring-rush-red/50 transition-all text-sm"
+                      className="w-full bg-rush-light border border-rush-border rounded-xl py-3 pl-10 pr-4 text-rush-dark placeholder-rush-gray/50 focus:outline-none focus:border-[#E63946] focus:bg-white transition-all text-sm font-medium"
                       placeholder="••••••••"
                       value={form.password}
                       onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -181,7 +167,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-rush-red hover:bg-red-600 text-white font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-50 disabled:cursor-not-allowed group shadow-lg shadow-rush-red/20"
+                  className="w-full bg-[#E63946] hover:bg-[#D62839] text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 mt-4 disabled:opacity-50 disabled:cursor-not-allowed group shadow-lg shadow-[#E63946]/20 hover:shadow-[#E63946]/40"
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -194,10 +180,10 @@ export default function LoginPage() {
                 </button>
               </form>
 
-              <div className="mt-8 text-center">
-                <p className="text-sm text-rush-gray">
+              <div className="mt-8 text-center bg-rush-light rounded-xl p-4">
+                <p className="text-sm text-rush-gray font-medium">
                   Don't have an account?{" "}
-                  <Link href="/signup" className="text-white font-medium hover:text-rush-red transition-colors">
+                  <Link href="/signup" className="text-[#E63946] font-bold hover:underline transition-colors">
                     Create free account
                   </Link>
                 </p>
