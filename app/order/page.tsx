@@ -414,7 +414,7 @@ export default function OrderPage() {
           {step === 1 && (
             <motion.div key="1" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
               <div className="text-center mb-12">
-                <h1 className="text-4xl font-black mb-4">Choose Your Package</h1>
+                <h1 className="text-4xl font-extrabold mb-4">Choose Your Package</h1>
                 <p className="text-rush-gray font-medium">Select the best fit for your brand imagery.</p>
               </div>
 
@@ -450,7 +450,7 @@ export default function OrderPage() {
                 <ArrowLeft className="w-4 h-4" /> Back to packages
               </button>
 
-              <h2 className="text-3xl font-black mb-2">Build Your Order</h2>
+              <h2 className="text-3xl font-extrabold mb-2">Build Your Order</h2>
               <p className="text-rush-gray font-medium mb-8">Select styles and angles to add to your shoot.</p>
 
               <div className="space-y-4 mb-12">
@@ -466,7 +466,7 @@ export default function OrderPage() {
                           <p className="text-xs text-rush-gray font-medium">{style.description}</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-black text-[#E63946]">${style.pricePerAngle || PRICES.ecommerce.perAngle}</p>
+                          <p className="font-bold text-[#E63946]">${style.pricePerAngle || PRICES.ecommerce.perAngle}</p>
                           <p className="text-[10px] font-bold text-rush-gray uppercase">per angle</p>
                         </div>
                         <ChevronDown className={`w-5 h-5 transition-transform ${isEx ? 'rotate-180' : 'opacity-30'}`} />
@@ -502,9 +502,9 @@ export default function OrderPage() {
                 <div className="bg-white p-6 rounded-3xl border border-rush-dark shadow-xl flex items-center justify-between">
                   <div>
                     <p className="text-xs font-bold text-rush-gray uppercase tracking-widest mb-1">Estimated Total</p>
-                    <p className="text-3xl font-black">${calculateTotal()}</p>
+                    <p className="text-3xl font-extrabold">${calculateTotal()}</p>
                   </div>
-                  <button onClick={() => { setStep(4); setCheckoutStep('information'); }} className="bg-[#E63946] text-white px-8 py-4 rounded-2xl font-black shadow-lg shadow-[#E63946]/20 hover:scale-105 transition-all">
+                  <button onClick={() => { setStep(4); setCheckoutStep('information'); }} className="bg-[#E63946] text-white px-8 py-4 rounded-2xl font-bold shadow-lg shadow-[#E63946]/20 hover:scale-105 transition-all">
                     Continue to Checkout
                   </button>
                 </div>
@@ -528,7 +528,7 @@ export default function OrderPage() {
                     <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white text-sm font-bold mb-3">
                       <Sparkles className="w-4 h-4" /> Premium Service
                     </div>
-                    <h1 className="text-4xl font-black text-white">Lifestyle Photography</h1>
+                    <h1 className="text-4xl font-extrabold text-white">Lifestyle Photography</h1>
                   </div>
                 </div>
 
@@ -558,7 +558,7 @@ export default function OrderPage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs font-black text-rush-gray uppercase tracking-widest mb-1">Flat Rate Pricing</p>
-                        <p className="text-4xl font-black text-rush-dark">${PRICES.lifestyle.flatRate}</p>
+                        <p className="text-4xl font-extrabold text-rush-dark">${PRICES.lifestyle.flatRate}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-xs font-bold text-rush-gray">Includes</p>

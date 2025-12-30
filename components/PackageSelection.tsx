@@ -70,7 +70,7 @@ export default function PackageSelection() {
             <span className="inline-block px-4 py-1.5 rounded-full border border-[#E63946]/20 bg-[#E63946]/5 text-[#E63946] text-xs sm:text-sm font-bold tracking-wide uppercase mb-6">
               Choose Your Package
             </span>
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-rush-dark mb-4 sm:mb-6 tracking-tight leading-[1.1]">
+            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-rush-dark mb-4 sm:mb-6 tracking-tight leading-[1.1]">
               3 Simple Plans, <br className="hidden sm:block" />
               <span className="text-[#E63946]">Stunning Results</span>
             </h2>
@@ -93,8 +93,8 @@ export default function PackageSelection() {
               <Link
                 href={`/order?package=${pkg.id}`}
                 className={`group block bg-white rounded-2xl sm:rounded-3xl overflow-hidden border-2 transition-all duration-300 h-full ${pkg.badge
-                    ? "border-[#F59E0B] shadow-xl shadow-[#F59E0B]/10"
-                    : "border-rush-border hover:border-[#E63946]/50 hover:shadow-xl hover:shadow-black/5"
+                  ? "border-[#F59E0B] shadow-xl shadow-[#F59E0B]/10"
+                  : "border-rush-border hover:border-[#E63946]/50 hover:shadow-xl hover:shadow-black/5"
                   }`}
               >
                 {/* Image */}
@@ -107,7 +107,7 @@ export default function PackageSelection() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
                   {pkg.badge && (
-                    <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-[#F59E0B] text-white text-[10px] sm:text-xs font-black px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                    <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-[#F59E0B] text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full uppercase tracking-widest shadow-lg">
                       {pkg.badge}
                     </div>
                   )}
@@ -125,10 +125,10 @@ export default function PackageSelection() {
                 {/* Content */}
                 <div className="p-5 sm:p-6">
                   <div className="mb-4">
-                    <p className="text-[10px] sm:text-xs font-black text-rush-gray uppercase tracking-widest mb-1">
+                    <p className="text-[10px] sm:text-xs font-bold text-rush-gray uppercase tracking-widest mb-1">
                       {pkg.subtitle}
                     </p>
-                    <h3 className="text-xl sm:text-2xl font-black text-rush-dark mb-2">{pkg.title}</h3>
+                    <h3 className="text-xl sm:text-2xl font-bold text-rush-dark mb-2">{pkg.title}</h3>
                     <p className="text-xs sm:text-sm text-rush-gray font-medium leading-relaxed line-clamp-2">
                       {pkg.description}
                     </p>
@@ -149,7 +149,7 @@ export default function PackageSelection() {
                   {/* Price & CTA */}
                   <div className="flex items-center justify-between pt-4 border-t border-rush-border">
                     <div>
-                      <span className="text-xl sm:text-2xl font-black text-rush-dark">{pkg.price}</span>
+                      <span className="text-xl sm:text-2xl font-bold text-rush-dark">{pkg.price}</span>
                       <span className="text-xs sm:text-sm text-rush-gray font-medium ml-1">{pkg.unit}</span>
                     </div>
                     <div
