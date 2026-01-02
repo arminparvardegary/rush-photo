@@ -1,82 +1,128 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Star, Quote, Play } from "lucide-react";
+import { Star, Quote, ArrowRight, MessageCircle } from "lucide-react";
+import Link from "next/link";
 
 const TESTIMONIALS = [
   {
     id: 1,
-    name: "Sarah Jenkins",
-    role: "Marketing Director",
-    company: "Luxe Skin",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop&q=80",
-    content: "The quality of the photos blew us away. Our conversion rate increased by 40% after updating our product pages.",
+    name: "Alex Morrison",
+    role: "CEO",
+    company: "UrbanWear Co.",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&q=80",
+    content: "Rush Photos transformed our product catalog. Sales increased 65% in the first month after implementing their imagery across our site.",
     rating: 5,
-    type: "text"
+    type: "text",
+    metric: "+65% sales"
   },
   {
     id: 2,
-    name: "David Chen",
-    role: "Founder",
-    company: "TechGear",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&q=80",
-    content: "Fastest turnaround in the industry without compromising on quality. The team understood our brand aesthetic perfectly.",
+    name: "Priya Sharma",
+    role: "Marketing Lead",
+    company: "EcoStyle",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&q=80",
+    content: "Working with Rush was seamless from start to finish. They captured our brand essence perfectly and delivered ahead of schedule.",
     rating: 5,
-    type: "video",
-    videoThumbnail: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=400&fit=crop&q=80"
+    type: "text",
+    metric: "5-day delivery"
   },
   {
     id: 3,
-    name: "Emily Watson",
-    role: "Brand Manager",
-    company: "Organic Life",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&q=80",
-    content: "Professional, responsive, and incredibly talented. Rush Photos has become our go-to partner for all visual content.",
+    name: "Marcus Chen",
+    role: "Founder",
+    company: "TechLux",
+    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop&q=80",
+    content: "The quality is unmatched. Every single shot exceeded our expectations. Our products have never looked this premium.",
     rating: 5,
-    type: "text"
+    type: "featured",
+    metric: "Premium quality"
   },
   {
     id: 4,
-    name: "Michael Ross",
-    role: "E-commerce Lead",
-    company: "FitFlex",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&q=80",
-    content: "They made our products look million-dollar worthy. The investment paid off in the first week of launch.",
+    name: "Sofia Rodriguez",
+    role: "Brand Director",
+    company: "Lumina Beauty",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&q=80",
+    content: "Rush Photos is our secret weapon. Their attention to lighting and composition makes every product look irresistible.",
     rating: 5,
-    type: "text"
+    type: "text",
+    metric: "Repeat client"
   },
   {
     id: 5,
-    name: "Jessica Lee",
-    role: "Creative Director",
-    company: "Modern Home",
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&q=80",
-    content: "The attention to detail is unmatched. Every shadow, every highlight is intentional. Truly world-class work.",
+    name: "James Taylor",
+    role: "E-commerce Manager",
+    company: "ActiveGear",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&q=80",
+    content: "Three different photographers couldn't get it right. Rush nailed it on the first shoot. Professional, fast, and worth every penny.",
     rating: 5,
-    type: "video",
-    videoThumbnail: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop&q=80"
+    type: "text",
+    metric: "First attempt"
+  },
+  {
+    id: 6,
+    name: "Nina Patel",
+    role: "Creative Director",
+    company: "Artisan Home",
+    image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=150&h=150&fit=crop&q=80",
+    content: "I've worked with product photographers for 15 years. Rush Photos sets a new standard. The turnaround speed is incredible.",
+    rating: 5,
+    type: "text",
+    metric: "15 yrs experience"
   }
 ];
 
 export default function Testimonials() {
   return (
-    <section id="testimonials" className="relative py-16 sm:py-24 md:py-32 bg-rush-light overflow-hidden">
-      <div className="container relative z-10 px-4 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16 md:mb-20">
+    <section id="testimonials" className="relative py-16 sm:py-24 md:py-32 bg-white overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-[#E63946]/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-rush-gray/5 rounded-full blur-[120px]" />
+      </div>
+
+      <div className="container relative z-10 px-4 sm:px-6 max-w-7xl mx-auto">
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 md:mb-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
           >
+            <span className="inline-block px-3 sm:px-4 py-1.5 rounded-full border border-[#E63946]/20 bg-[#E63946]/5 text-[#E63946] text-xs sm:text-sm font-bold tracking-wide uppercase mb-4 sm:mb-6">
+              Trusted Worldwide
+            </span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-rush-dark mb-4 sm:mb-6 tracking-tight">
               Client <span className="text-[#E63946]">Love</span>
             </h2>
-            <p className="text-base sm:text-lg text-rush-gray font-medium">
-              Don't just take our word for it. Trusted by over 500+ brands worldwide.
+            <p className="text-base sm:text-lg text-rush-gray font-medium mb-6">
+              Join 500+ brands who've transformed their product imagery with Rush Photos
             </p>
+
+            {/* Stats bar */}
+            <div className="grid grid-cols-3 gap-4 sm:gap-8 max-w-2xl mx-auto mb-8">
+              {[
+                { value: "500+", label: "Happy Clients" },
+                { value: "50K+", label: "Photos Delivered" },
+                { value: "4.9/5", label: "Average Rating" }
+              ].map((stat, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="text-center"
+                >
+                  <div className="text-2xl sm:text-3xl font-black text-[#E63946] mb-1">{stat.value}</div>
+                  <div className="text-xs sm:text-sm text-rush-gray font-medium">{stat.label}</div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
         </div>
 
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 sm:gap-6 md:gap-8 space-y-4 sm:space-y-6 md:space-y-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-12">
           {TESTIMONIALS.map((item, i) => (
             <motion.div
               key={item.id}
@@ -84,52 +130,93 @@ export default function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="break-inside-avoid"
             >
-              <div className={`relative p-5 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl border transition-colors duration-500 overflow-hidden ${item.type === 'video' ? 'bg-black border-black text-white' : 'bg-white border-rush-border hover:border-[#E63946]/20'}`}>
-                {item.type === 'video' ? (
-                  <>
-                    <div className="absolute inset-0 opacity-60 group-hover:opacity-40 transition-opacity duration-500">
-                      <img src={item.videoThumbnail} alt="Thumbnail" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="relative z-10 flex flex-col items-center justify-center h-48 sm:h-56 md:h-64 text-center">
-                      <button className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-[#E63946]/90 flex items-center justify-center mb-4 sm:mb-6 hover:scale-110 transition-transform shadow-xl shadow-[#E63946]/20">
-                        <Play className="w-5 h-5 sm:w-6 sm:h-6 text-white fill-current ml-1" />
-                      </button>
-                      <p className="font-serif italic text-lg sm:text-xl md:text-2xl text-white px-2">"{item.content}"</p>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="mb-4 sm:mb-6 flex gap-1">
-                      {[...Array(item.rating)].map((_, i) => (
-                        <Star key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E63946] fill-current" />
-                      ))}
-                    </div>
+              <div className={`relative h-full p-6 sm:p-8 rounded-2xl sm:rounded-3xl border transition-all duration-300 ${item.type === 'featured'
+                  ? 'bg-gradient-to-br from-[#E63946] to-[#D62839] border-[#E63946] text-white shadow-xl shadow-[#E63946]/20'
+                  : 'bg-white border-rush-border hover:border-[#E63946]/30 hover:shadow-lg'
+                }`}>
+                {/* Rating */}
+                <div className="flex gap-1 mb-4">
+                  {[...Array(item.rating)].map((_, idx) => (
+                    <Star
+                      key={idx}
+                      className={`w-4 h-4 ${item.type === 'featured' ? 'text-white fill-white' : 'text-[#E63946] fill-[#E63946]'}`}
+                    />
+                  ))}
+                </div>
 
-                    <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-rush-gray/10 mb-4 sm:mb-6" />
+                {/* Quote icon */}
+                <Quote className={`w-8 h-8 mb-4 ${item.type === 'featured' ? 'text-white/20' : 'text-rush-gray/10'}`} />
 
-                    <p className="text-base sm:text-lg text-rush-gray leading-relaxed mb-6 sm:mb-8 font-medium">
-                      "{item.content}"
-                    </p>
-                  </>
+                {/* Content */}
+                <p className={`text-sm sm:text-base leading-relaxed mb-6 font-medium ${item.type === 'featured' ? 'text-white' : 'text-rush-gray'
+                  }`}>
+                  "{item.content}"
+                </p>
+
+                {/* Metric badge */}
+                {item.metric && (
+                  <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-6 ${item.type === 'featured'
+                      ? 'bg-white/20 text-white'
+                      : 'bg-[#E63946]/10 text-[#E63946]'
+                    }`}>
+                    {item.metric}
+                  </div>
                 )}
 
-                <div className="flex items-center gap-3 sm:gap-4 relative z-10">
+                {/* Author */}
+                <div className="flex items-center gap-3 mt-auto">
                   <img
                     src={item.image}
                     alt={item.name}
-                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover ring-2 ${item.type === 'video' ? 'ring-white/10' : 'ring-rush-border'}`}
+                    className="w-12 h-12 rounded-full object-cover ring-2 ring-white/10"
                   />
                   <div>
-                    <h4 className={`font-bold text-sm ${item.type === 'video' ? 'text-white' : 'text-rush-dark'}`}>{item.name}</h4>
-                    <p className={`text-xs ${item.type === 'video' ? 'text-white/60' : 'text-rush-gray'}`}>{item.role}, {item.company}</p>
+                    <h4 className={`font-bold text-sm ${item.type === 'featured' ? 'text-white' : 'text-rush-dark'}`}>
+                      {item.name}
+                    </h4>
+                    <p className={`text-xs ${item.type === 'featured' ? 'text-white/80' : 'text-rush-gray'}`}>
+                      {item.role}, {item.company}
+                    </p>
                   </div>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
+
+        {/* CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-4xl mx-auto"
+        >
+          <div className="bg-gradient-to-br from-rush-light to-white rounded-3xl border border-rush-border p-8 sm:p-12 text-center">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-rush-dark mb-4">
+              Ready to Join Them?
+            </h3>
+            <p className="text-rush-gray font-medium mb-8 max-w-2xl mx-auto">
+              Start creating stunning product photography that converts browsers into buyers
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/order"
+                className="w-full sm:w-auto bg-[#E63946] text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-[#E63946]/20 hover:scale-105 transition-all flex items-center justify-center gap-2"
+              >
+                Get Started Now
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <a
+                href="mailto:hello@rush.photos"
+                className="w-full sm:w-auto bg-white border-2 border-rush-border text-rush-dark px-8 py-4 rounded-2xl font-bold text-lg hover:border-rush-dark transition-all flex items-center justify-center gap-2"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Talk to Us
+              </a>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
