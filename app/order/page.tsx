@@ -274,8 +274,16 @@ export default function OrderPage() {
   };
 
   const selectStyle = (style: EcommerceStyle) => {
-    setCurrentStyle(currentStyle === style ? null : style);
-    setSelectedAngles([]);
+    const newCurrentStyle = currentStyle === style ? null : style;
+    setCurrentStyle(newCurrentStyle);
+
+    // If opening a style that's already in cart, load its angles
+    if (newCurrentStyle) {
+      const existingCartItem = order.cart.find(c => c.style === newCurrentStyle);
+      setSelectedAngles(existingCartItem?.angles || []);
+    } else {
+      setSelectedAngles([]);
+    }
   };
 
   const toggleAngle = (angle: Angle) => {
