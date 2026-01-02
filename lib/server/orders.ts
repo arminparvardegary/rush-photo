@@ -1,5 +1,5 @@
+import { supabase } from "@/lib/supabase";
 import crypto from "node:crypto";
-import { readDataFile, writeDataFile } from "@/lib/server/storage";
 import type { PricingSettings } from "@/lib/shared/pricing";
 import type { DiscountCode } from "@/lib/shared/discounts";
 
@@ -24,7 +24,7 @@ export interface OrderTotals {
 
 export interface OrderRecord {
   id: string;
-  trackingNumber: string; // used as an order number in UI
+  trackingNumber: string; // used as an order number in UI e.g. RUSH-XYZ
   userId: string | null;
   email: string;
   name?: string;
@@ -49,20 +49,57 @@ export interface OrderRecord {
   };
 }
 
-interface OrdersFileShape {
-  orders: OrderRecord[];
+// Map DB row to OrderRecord
+function mapOrder(row: any): OrderRecord {
+  return {
+    id: row.id,
+    trackingNumber: row.order_number,
+    userId: row.user_id,
+    email: row.customer_email,
+    name: row.customer_name,
+    phone: row.customer_phone,
+    company: row.company,
+    productName: row.product_name,
+    notes: row.notes,
+    package: row.package_type as PackageType,
+    styles: (Array.isArray(row.cart_data) ? row.cart_data.map((i: any) => i.style) : []),
+    status: row.status as OrderStatus,
+    createdAt: row.created_at,
+    estimatedDelivery: "3–5 business days", // could be DB field
+    totals: row.totals_data as OrderTotals,
+    discountCode: row.discount_code,
+    lifestyleIncluded: row.lifestyle_included,
+    cart: (row.cart_data || []) as OrderCartItem[],
+    deliveryUrl: row.delivery_url,
+    payment: row.payment_provider === "stripe" ? {
+      provider: "stripe",
+      sessionId: row.payment_session_id,
+      status: row.payment_status as any
+    } : undefined
+  };
 }
-
-const ORDERS_FILE = "orders.json";
-const DEFAULT_ORDERS_FILE: OrdersFileShape = { orders: [] };
 
 export async function getAllOrders(): Promise<OrderRecord[]> {
-  const file = await readDataFile<OrdersFileShape>(ORDERS_FILE, DEFAULT_ORDERS_FILE);
-  return Array.isArray(file.orders) ? file.orders : [];
+  const { data, error } = await supabase
+    .from("rush_orders")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Supabase Error (getAllOrders):", error);
+    return [];
+  }
+  return (data || []).map(mapOrder);
 }
 
-async function saveAllOrders(orders: OrderRecord[]): Promise<void> {
-  await writeDataFile(ORDERS_FILE, { orders } satisfies OrdersFileShape);
+export async function findOrderById(orderId: string): Promise<OrderRecord | null> {
+  const { data } = await supabase.from("rush_orders").select("*").eq("id", orderId).single();
+  return data ? mapOrder(data) : null;
+}
+
+export async function findOrderByStripeSessionId(sessionId: string): Promise<OrderRecord | null> {
+  const { data } = await supabase.from("rush_orders").select("*").eq("payment_session_id", sessionId).single();
+  return data ? mapOrder(data) : null;
 }
 
 export function computeOrderTotals(input: {
@@ -112,11 +149,6 @@ export function computeOrderTotals(input: {
   };
 }
 
-function formatEstimatedDelivery(): string {
-  // For a digital service, keep it human-friendly.
-  return "3–5 business days";
-}
-
 function generateOrderNumber(): string {
   const short = crypto.randomBytes(3).toString("hex").toUpperCase();
   return `RUSH-${short}`;
@@ -139,60 +171,66 @@ export async function createOrder(input: {
   deliveryUrl?: string;
   payment?: OrderRecord["payment"];
 }): Promise<OrderRecord> {
-  const orders = await getAllOrders();
-  const now = new Date().toISOString();
-  const order: OrderRecord = {
-    id: `ord_${crypto.randomUUID()}`,
-    trackingNumber: generateOrderNumber(),
-    userId: input.userId,
-    email: input.email.trim(),
-    name: input.name?.trim() || undefined,
-    phone: input.phone?.trim() || undefined,
-    company: input.company?.trim() || undefined,
-    productName: input.productName.trim(),
-    notes: input.notes?.trim() || undefined,
-    package: input.packageType,
-    styles: input.cart.map((c) => c.style),
+  const trackingNumber = generateOrderNumber();
+
+  const row = {
+    user_id: input.userId,
+    customer_email: input.email,
+    customer_name: input.name,
+    customer_phone: input.phone,
+    company: input.company,
+    product_name: input.productName,
+    notes: input.notes,
+    package_type: input.packageType,
+    order_number: trackingNumber,
     status: input.status,
-    createdAt: now,
-    estimatedDelivery: formatEstimatedDelivery(),
-    totals: input.totals,
-    discountCode: input.discountCode?.trim() || undefined,
-    lifestyleIncluded: input.lifestyleIncluded,
-    cart: input.cart,
-    deliveryUrl: input.deliveryUrl,
-    payment: input.payment,
+    cart_data: input.cart,
+    totals_data: input.totals,
+    discount_code: input.discountCode,
+    lifestyle_included: input.lifestyleIncluded,
+    delivery_url: input.deliveryUrl,
+    payment_provider: input.payment?.provider,
+    payment_session_id: input.payment?.sessionId,
+    payment_status: input.payment?.status,
+    // created_at defaults
   };
 
-  orders.unshift(order);
-  await saveAllOrders(orders);
-  return order;
+  const { data, error } = await supabase
+    .from("rush_orders")
+    .insert(row)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Create Order Error:", error);
+    throw new Error(error.message);
+  }
+
+  return mapOrder(data);
 }
 
 export async function updateOrder(
   orderId: string,
   patch: Partial<Pick<OrderRecord, "status" | "deliveryUrl" | "payment">>
 ): Promise<OrderRecord | null> {
-  const orders = await getAllOrders();
-  const idx = orders.findIndex((o) => o.id === orderId);
-  if (idx === -1) return null;
-  const next: OrderRecord = {
-    ...orders[idx],
-    ...patch,
-  };
-  orders[idx] = next;
-  await saveAllOrders(orders);
-  return next;
+  const updateData: any = {};
+  if (patch.status) updateData.status = patch.status;
+  if (patch.deliveryUrl) updateData.delivery_url = patch.deliveryUrl;
+  if (patch.payment) {
+    if (patch.payment.provider) updateData.payment_provider = patch.payment.provider;
+    if (patch.payment.sessionId) updateData.payment_session_id = patch.payment.sessionId;
+    if (patch.payment.status) updateData.payment_status = patch.payment.status;
+  }
+
+  updateData.updated_at = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from("rush_orders")
+    .update(updateData)
+    .eq("id", orderId)
+    .select()
+    .single();
+
+  if (error || !data) return null;
+  return mapOrder(data);
 }
-
-export async function findOrderById(orderId: string): Promise<OrderRecord | null> {
-  const orders = await getAllOrders();
-  return orders.find((o) => o.id === orderId) ?? null;
-}
-
-export async function findOrderByStripeSessionId(sessionId: string): Promise<OrderRecord | null> {
-  const orders = await getAllOrders();
-  return orders.find((o) => o.payment?.provider === "stripe" && o.payment.sessionId === sessionId) ?? null;
-}
-
-

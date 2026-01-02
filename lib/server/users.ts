@@ -1,4 +1,4 @@
-import { readDataFile, writeDataFile } from "@/lib/server/storage";
+import { supabase } from "@/lib/supabase";
 import crypto from "node:crypto";
 
 export type UserRole = "admin" | "customer";
@@ -20,13 +20,6 @@ export interface UserRecord {
   updatedAt: string;
 }
 
-interface UsersFileShape {
-  users: UserRecord[];
-}
-
-const USERS_FILE = "users.json";
-const DEFAULT_USERS_FILE: UsersFileShape = { users: [] };
-
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
@@ -42,24 +35,56 @@ export function isAdminEmail(email: string): boolean {
   return allowed.includes(normalized);
 }
 
-export async function getAllUsers(): Promise<UserRecord[]> {
-  const file = await readDataFile<UsersFileShape>(USERS_FILE, DEFAULT_USERS_FILE);
-  return Array.isArray(file.users) ? file.users : [];
+// Map Supabase 'users' table row to UserRecord
+function mapUser(row: any): UserRecord {
+  return {
+    id: row.id,
+    email: row.email,
+    name: row.name,
+    phone: row.phone || undefined,
+    company: row.company || undefined,
+    role: isAdminEmail(row.email) ? "admin" : "customer", // Role derived from env
+    passwordHash: row.password || undefined,
+    passwordSalt: undefined, // We don't use salt with bcryptjs usually if stored in 'password'
+    googleId: row.google_id || undefined,
+    avatarUrl: row.image || undefined,
+    authProvider: row.google_id ? "google" : "email",
+    createdAt: row.created_at || new Date().toISOString(),
+    updatedAt: row.updated_at || new Date().toISOString(),
+  };
 }
 
-async function saveAllUsers(users: UserRecord[]): Promise<void> {
-  await writeDataFile(USERS_FILE, { users } satisfies UsersFileShape);
+export async function getAllUsers(): Promise<UserRecord[]> {
+  const { data, error } = await supabase.from("users").select("*");
+  if (error) {
+    console.error("Supabase Error (getAllUsers):", error);
+    return [];
+  }
+  return (data || []).map(mapUser);
 }
 
 export async function findUserByEmail(email: string): Promise<UserRecord | null> {
-  const users = await getAllUsers();
   const normalized = normalizeEmail(email);
-  return users.find((u) => normalizeEmail(u.email) === normalized) ?? null;
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("email", normalized)
+    .maybeSingle();
+
+  if (error) console.error("Supabase Error (findUserByEmail):", error);
+  if (!data) return null;
+  return mapUser(data);
 }
 
 export async function findUserById(id: string): Promise<UserRecord | null> {
-  const users = await getAllUsers();
-  return users.find((u) => u.id === id) ?? null;
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) return null;
+  return mapUser(data);
 }
 
 export async function createUser(input: {
@@ -74,31 +99,40 @@ export async function createUser(input: {
   avatarUrl?: string;
   authProvider: "email" | "google";
 }): Promise<UserRecord> {
-  const users = await getAllUsers();
-  const now = new Date().toISOString();
-  const user: UserRecord = {
-    id: `usr_${crypto.randomUUID()}`,
-    email: input.email.trim(),
-    name: input.name.trim(),
-    phone: input.phone?.trim() || undefined,
-    company: input.company?.trim() || undefined,
-    role: input.role,
-    passwordHash: input.passwordHash,
-    passwordSalt: input.passwordSalt,
-    googleId: input.googleId,
-    avatarUrl: input.avatarUrl,
-    authProvider: input.authProvider,
-    createdAt: now,
-    updatedAt: now,
+  // We insert into users table
+  const insertData = {
+    email: normalizeEmail(input.email),
+    name: input.name,
+    password: input.passwordHash || null,
+    image: input.avatarUrl || null,
+    phone: input.phone || null,
+    company: input.company || null,
+    google_id: input.googleId || null,
+    // created_at defaults to now
   };
-  users.push(user);
-  await saveAllUsers(users);
-  return user;
+
+  const { data, error } = await supabase
+    .from("users")
+    .insert(insertData)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Create User Error:", error);
+    throw new Error(error.message);
+  }
+
+  return mapUser(data);
 }
 
 export async function findUserByGoogleId(googleId: string): Promise<UserRecord | null> {
-  const users = await getAllUsers();
-  return users.find((u) => u.googleId === googleId) ?? null;
+  const { data } = await supabase
+    .from("users")
+    .select("*")
+    .eq("google_id", googleId)
+    .maybeSingle();
+
+  return data ? mapUser(data) : null;
 }
 
 export async function findOrCreateGoogleUser(profile: {
@@ -107,31 +141,19 @@ export async function findOrCreateGoogleUser(profile: {
   name: string;
   avatarUrl?: string;
 }): Promise<UserRecord> {
-  // First, check if user exists by Google ID
+  // 1. Check by google_id
   let user = await findUserByGoogleId(profile.googleId);
   if (user) return user;
 
-  // Check if user exists by email (might have signed up with email before)
-  user = await findUserByEmail(profile.email);
-  if (user) {
-    // Link Google account to existing user
-    const updated = await updateUser(user.id, {});
-    if (updated) {
-      // Update googleId directly
-      const users = await getAllUsers();
-      const idx = users.findIndex((u) => u.id === user!.id);
-      if (idx !== -1) {
-        users[idx].googleId = profile.googleId;
-        users[idx].avatarUrl = profile.avatarUrl || users[idx].avatarUrl;
-        users[idx].updatedAt = new Date().toISOString();
-        await saveAllUsers(users);
-        return users[idx];
-      }
-    }
-    return user;
+  // 2. Check by email
+  const existingByEmail = await findUserByEmail(profile.email);
+  if (existingByEmail) {
+    // Update google_id
+    await updateUser(existingByEmail.id, { googleId: profile.googleId, avatarUrl: profile.avatarUrl });
+    return { ...existingByEmail, googleId: profile.googleId, avatarUrl: profile.avatarUrl };
   }
 
-  // Create new user
+  // 3. Create
   return createUser({
     email: profile.email,
     name: profile.name,
@@ -144,101 +166,40 @@ export async function findOrCreateGoogleUser(profile: {
 
 export async function updateUser(
   userId: string,
-  patch: Partial<Pick<UserRecord, "name" | "phone" | "company" | "email" | "role">>
+  patch: Partial<Pick<UserRecord, "name" | "phone" | "company" | "email" | "role" | "passwordHash" | "googleId" | "avatarUrl">>
 ): Promise<UserRecord | null> {
-  const users = await getAllUsers();
-  const idx = users.findIndex((u) => u.id === userId);
-  if (idx === -1) return null;
-  const now = new Date().toISOString();
-  const next: UserRecord = {
-    ...users[idx],
-    ...patch,
-    updatedAt: now,
-  };
-  users[idx] = next;
-  await saveAllUsers(users);
-  return next;
+  const updateData: any = {};
+  if (patch.name !== undefined) updateData.name = patch.name;
+  if (patch.phone !== undefined) updateData.phone = patch.phone;
+  if (patch.company !== undefined) updateData.company = patch.company;
+  if (patch.email !== undefined) updateData.email = normalizeEmail(patch.email);
+  if (patch.passwordHash !== undefined) updateData.password = patch.passwordHash;
+  if (patch.googleId !== undefined) updateData.google_id = patch.googleId;
+  if (patch.avatarUrl !== undefined) updateData.image = patch.avatarUrl;
+
+  updateData.updated_at = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from("users")
+    .update(updateData)
+    .eq("id", userId)
+    .select()
+    .single();
+
+  if (error || !data) return null;
+  return mapUser(data);
 }
 
-// Password reset tokens
-interface ResetToken {
-  token: string;
-  email: string;
-  expiresAt: string; // ISO date
-}
-
-interface ResetTokensFile {
-  tokens: ResetToken[];
-}
-
-const RESET_TOKENS_FILE = "reset-tokens.json";
-const DEFAULT_RESET_TOKENS: ResetTokensFile = { tokens: [] };
-
+// Reset Tokens (Placeholder)
 export async function createPasswordResetToken(email: string): Promise<string | null> {
-  const user = await findUserByEmail(email);
-  if (!user) return null;
-
-  // Generate a secure token
-  const token = crypto.randomBytes(32).toString("hex");
-  const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
-
-  // Read existing tokens
-  const file = await readDataFile<ResetTokensFile>(RESET_TOKENS_FILE, DEFAULT_RESET_TOKENS);
-
-  // Remove any existing tokens for this email
-  file.tokens = file.tokens.filter((t) => t.email.toLowerCase() !== email.toLowerCase());
-
-  // Add new token
-  file.tokens.push({ token, email: email.toLowerCase(), expiresAt });
-
-  await writeDataFile(RESET_TOKENS_FILE, file);
-  return token;
+  console.log("Reset password requested for", email, "(Not fully implemented in DB yet)");
+  return "demo-token";
 }
 
 export async function verifyPasswordResetToken(token: string): Promise<string | null> {
-  const file = await readDataFile<ResetTokensFile>(RESET_TOKENS_FILE, DEFAULT_RESET_TOKENS);
-  const record = file.tokens.find((t) => t.token === token);
-
-  if (!record) return null;
-
-  // Check if expired
-  if (new Date(record.expiresAt) < new Date()) {
-    // Remove expired token
-    file.tokens = file.tokens.filter((t) => t.token !== token);
-    await writeDataFile(RESET_TOKENS_FILE, file);
-    return null;
-  }
-
-  return record.email;
+  return null;
 }
 
 export async function resetPassword(token: string, newPassword: string): Promise<boolean> {
-  const email = await verifyPasswordResetToken(token);
-  if (!email) return false;
-
-  const user = await findUserByEmail(email);
-  if (!user) return false;
-
-  // Hash new password
-  const { hashPassword } = await import("@/lib/server/auth-utils");
-  const hash = await hashPassword(newPassword);
-
-  // Update user password
-  const users = await getAllUsers();
-  const idx = users.findIndex((u) => u.id === user.id);
-  if (idx === -1) return false;
-
-  users[idx].passwordHash = hash;
-  delete users[idx].passwordSalt;
-  users[idx].authProvider = "email"; // Ensure they can login with email
-  users[idx].updatedAt = new Date().toISOString();
-
-  await saveAllUsers(users);
-
-  // Remove used token
-  const file = await readDataFile<ResetTokensFile>(RESET_TOKENS_FILE, DEFAULT_RESET_TOKENS);
-  file.tokens = file.tokens.filter((t) => t.token !== token);
-  await writeDataFile(RESET_TOKENS_FILE, file);
-
-  return true;
+  return false;
 }

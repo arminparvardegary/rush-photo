@@ -52,36 +52,36 @@ const packages = [
 
 export default function PackageSelection() {
   return (
-    <section id="packages" className="relative py-20 sm:py-32 bg-white overflow-hidden">
+    <section id="packages" className="relative py-16 sm:py-24 md:py-32 bg-white overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#E63946]/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-rush-gray/5 rounded-full blur-[100px]" />
+        <div className="absolute top-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-[#E63946]/5 rounded-full blur-[80px] sm:blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-rush-gray/5 rounded-full blur-[60px] sm:blur-[100px]" />
       </div>
 
       <div className="container relative z-10 px-4 sm:px-6">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-20">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16 md:mb-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <span className="inline-block px-4 py-1.5 rounded-full border border-[#E63946]/20 bg-[#E63946]/5 text-[#E63946] text-xs sm:text-sm font-bold tracking-wide uppercase mb-6">
+            <span className="inline-block px-3 sm:px-4 py-1.5 rounded-full border border-[#E63946]/20 bg-[#E63946]/5 text-[#E63946] text-xs sm:text-sm font-bold tracking-wide uppercase mb-4 sm:mb-6">
               Choose Your Package
             </span>
-            <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-rush-dark mb-4 sm:mb-6 tracking-tight leading-[1.1]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-rush-dark mb-4 sm:mb-6 tracking-tight leading-[1.1]">
               3 Simple Plans, <br className="hidden sm:block" />
               <span className="text-[#E63946]">Stunning Results</span>
             </h2>
-            <p className="text-base sm:text-lg text-rush-gray font-medium max-w-xl mx-auto">
+            <p className="text-sm sm:text-base md:text-lg text-rush-gray font-medium max-w-xl mx-auto px-2">
               Select the photography style that fits your brand. No hidden fees, no surprises.
             </p>
           </motion.div>
         </div>
 
         {/* Package Cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
           {packages.map((pkg, index) => (
             <motion.div
               key={pkg.id}
@@ -89,6 +89,7 @@ export default function PackageSelection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
+              className={index === 2 && packages.length === 3 ? "sm:col-span-2 lg:col-span-1 sm:max-w-md sm:mx-auto lg:mx-0 w-full" : ""}
             >
               <Link
                 href={`/order?package=${pkg.id}`}
@@ -123,13 +124,13 @@ export default function PackageSelection() {
                 </div>
 
                 {/* Content */}
-                <div className="p-5 sm:p-6">
+                <div className="p-5 sm:p-6 lg:p-8">
                   <div className="mb-4">
                     <p className="text-[10px] sm:text-xs font-bold text-rush-gray uppercase tracking-widest mb-1">
                       {pkg.subtitle}
                     </p>
                     <h3 className="text-xl sm:text-2xl font-bold text-rush-dark mb-2">{pkg.title}</h3>
-                    <p className="text-xs sm:text-sm text-rush-gray font-medium leading-relaxed line-clamp-2">
+                    <p className="text-xs sm:text-sm text-rush-gray font-medium leading-relaxed line-clamp-3">
                       {pkg.description}
                     </p>
                   </div>
