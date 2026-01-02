@@ -574,167 +574,166 @@ export default function OrderPage() {
 
                 </div>
               </div>
-            </div>
             </motion.div>
           )}
 
-        {/* STEP 4: CHECKOUT */}
-        {step === 4 && (
-          <motion.div key="4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
-            <div className="space-y-8">
-              {/* Checkout Header */}
-              <div className="flex items-center gap-4 text-sm font-bold text-rush-gray uppercase tracking-widest mb-8">
-                {['Info', 'Shipping', 'Payment'].map((s, idx) => (
-                  <div key={s} className="flex items-center gap-2">
-                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] ${idx === ['information', 'shipping', 'payment'].indexOf(checkoutStep) ? 'bg-[#E63946] text-white' : 'bg-rush-border'}`}>{idx + 1}</span>
-                    <span className={idx === ['information', 'shipping', 'payment'].indexOf(checkoutStep) ? 'text-rush-dark' : ''}>{s}</span>
-                    {idx < 2 && <div className="w-8 h-[1px] bg-rush-border mx-2" />}
-                  </div>
-                ))}
-              </div>
-
-              {checkoutStep === 'information' && (
-                <div className="space-y-6">
-                  <h2 className="text-3xl font-black">Contract Information</h2>
-                  <div className="grid gap-4">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Email Address</label>
-                      <input type="email" value={order.formData.email} onChange={(e) => updateFormData('email', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" placeholder="your@email.com" />
+          {/* STEP 4: CHECKOUT */}
+          {step === 4 && (
+            <motion.div key="4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
+              <div className="space-y-8">
+                {/* Checkout Header */}
+                <div className="flex items-center gap-4 text-sm font-bold text-rush-gray uppercase tracking-widest mb-8">
+                  {['Info', 'Shipping', 'Payment'].map((s, idx) => (
+                    <div key={s} className="flex items-center gap-2">
+                      <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] ${idx === ['information', 'shipping', 'payment'].indexOf(checkoutStep) ? 'bg-[#E63946] text-white' : 'bg-rush-border'}`}>{idx + 1}</span>
+                      <span className={idx === ['information', 'shipping', 'payment'].indexOf(checkoutStep) ? 'text-rush-dark' : ''}>{s}</span>
+                      {idx < 2 && <div className="w-8 h-[1px] bg-rush-border mx-2" />}
                     </div>
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Product Name</label>
-                      <input type="text" value={order.formData.productName} onChange={(e) => updateFormData('productName', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" placeholder="E.g. Wireless Headphones" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Order Notes (Optional)</label>
-                      <textarea value={order.formData.notes} onChange={(e) => updateFormData('notes', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium h-32" placeholder="Tell us about special requests..." />
-                    </div>
-                  </div>
-                  <button onClick={handleCheckoutContinue} className="w-full bg-rush-dark text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-black/10">Continue to Shipping</button>
+                  ))}
                 </div>
-              )}
 
-              {checkoutStep === 'shipping' && (
-                <div className="space-y-6">
-                  <h2 className="text-3xl font-black">Shipping Details</h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5 col-span-1">
-                      <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">First Name</label>
-                      <input type="text" value={order.formData.firstName} onChange={(e) => updateFormData('firstName', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" />
-                    </div>
-                    <div className="space-y-1.5 col-span-1">
-                      <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Last Name</label>
-                      <input type="text" value={order.formData.lastName} onChange={(e) => updateFormData('lastName', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" />
-                    </div>
-                    <div className="space-y-1.5 col-span-2">
-                      <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Address</label>
-                      <input type="text" value={order.formData.address} onChange={(e) => updateFormData('address', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" />
-                    </div>
-                    <div className="space-y-1.5 col-span-2">
-                      <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Phone (Optional)</label>
-                      <input type="tel" value={order.formData.phone} onChange={(e) => updateFormData('phone', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" />
-                    </div>
-                  </div>
-                  <div className="flex gap-4">
-                    <button onClick={() => setCheckoutStep('information')} className="flex-1 bg-rush-light border border-rush-border text-rush-dark py-4 rounded-2xl font-bold">Back</button>
-                    <button onClick={handleCheckoutContinue} className="flex-[2] bg-rush-dark text-white py-4 rounded-2xl font-black">Continue to Payment</button>
-                  </div>
-                </div>
-              )}
-
-              {checkoutStep === 'payment' && (
-                <div className="space-y-8">
-                  <h2 className="text-3xl font-black">Complete Payment</h2>
-                  <div className="bg-white p-6 rounded-3xl border-2 border-rush-dark shadow-xl">
-                    <div className="flex items-start gap-4 mb-6">
-                      <div className="w-12 h-12 bg-rush-light rounded-2xl flex items-center justify-center"><CreditCard className="w-6 h-6 text-rush-dark" /></div>
-                      <div className="flex-1">
-                        <p className="font-bold text-lg">Secure Credit Card</p>
-                        <p className="text-sm text-rush-gray font-medium">You will be redirected to Stripe for safe payment.</p>
+                {checkoutStep === 'information' && (
+                  <div className="space-y-6">
+                    <h2 className="text-3xl font-black">Contract Information</h2>
+                    <div className="grid gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Email Address</label>
+                        <input type="email" value={order.formData.email} onChange={(e) => updateFormData('email', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" placeholder="your@email.com" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Product Name</label>
+                        <input type="text" value={order.formData.productName} onChange={(e) => updateFormData('productName', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" placeholder="E.g. Wireless Headphones" />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Order Notes (Optional)</label>
+                        <textarea value={order.formData.notes} onChange={(e) => updateFormData('notes', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium h-32" placeholder="Tell us about special requests..." />
                       </div>
                     </div>
-                    <button onClick={startStripeCheckout} disabled={isSubmitting} className="w-full bg-[#E63946] text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3 shadow-lg shadow-[#E63946]/20">
-                      {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin" /> : <><Lock className="w-4 h-4" /> Pay ${calculateTotal()}</>}
+                    <button onClick={handleCheckoutContinue} className="w-full bg-rush-dark text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-black/10">Continue to Shipping</button>
+                  </div>
+                )}
+
+                {checkoutStep === 'shipping' && (
+                  <div className="space-y-6">
+                    <h2 className="text-3xl font-black">Shipping Details</h2>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1.5 col-span-1">
+                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">First Name</label>
+                        <input type="text" value={order.formData.firstName} onChange={(e) => updateFormData('firstName', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" />
+                      </div>
+                      <div className="space-y-1.5 col-span-1">
+                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Last Name</label>
+                        <input type="text" value={order.formData.lastName} onChange={(e) => updateFormData('lastName', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" />
+                      </div>
+                      <div className="space-y-1.5 col-span-2">
+                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Address</label>
+                        <input type="text" value={order.formData.address} onChange={(e) => updateFormData('address', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" />
+                      </div>
+                      <div className="space-y-1.5 col-span-2">
+                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Phone (Optional)</label>
+                        <input type="tel" value={order.formData.phone} onChange={(e) => updateFormData('phone', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" />
+                      </div>
+                    </div>
+                    <div className="flex gap-4">
+                      <button onClick={() => setCheckoutStep('information')} className="flex-1 bg-rush-light border border-rush-border text-rush-dark py-4 rounded-2xl font-bold">Back</button>
+                      <button onClick={handleCheckoutContinue} className="flex-[2] bg-rush-dark text-white py-4 rounded-2xl font-black">Continue to Payment</button>
+                    </div>
+                  </div>
+                )}
+
+                {checkoutStep === 'payment' && (
+                  <div className="space-y-8">
+                    <h2 className="text-3xl font-black">Complete Payment</h2>
+                    <div className="bg-white p-6 rounded-3xl border-2 border-rush-dark shadow-xl">
+                      <div className="flex items-start gap-4 mb-6">
+                        <div className="w-12 h-12 bg-rush-light rounded-2xl flex items-center justify-center"><CreditCard className="w-6 h-6 text-rush-dark" /></div>
+                        <div className="flex-1">
+                          <p className="font-bold text-lg">Secure Credit Card</p>
+                          <p className="text-sm text-rush-gray font-medium">You will be redirected to Stripe for safe payment.</p>
+                        </div>
+                      </div>
+                      <button onClick={startStripeCheckout} disabled={isSubmitting} className="w-full bg-[#E63946] text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3 shadow-lg shadow-[#E63946]/20">
+                        {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin" /> : <><Lock className="w-4 h-4" /> Pay ${calculateTotal()}</>}
+                      </button>
+                    </div>
+
+                    <div className="text-center font-bold text-rush-gray text-sm">OR</div>
+
+                    <button onClick={placeInvoiceOrder} disabled={isSubmitting} className="w-full bg-white border-2 border-rush-border py-4 rounded-2xl font-bold text-rush-dark hover:border-rush-dark transition-all">
+                      Request Invoice via Email
                     </button>
                   </div>
+                )}
+              </div>
 
-                  <div className="text-center font-bold text-rush-gray text-sm">OR</div>
-
-                  <button onClick={placeInvoiceOrder} disabled={isSubmitting} className="w-full bg-white border-2 border-rush-border py-4 rounded-2xl font-bold text-rush-dark hover:border-rush-dark transition-all">
-                    Request Invoice via Email
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Order Summary Sidebar */}
-            <div className="bg-white p-8 rounded-[40px] border border-rush-border shadow-sm h-fit sticky top-24">
-              <h3 className="text-xl font-black mb-6">Order Summary</h3>
-              <div className="space-y-4 mb-8">
-                {order.cart.map(item => (
-                  <div key={item.style} className="flex justify-between items-start gap-4">
-                    <div className="flex gap-3">
-                      <img src={ECOMMERCE_STYLES.find(s => s.id === item.style)?.image} className="w-12 h-12 rounded-lg object-cover" />
-                      <div>
-                        <p className="font-bold text-sm leading-none mb-1">{ECOMMERCE_STYLES.find(s => s.id === item.style)?.name}</p>
-                        <p className="text-[10px] text-rush-gray font-bold uppercase">{item.angles.length} Angles</p>
+              {/* Order Summary Sidebar */}
+              <div className="bg-white p-8 rounded-[40px] border border-rush-border shadow-sm h-fit sticky top-24">
+                <h3 className="text-xl font-black mb-6">Order Summary</h3>
+                <div className="space-y-4 mb-8">
+                  {order.cart.map(item => (
+                    <div key={item.style} className="flex justify-between items-start gap-4">
+                      <div className="flex gap-3">
+                        <img src={ECOMMERCE_STYLES.find(s => s.id === item.style)?.image} className="w-12 h-12 rounded-lg object-cover" />
+                        <div>
+                          <p className="font-bold text-sm leading-none mb-1">{ECOMMERCE_STYLES.find(s => s.id === item.style)?.name}</p>
+                          <p className="text-[10px] text-rush-gray font-bold uppercase">{item.angles.length} Angles</p>
+                        </div>
                       </div>
+                      <span className="font-black text-sm">${item.angles.length * item.pricePerAngle}</span>
                     </div>
-                    <span className="font-black text-sm">${item.angles.length * item.pricePerAngle}</span>
-                  </div>
-                ))}
-                {order.lifestyleIncluded && (
-                  <div className="flex justify-between items-center bg-purple-50 p-3 rounded-2xl border border-purple-100">
-                    <div className="flex gap-3 items-center">
-                      <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center"><Sparkles className="w-4 h-4 text-purple-600" /></div>
-                      <span className="font-bold text-sm">Lifestyle Session</span>
+                  ))}
+                  {order.lifestyleIncluded && (
+                    <div className="flex justify-between items-center bg-purple-50 p-3 rounded-2xl border border-purple-100">
+                      <div className="flex gap-3 items-center">
+                        <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center"><Sparkles className="w-4 h-4 text-purple-600" /></div>
+                        <span className="font-bold text-sm">Lifestyle Session</span>
+                      </div>
+                      <span className="font-black text-sm text-purple-600">${PRICES.lifestyle.flatRate}</span>
                     </div>
-                    <span className="font-black text-sm text-purple-600">${PRICES.lifestyle.flatRate}</span>
+                  )}
+                </div>
+
+                <div className="space-y-3 pt-6 border-t border-rush-border">
+                  <div className="flex justify-between text-rush-gray font-bold text-sm">
+                    <span>Subtotal</span>
+                    <span>${calculateItemsSubtotal()}</span>
                   </div>
-                )}
+                  {calculateBundleDiscount(calculateItemsSubtotal()) > 0 && (
+                    <div className="flex justify-between text-teal-600 font-bold text-sm">
+                      <span>Bundle Discount (10%)</span>
+                      <span>-${calculateBundleDiscount(calculateItemsSubtotal())}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-rush-dark font-black pt-4 border-t border-rush-border text-2xl">
+                    <span>Total</span>
+                    <span>${calculateTotal()}</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* STEP 5: SUCCESS */}
+          {step === 5 && (
+            <motion.div key="5" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="max-w-md mx-auto text-center py-20">
+              <div className="w-24 h-24 bg-teal-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-xl shadow-teal-500/20">
+                <Check className="w-12 h-12 text-white" strokeWidth={4} />
+              </div>
+              <h1 className="text-4xl font-black mb-4">Order Received!</h1>
+              <p className="text-rush-gray font-medium mb-12">Thank you! Your production has been initialized. We'll be in touch within 24 hours.</p>
+
+              <div className="bg-white p-6 rounded-3xl border border-rush-border mb-8 shadow-sm">
+                <p className="text-[10px] font-black uppercase text-rush-gray tracking-widest mb-2">Tracking Number</p>
+                <p className="text-2xl font-black text-rush-dark font-mono">{trackingNumber}</p>
               </div>
 
-              <div className="space-y-3 pt-6 border-t border-rush-border">
-                <div className="flex justify-between text-rush-gray font-bold text-sm">
-                  <span>Subtotal</span>
-                  <span>${calculateItemsSubtotal()}</span>
-                </div>
-                {calculateBundleDiscount(calculateItemsSubtotal()) > 0 && (
-                  <div className="flex justify-between text-teal-600 font-bold text-sm">
-                    <span>Bundle Discount (10%)</span>
-                    <span>-${calculateBundleDiscount(calculateItemsSubtotal())}</span>
-                  </div>
-                )}
-                <div className="flex justify-between text-rush-dark font-black pt-4 border-t border-rush-border text-2xl">
-                  <span>Total</span>
-                  <span>${calculateTotal()}</span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
+              <Link href="/admin" className="block w-full bg-[#E63946] text-white py-4 rounded-2xl font-black shadow-lg shadow-[#E63946]/20 hover:scale-105 transition-all">Go to My Dashboard</Link>
+              <button onClick={() => window.location.href = '/'} className="mt-4 text-rush-gray font-bold hover:text-rush-dark">Back to Homepage</button>
+            </motion.div>
+          )}
 
-        {/* STEP 5: SUCCESS */}
-        {step === 5 && (
-          <motion.div key="5" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="max-w-md mx-auto text-center py-20">
-            <div className="w-24 h-24 bg-teal-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-xl shadow-teal-500/20">
-              <Check className="w-12 h-12 text-white" strokeWidth={4} />
-            </div>
-            <h1 className="text-4xl font-black mb-4">Order Received!</h1>
-            <p className="text-rush-gray font-medium mb-12">Thank you! Your production has been initialized. We'll be in touch within 24 hours.</p>
-
-            <div className="bg-white p-6 rounded-3xl border border-rush-border mb-8 shadow-sm">
-              <p className="text-[10px] font-black uppercase text-rush-gray tracking-widest mb-2">Tracking Number</p>
-              <p className="text-2xl font-black text-rush-dark font-mono">{trackingNumber}</p>
-            </div>
-
-            <Link href="/admin" className="block w-full bg-[#E63946] text-white py-4 rounded-2xl font-black shadow-lg shadow-[#E63946]/20 hover:scale-105 transition-all">Go to My Dashboard</Link>
-            <button onClick={() => window.location.href = '/'} className="mt-4 text-rush-gray font-bold hover:text-rush-dark">Back to Homepage</button>
-          </motion.div>
-        )}
-
-      </AnimatePresence>
-    </main>
+        </AnimatePresence>
+      </main>
     </div >
   );
 }
