@@ -7,6 +7,13 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    container: {
+      center: true,
+      padding: "1rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       colors: {
         'rush-red': 'var(--rush-red)',
@@ -20,6 +27,9 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['Outfit', 'system-ui', 'sans-serif'],
+      },
+      screens: {
+        "3xl": "1600px",
       },
     },
   },

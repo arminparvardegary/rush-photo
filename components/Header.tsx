@@ -67,7 +67,7 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
       <div className="mx-4 sm:mx-6 mt-4">
-        <div className={`max-w-6xl mx-auto transition-all duration-300 bg-white/90 backdrop-blur-xl border border-rush-border shadow-sm rounded-2xl px-4 sm:px-6 py-3`}>
+        <div className={`max-w-7xl mx-auto transition-all duration-300 bg-white/90 backdrop-blur-xl border border-rush-border shadow-sm rounded-2xl px-4 sm:px-6 py-3`}>
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group">

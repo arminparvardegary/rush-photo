@@ -13,7 +13,7 @@ export default function Hero() {
         <div className="absolute bottom-1/4 right-1/4 w-[250px] sm:w-[300px] md:w-[400px] h-[250px] sm:h-[300px] md:h-[400px] bg-rush-gray/5 rounded-full blur-[60px] sm:blur-[80px]" />
       </div>
 
-      <div className="container relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6">
+      <div className="container relative z-10 text-center max-w-5xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

@@ -241,20 +241,35 @@ export default function OrderPage() {
   const getTotalItems = () => (order.cart.length + (order.lifestyleIncluded ? 1 : 0));
 
   const selectPackageType = (type: PackageType) => {
-    setOrder(prev => ({
-      ...prev,
-      packageType: type,
-      lifestyleIncluded: type === "lifestyle" || type === "fullpackage",
-      cart: []
-    }));
-    setSelectedPackage(type);
-
-    if (type === "lifestyle") {
-      // Lifestyle: go to info page (Step 3)
-      setStep(3);
-    } else {
-      // E-commerce or Full Package: go to style selection (Step 2)
+    if (type === "fullpackage") {
+      // For Full Package, auto-populate cart with all styles and all angles
+      const allStylesCart = ECOMMERCE_STYLES.map(style => ({
+        style: style.id,
+        angles: ANGLES.map(a => a.id),
+        pricePerAngle: style.pricePerAngle || PRICES.ecommerce.perAngle
+      }));
+      setOrder(prev => ({
+        ...prev,
+        packageType: type,
+        lifestyleIncluded: true,
+        cart: allStylesCart
+      }));
+      setSelectedPackage(type);
       setStep(2);
+    } else {
+      setOrder(prev => ({
+        ...prev,
+        packageType: type,
+        lifestyleIncluded: type === "lifestyle",
+        cart: []
+      }));
+      setSelectedPackage(type);
+
+      if (type === "lifestyle") {
+        setStep(3);
+      } else {
+        setStep(2);
+      }
     }
   };
 
@@ -505,7 +520,7 @@ export default function OrderPage() {
                     <p className="text-3xl font-extrabold">${calculateTotal()}</p>
                   </div>
                   <button onClick={() => { setStep(4); setCheckoutStep('information'); }} className="bg-[#E63946] text-white px-8 py-4 rounded-2xl font-bold shadow-lg shadow-[#E63946]/20 hover:scale-105 transition-all">
-                    Continue to Checkout
+                    Add to Cart
                   </button>
                 </div>
               )}
@@ -571,7 +586,7 @@ export default function OrderPage() {
                     onClick={() => { setStep(4); setCheckoutStep('information'); }}
                     className="w-full bg-[#E63946] text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-[#E63946]/20 hover:scale-[1.02] transition-all flex items-center justify-center gap-3"
                   >
-                    Continue to Checkout
+                    Add to Cart
                     <ArrowRight className="w-5 h-5" />
                   </button>
                 </div>

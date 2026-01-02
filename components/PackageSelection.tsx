@@ -81,7 +81,7 @@ export default function PackageSelection() {
         </div>
 
         {/* Package Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
           {packages.map((pkg, index) => (
             <motion.div
               key={pkg.id}
