@@ -106,10 +106,10 @@ const DEFAULT_ECOMMERCE_STYLES: { id: EcommerceStyle; name: string; description:
 ];
 
 const DEFAULT_ANGLES: { id: Angle; name: string; image: string; price: number }[] = [
-  { id: "front", name: "Front", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop", price: 25 },
-  { id: "back", name: "Back", image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=300&fit=crop", price: 25 },
-  { id: "left", name: "Left Side", image: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=300&h=300&fit=crop", price: 25 },
-  { id: "right", name: "Right Side", image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=300&h=300&fit=crop", price: 25 },
+  { id: "front", name: "Front", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop&q=80", price: 25 },
+  { id: "back", name: "Back", image: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=300&h=300&fit=crop&q=80", price: 25 },
+  { id: "left", name: "Left Side", image: "https://images.unsplash.com/photo-1584735175315-9d5df23860e6?w=300&h=300&fit=crop&q=80", price: 25 },
+  { id: "right", name: "Right Side", image: "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=300&h=300&fit=crop&q=80", price: 25 },
 ];
 
 export default function OrderPage() {
