@@ -60,23 +60,23 @@ const TESTIMONIALS = [
 
 export default function Testimonials() {
   return (
-    <section id="testimonials" className="relative py-32 bg-rush-light overflow-hidden">
-      <div className="container relative z-10">
-        <div className="text-center max-w-2xl mx-auto mb-20">
+    <section id="testimonials" className="relative py-16 sm:py-24 md:py-32 bg-rush-light overflow-hidden">
+      <div className="container relative z-10 px-4 sm:px-6">
+        <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16 md:mb-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
           >
-            <h2 className="text-5xl md:text-7xl font-extrabold text-rush-dark mb-6 tracking-tighter">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-rush-dark mb-4 sm:mb-6 tracking-tight">
               Client <span className="text-[#E63946]">Love</span>
             </h2>
-            <p className="text-lg text-rush-gray font-medium">
+            <p className="text-base sm:text-lg text-rush-gray font-medium">
               Don't just take our word for it. Trusted by over 500+ brands worldwide.
             </p>
           </motion.div>
         </div>
 
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 sm:gap-6 md:gap-8 space-y-4 sm:space-y-6 md:space-y-8">
           {TESTIMONIALS.map((item, i) => (
             <motion.div
               key={item.id}
@@ -86,40 +86,40 @@ export default function Testimonials() {
               transition={{ delay: i * 0.1 }}
               className="break-inside-avoid"
             >
-              <div className={`relative p-8 rounded-3xl border transition-colors duration-500 overflow-hidden ${item.type === 'video' ? 'bg-black border-black text-white' : 'bg-white border-rush-border hover:border-[#E63946]/20'}`}>
+              <div className={`relative p-5 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl border transition-colors duration-500 overflow-hidden ${item.type === 'video' ? 'bg-black border-black text-white' : 'bg-white border-rush-border hover:border-[#E63946]/20'}`}>
                 {item.type === 'video' ? (
                   <>
                     <div className="absolute inset-0 opacity-60 group-hover:opacity-40 transition-opacity duration-500">
                       <img src={item.videoThumbnail} alt="Thumbnail" className="w-full h-full object-cover" />
                     </div>
-                    <div className="relative z-10 flex flex-col items-center justify-center h-64 text-center">
-                      <button className="w-16 h-16 rounded-full bg-[#E63946]/90 flex items-center justify-center mb-6 hover:scale-110 transition-transform shadow-xl shadow-[#E63946]/20">
-                        <Play className="w-6 h-6 text-white fill-current ml-1" />
+                    <div className="relative z-10 flex flex-col items-center justify-center h-48 sm:h-56 md:h-64 text-center">
+                      <button className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-[#E63946]/90 flex items-center justify-center mb-4 sm:mb-6 hover:scale-110 transition-transform shadow-xl shadow-[#E63946]/20">
+                        <Play className="w-5 h-5 sm:w-6 sm:h-6 text-white fill-current ml-1" />
                       </button>
-                      <p className="font-serif italic text-2xl text-white">"{item.content}"</p>
+                      <p className="font-serif italic text-lg sm:text-xl md:text-2xl text-white px-2">"{item.content}"</p>
                     </div>
                   </>
                 ) : (
                   <>
-                    <div className="mb-6 flex gap-1">
+                    <div className="mb-4 sm:mb-6 flex gap-1">
                       {[...Array(item.rating)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 text-[#E63946] fill-current" />
+                        <Star key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E63946] fill-current" />
                       ))}
                     </div>
 
-                    <Quote className="w-8 h-8 text-rush-gray/10 mb-6" />
+                    <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-rush-gray/10 mb-4 sm:mb-6" />
 
-                    <p className="text-lg text-rush-gray leading-relaxed mb-8 font-medium">
+                    <p className="text-base sm:text-lg text-rush-gray leading-relaxed mb-6 sm:mb-8 font-medium">
                       "{item.content}"
                     </p>
                   </>
                 )}
 
-                <div className="flex items-center gap-4 relative z-10">
+                <div className="flex items-center gap-3 sm:gap-4 relative z-10">
                   <img
                     src={item.image}
                     alt={item.name}
-                    className={`w-12 h-12 rounded-full object-cover ring-2 ${item.type === 'video' ? 'ring-white/10' : 'ring-rush-border'}`}
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover ring-2 ${item.type === 'video' ? 'ring-white/10' : 'ring-rush-border'}`}
                   />
                   <div>
                     <h4 className={`font-bold text-sm ${item.type === 'video' ? 'text-white' : 'text-rush-dark'}`}>{item.name}</h4>
