@@ -50,7 +50,7 @@ export default function FAQ() {
     <section id="faq" className="relative py-32 bg-white overflow-hidden">
       <div className="container max-w-4xl relative z-10">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-black text-rush-dark mb-6 tracking-tighter">
+          <h2 className="text-4xl md:text-6xl font-extrabold text-rush-dark mb-6 tracking-tighter">
             Common <span className="text-[#E63946]">Questions</span>
           </h2>
           <p className="text-rush-gray">Everything you need to know about our process.</p>

@@ -67,7 +67,7 @@ export default function Testimonials() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
           >
-            <h2 className="text-5xl md:text-7xl font-black text-rush-dark mb-6 tracking-tighter">
+            <h2 className="text-5xl md:text-7xl font-extrabold text-rush-dark mb-6 tracking-tighter">
               Client <span className="text-[#E63946]">Love</span>
             </h2>
             <p className="text-lg text-rush-gray font-medium">
