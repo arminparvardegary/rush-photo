@@ -126,7 +126,7 @@ export default function AboutPage() {
 
             <div className="text-center mb-12">
               <h2 className="text-3xl sm:text-4xl font-black text-rush-dark mb-4">Visit Our Studio</h2>
-              <p className="text-rush-gray font-medium">Have questions? We're here to help you scale your visual content.</p>
+              <p className="text-rush-gray font-medium">Have questions? We&apos;re here to help you scale your visual content.</p>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-8 mb-12">

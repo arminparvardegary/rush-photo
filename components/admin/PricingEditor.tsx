@@ -126,7 +126,7 @@ export default function PricingEditor({ initialPricing }: { initialPricing: Pric
                         {pricing.ecommerce.styles.map((style, idx) => (
                             <div key={style.id} className="p-4 border border-gray-200 rounded-2xl bg-gray-50/50 grid md:grid-cols-12 gap-4 items-start">
                                 <div className="md:col-span-1">
-                                    <img src={style.image} className="w-12 h-12 rounded-lg object-cover bg-gray-200" />
+                                    <img src={style.image} alt={style.name} className="w-12 h-12 rounded-lg object-cover bg-gray-200" />
                                 </div>
                                 <div className="md:col-span-3">
                                     <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Name</label>

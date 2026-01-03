@@ -64,10 +64,8 @@ export default function Process() {
                 <span className="text-transparent bg-clip-text bg-gradient-cool font-serif italic">Streamlined</span> <br />
                 Process
               </h2>
-              <p className="text-lg text-mist max-w-md mb-10 leading-relaxed">
-                From your doorstep to your dashboard in under a week.
-                We've optimized every step for speed without compromising quality.
-              </p>
+              From your doorstep to your dashboard in under a week.
+              We&apos;ve optimized every step for speed without compromising quality.
 
               <Link
                 href="/order"

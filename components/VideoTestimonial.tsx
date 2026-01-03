@@ -54,8 +54,8 @@ export default function VideoTestimonial() {
                     </div>
 
                     <h2 className="text-4xl md:text-6xl font-serif italic text-white mb-6 leading-tight">
-                        "They didn't just take photos.<br />
-                        They built our brand visual identity."
+                        &quot;They didn&apos;t just take photos.<br />
+                        They built our brand visual identity.&quot;
                     </h2>
 
                     <div className="flex items-center justify-center gap-4">

@@ -728,7 +728,7 @@ export default function OrderPage() {
                 <Check className="w-12 h-12 text-white" strokeWidth={4} />
               </div>
               <h1 className="text-4xl font-black mb-4">Order Received!</h1>
-              <p className="text-rush-gray font-medium mb-12">Thank you! Your production has been initialized. We'll be in touch within 24 hours.</p>
+              <p className="text-rush-gray font-medium mb-12">Thank you! Your production has been initialized. We&apos;ll be in touch within 24 hours.</p>
 
               <div className="bg-white p-6 rounded-3xl border border-rush-border mb-8 shadow-sm">
                 <p className="text-[10px] font-black uppercase text-rush-gray tracking-widest mb-2">Tracking Number</p>

@@ -96,7 +96,7 @@ export default function Testimonials() {
               Client <span className="text-[#E63946]">Love</span>
             </h2>
             <p className="text-base sm:text-lg text-rush-gray font-medium mb-6">
-              Join 500+ brands who've transformed their product imagery with Rush Photos
+              Join 500+ brands who&apos;ve transformed their product imagery with Rush Photos
             </p>
 
             {/* Stats bar */}
@@ -132,8 +132,8 @@ export default function Testimonials() {
               transition={{ delay: i * 0.1 }}
             >
               <div className={`relative h-full p-6 sm:p-8 rounded-2xl sm:rounded-3xl border transition-all duration-300 ${item.type === 'featured'
-                  ? 'bg-gradient-to-br from-[#E63946] to-[#D62839] border-[#E63946] text-white shadow-xl shadow-[#E63946]/20'
-                  : 'bg-white border-rush-border hover:border-[#E63946]/30 hover:shadow-lg'
+                ? 'bg-gradient-to-br from-[#E63946] to-[#D62839] border-[#E63946] text-white shadow-xl shadow-[#E63946]/20'
+                : 'bg-white border-rush-border hover:border-[#E63946]/30 hover:shadow-lg'
                 }`}>
                 {/* Rating */}
                 <div className="flex gap-1 mb-4">
@@ -151,14 +151,14 @@ export default function Testimonials() {
                 {/* Content */}
                 <p className={`text-sm sm:text-base leading-relaxed mb-6 font-medium ${item.type === 'featured' ? 'text-white' : 'text-rush-gray'
                   }`}>
-                  "{item.content}"
+                  &quot;{item.content}&quot;
                 </p>
 
                 {/* Metric badge */}
                 {item.metric && (
                   <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-6 ${item.type === 'featured'
-                      ? 'bg-white/20 text-white'
-                      : 'bg-[#E63946]/10 text-[#E63946]'
+                    ? 'bg-white/20 text-white'
+                    : 'bg-[#E63946]/10 text-[#E63946]'
                     }`}>
                     {item.metric}
                   </div>
