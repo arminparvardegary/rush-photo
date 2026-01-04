@@ -24,13 +24,25 @@ services:
       - PORT=3002
       - NEXT_PUBLIC_SITE_URL=https://rush.photos
       - NEXT_PUBLIC_BASE_URL=https://rush.photos
+      # Supabase Configuration
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
       # Auth Configuration
-      - AUTH_SECRET=cMTm8wSZIcmzd3ckc5kD5FSn1u57OhNeQBFWm01U3fE=
+      - AUTH_SECRET=${AUTH_SECRET:-cMTm8wSZIcmzd3ckc5kD5FSn1u57OhNeQBFWm01U3fE=}
       # Google OAuth
-      - GOOGLE_CLIENT_ID=762790599040-6p4q7mfmsuus5ku0dff62vku1qdmum4k.apps.googleusercontent.com
-      - GOOGLE_CLIENT_SECRET=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
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-762790599040-6p4q7mfmsuus5ku0dff62vku1qdmum4k.apps.googleusercontent.com}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-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}
+      # Stripe
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
+      # AWS SES
+      - AWS_REGION=${AWS_REGION:-eu-north-1}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_SES_FROM_EMAIL=${AWS_SES_FROM_EMAIL:-hello@rush.photos}
       # Admin emails (comma-separated)
-      - ADMIN_EMAILS=admin@rush.photos,hello@rushgraphics.com
+      - ADMIN_EMAILS=${ADMIN_EMAILS:-admin@rush.photos,hello@rushgraphics.com}
     # Persistent data volume
     volumes:
       - ./data:/app/data
