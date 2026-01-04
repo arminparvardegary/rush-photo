@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { findOrderByStripeSessionId, findOrderById, updateOrder } from "@/lib/server/orders";
+import { sendEmail } from "@/lib/aws-ses";
+import { orderConfirmationEmail } from "@/lib/email-templates";
 
 export const runtime = "nodejs";
 
@@ -46,6 +48,36 @@ export async function GET(req: Request) {
     status: order.status === "completed" ? "completed" : "processing",
     payment: { provider: "stripe", sessionId, status: "paid" },
   });
+
+  // Send order confirmation email
+  if (updated && order.email) {
+    try {
+      const cartItems = order.cart.map(item => ({
+        style: item.style.charAt(0).toUpperCase() + item.style.slice(1),
+        angles: item.angles,
+        price: item.angles.length * 25, // Default price, should calculate from pricing
+      }));
+
+      const emailData = orderConfirmationEmail({
+        customerName: order.name || '',
+        orderNumber: order.trackingNumber,
+        productName: order.productName,
+        packageType: order.package,
+        total: order.totals.total,
+        cartItems,
+      });
+
+      await sendEmail({
+        to: order.email,
+        subject: emailData.subject,
+        html: emailData.html,
+        text: emailData.text,
+      });
+    } catch (error) {
+      console.error('Failed to send confirmation email:', error);
+      // Don't fail the request if email sending fails
+    }
+  }
 
   return NextResponse.json({ order: updated || order });
 }

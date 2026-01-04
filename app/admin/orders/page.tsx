@@ -59,8 +59,8 @@ export default async function OrdersPage() {
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold capitalize ${order.status === 'completed' ? 'bg-green-100 text-green-700' :
-                                                order.status === 'processing' ? 'bg-blue-100 text-blue-700' :
-                                                    'bg-amber-100 text-amber-700'
+                                            order.status === 'processing' ? 'bg-blue-100 text-blue-700' :
+                                                'bg-amber-100 text-amber-700'
                                             }`}>
                                             {order.status.replace('_', ' ')}
                                         </span>
@@ -72,9 +72,9 @@ export default async function OrdersPage() {
                                         ${order.totals.total}
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <button className="text-gray-400 hover:text-rush-dark">
+                                        <Link href={`/admin/orders/${order.id}`} className="text-gray-400 hover:text-rush-dark block">
                                             <ArrowUpRight className="w-5 h-5" />
-                                        </button>
+                                        </Link>
                                     </td>
                                 </tr>
                             ))}
