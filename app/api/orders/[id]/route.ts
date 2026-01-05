@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/server/auth";
 import { findOrderById, updateOrder } from "@/lib/server/orders";
-import { sendEmail } from "@/lib/aws-ses";
+import { sendEmail } from "@/lib/resend";
 import { deliveryNotificationEmail } from "@/lib/email-templates";
 
 export const runtime = "nodejs";

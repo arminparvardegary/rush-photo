@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { findOrderByStripeSessionId, findOrderById, updateOrder } from "@/lib/server/orders";
-import { sendEmail } from "@/lib/aws-ses";
+import { sendEmail } from "@/lib/resend";
 import { orderConfirmationEmail } from "@/lib/email-templates";
 
 export const runtime = "nodejs";

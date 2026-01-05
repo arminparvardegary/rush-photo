@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Save, Upload, ExternalLink, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { sendEmail } from "@/lib/aws-ses";
+import { sendEmail } from "@/lib/resend";
 import { deliveryNotificationEmail } from "@/lib/email-templates";
 
 interface OrderDetail {
