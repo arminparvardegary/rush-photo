@@ -132,34 +132,30 @@ export default function Testimonials() {
               transition={{ delay: i * 0.1 }}
             >
               <div className={`relative h-full p-6 sm:p-8 rounded-2xl sm:rounded-3xl border transition-all duration-300 ${item.type === 'featured'
-                ? 'bg-gradient-to-br from-[#E63946] to-[#D62839] border-[#E63946] text-white shadow-xl shadow-[#E63946]/20'
-                : 'bg-white border-rush-border hover:border-[#E63946]/30 hover:shadow-lg'
+                ? 'bg-white border-2 border-[#E63946] shadow-lg'
+                : 'bg-white border-gray-100 hover:border-gray-200 hover:shadow-md'
                 }`}>
                 {/* Rating */}
                 <div className="flex gap-1 mb-4">
                   {[...Array(item.rating)].map((_, idx) => (
                     <Star
                       key={idx}
-                      className={`w-4 h-4 ${item.type === 'featured' ? 'text-white fill-white' : 'text-[#E63946] fill-[#E63946]'}`}
+                      className={`w-4 h-4 text-[#E63946] fill-[#E63946]`}
                     />
                   ))}
                 </div>
 
                 {/* Quote icon */}
-                <Quote className={`w-8 h-8 mb-4 ${item.type === 'featured' ? 'text-white/20' : 'text-rush-gray/10'}`} />
+                <Quote className={`w-8 h-8 mb-4 text-gray-100`} />
 
                 {/* Content */}
-                <p className={`text-sm sm:text-base leading-relaxed mb-6 font-medium ${item.type === 'featured' ? 'text-white' : 'text-rush-gray'
-                  }`}>
+                <p className={`text-sm sm:text-base leading-relaxed mb-6 font-medium text-gray-600`}>
                   &quot;{item.content}&quot;
                 </p>
 
                 {/* Metric badge */}
                 {item.metric && (
-                  <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-6 ${item.type === 'featured'
-                    ? 'bg-white/20 text-white'
-                    : 'bg-[#E63946]/10 text-[#E63946]'
-                    }`}>
+                  <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-6 bg-[#E63946]/10 text-[#E63946]`}>
                     {item.metric}
                   </div>
                 )}
@@ -172,10 +168,10 @@ export default function Testimonials() {
                     className="w-12 h-12 rounded-full object-cover ring-2 ring-white/10"
                   />
                   <div>
-                    <h4 className={`font-bold text-sm ${item.type === 'featured' ? 'text-white' : 'text-rush-dark'}`}>
+                    <h4 className={`font-bold text-sm text-gray-900`}>
                       {item.name}
                     </h4>
-                    <p className={`text-xs ${item.type === 'featured' ? 'text-white/80' : 'text-rush-gray'}`}>
+                    <p className={`text-xs text-gray-500`}>
                       {item.role}, {item.company}
                     </p>
                   </div>

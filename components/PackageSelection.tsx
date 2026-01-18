@@ -53,10 +53,9 @@ const packages = [
 export default function PackageSelection() {
   return (
     <section id="packages" className="relative py-16 sm:py-24 md:py-32 bg-white overflow-hidden">
-      {/* Background */}
+      {/* Background - Subtle */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-[#E63946]/5 rounded-full blur-[80px] sm:blur-[120px]" />
-        <div className="absolute bottom-0 left-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-rush-gray/5 rounded-full blur-[60px] sm:blur-[100px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-b from-gray-50 to-transparent rounded-full blur-[120px]" />
       </div>
 
       <div className="container relative z-10 px-4 sm:px-6">
@@ -67,15 +66,14 @@ export default function PackageSelection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <span className="inline-block px-3 sm:px-4 py-1.5 rounded-full border border-[#E63946]/20 bg-[#E63946]/5 text-[#E63946] text-xs sm:text-sm font-bold tracking-wide uppercase mb-4 sm:mb-6">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 text-gray-600 text-sm font-medium mb-6">
               Choose Your Package
             </span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-rush-dark mb-4 sm:mb-6 tracking-tight leading-[1.1]">
-              3 Simple Plans, <br className="hidden sm:block" />
-              <span className="text-[#E63946]">Stunning Results</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight leading-[1.1]">
+              3 Simple Plans
             </h2>
-            <p className="text-sm sm:text-base md:text-lg text-rush-gray font-medium max-w-xl mx-auto px-2">
-              Select the photography style that fits your brand. No hidden fees, no surprises.
+            <p className="text-base sm:text-lg text-gray-500 font-medium max-w-xl mx-auto">
+              Select the photography style that fits your brand. No hidden fees.
             </p>
           </motion.div>
         </div>
