@@ -2,7 +2,7 @@
 const nextConfig = {
   // Standalone output for Docker deployment
   output: 'standalone',
-  
+
   // Image optimization
   images: {
     remotePatterns: [
@@ -18,19 +18,23 @@ const nextConfig = {
 
   // Production optimizations
   reactStrictMode: true,
-  
+
   // Compression
   compress: true,
-  
+
   // Power optimizations
   poweredByHeader: false,
-  
+
   // Headers for security
   async headers() {
     return [
       {
         source: '/(.*)',
         headers: [
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload',
+          },
           {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
