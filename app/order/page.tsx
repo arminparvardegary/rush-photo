@@ -601,23 +601,69 @@ export default function OrderPage() {
                 </div>
 
                 {checkoutStep === 'information' && (
-                  <div className="space-y-6">
-                    <h2 className="text-3xl font-black">Contract Information</h2>
-                    <div className="grid gap-4">
+                  <div className="space-y-8">
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900 mb-2">Contact Information</h2>
+                      <p className="text-gray-500 text-sm">We&apos;ll use this to send your order updates</p>
+                    </div>
+
+                    <div className="space-y-5">
                       <div className="space-y-1.5">
                         <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Email Address</label>
-                        <input type="email" value={order.formData.email} onChange={(e) => updateFormData('email', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" placeholder="your@email.com" />
+                        <input
+                          type="email"
+                          value={order.formData.email}
+                          onChange={(e) => updateFormData('email', e.target.value)}
+                          className="w-full p-4 rounded-xl border-2 border-gray-200 bg-white focus:border-[#E63946] focus:ring-4 focus:ring-[#E63946]/10 outline-none font-medium transition-all hover:border-gray-300"
+                          placeholder="your@email.com"
+                        />
                       </div>
+
+                      <label className="flex items-center gap-3 cursor-pointer group p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+                        <div
+                          onClick={() => setEmailUpdates(!emailUpdates)}
+                          className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${emailUpdates
+                            ? "bg-[#E63946] border-[#E63946]"
+                            : "border-gray-300 group-hover:border-gray-400"
+                            }`}
+                        >
+                          {emailUpdates && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
+                        </div>
+                        <span className="text-sm text-gray-600 font-medium">Email me with news and offers</span>
+                      </label>
+                    </div>
+
+                    <div className="space-y-5">
                       <div className="space-y-1.5">
                         <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Product Name</label>
-                        <input type="text" value={order.formData.productName} onChange={(e) => updateFormData('productName', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" placeholder="E.g. Wireless Headphones" />
+                        <input
+                          type="text"
+                          value={order.formData.productName}
+                          onChange={(e) => updateFormData('productName', e.target.value)}
+                          className="w-full p-4 rounded-xl border-2 border-gray-200 bg-white focus:border-[#E63946] focus:ring-4 focus:ring-[#E63946]/10 outline-none font-medium transition-all hover:border-gray-300"
+                          placeholder="E.g. Wireless Headphones"
+                        />
                       </div>
+
                       <div className="space-y-1.5">
                         <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Order Notes (Optional)</label>
-                        <textarea value={order.formData.notes} onChange={(e) => updateFormData('notes', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium h-32" placeholder="Tell us about special requests..." />
+                        <textarea
+                          value={order.formData.notes}
+                          onChange={(e) => updateFormData('notes', e.target.value)}
+                          className="w-full p-4 rounded-xl border-2 border-gray-200 bg-white focus:border-[#E63946] focus:ring-4 focus:ring-[#E63946]/10 outline-none font-medium h-32 resize-none transition-all hover:border-gray-300"
+                          placeholder="Tell us about special requests..."
+                        />
                       </div>
                     </div>
-                    <button onClick={handleCheckoutContinue} className="w-full bg-rush-dark text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-black/10">Continue to Shipping</button>
+
+                    <motion.button
+                      whileHover={{ scale: 1.01 }}
+                      whileTap={{ scale: 0.99 }}
+                      onClick={handleCheckoutContinue}
+                      className="w-full mt-4 bg-gradient-to-r from-[#E63946] to-[#FF6B6B] hover:from-[#D62839] hover:to-[#E63946] text-white py-4 rounded-xl font-semibold transition-all shadow-lg shadow-[#E63946]/25 hover:shadow-[#E63946]/40"
+                    >
+                      Continue to Shipping
+                    </motion.button>
                   </div>
                 )}
 
