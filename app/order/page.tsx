@@ -601,56 +601,105 @@ export default function OrderPage() {
                 </div>
 
                 {checkoutStep === 'information' && (
-                  <div className="space-y-8">
-                    <div>
-                      <h2 className="text-2xl font-bold text-gray-900 mb-2">Contact Information</h2>
-                      <p className="text-gray-500 text-sm">We&apos;ll use this to send your order updates</p>
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-2 mb-6">
+                      <Mail className="w-5 h-5 text-[#E63946]" />
+                      <h2 className="text-xl font-bold text-gray-900">Contact Information</h2>
                     </div>
 
-                    <div className="space-y-5">
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Email Address</label>
-                        <input
-                          type="email"
-                          value={order.formData.email}
-                          onChange={(e) => updateFormData('email', e.target.value)}
-                          className="w-full p-4 rounded-xl border-2 border-gray-200 bg-white focus:border-[#E63946] focus:ring-4 focus:ring-[#E63946]/10 outline-none font-medium transition-all hover:border-gray-300"
-                          placeholder="your@email.com"
-                        />
-                      </div>
-
-                      <label className="flex items-center gap-3 cursor-pointer group p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
-                        <div
-                          onClick={() => setEmailUpdates(!emailUpdates)}
-                          className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all ${emailUpdates
-                            ? "bg-[#E63946] border-[#E63946]"
-                            : "border-gray-300 group-hover:border-gray-400"
-                            }`}
-                        >
-                          {emailUpdates && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
+                    {isLoggedIn && user ? (
+                      // Authenticated View - Show user info
+                      <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 mb-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm text-gray-500 mb-1">Signed in as</p>
+                            <p className="font-medium text-gray-900 flex items-center gap-2">
+                              {user.name || 'User'}
+                              <span className="text-gray-400">•</span>
+                              {user.email}
+                            </p>
+                          </div>
+                          <button
+                            onClick={async () => {
+                              try {
+                                await fetch('/api/auth/logout', { method: 'POST' });
+                                setUser(null);
+                                setIsLoggedIn(false);
+                                setOrder(prev => ({
+                                  ...prev,
+                                  formData: { ...prev.formData, email: '', firstName: '', lastName: '' }
+                                }));
+                              } catch (e) { console.error(e); }
+                            }}
+                            className="text-sm text-[#E63946] hover:text-[#D62839] transition-colors font-medium"
+                          >
+                            Sign out
+                          </button>
                         </div>
-                        <span className="text-sm text-gray-600 font-medium">Email me with news and offers</span>
-                      </label>
-                    </div>
+                      </div>
+                    ) : (
+                      // Guest Checkout - Email + Sign In Button
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm text-gray-600 mb-2">Email</label>
+                          <input
+                            type="email"
+                            value={order.formData.email}
+                            onChange={(e) => updateFormData('email', e.target.value)}
+                            className="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-[#E63946] transition-colors hover:border-gray-300"
+                            placeholder="your@email.com"
+                          />
+                          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                        </div>
 
-                    <div className="space-y-5">
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Product Name</label>
+                        {/* Sign In Button */}
+                        <div className="pt-2">
+                          <Link
+                            href="/login?redirect=/order"
+                            className="w-full bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-900 py-3 rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
+                          >
+                            <Lock className="w-4 h-4" />
+                            Already have an account? Sign In
+                          </Link>
+                        </div>
+
+                        {/* Email Updates Checkbox */}
+                        <div className="pt-4 border-t border-gray-200">
+                          <label className="flex items-center gap-3 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={emailUpdates}
+                              onChange={() => setEmailUpdates(!emailUpdates)}
+                              className="sr-only"
+                            />
+                            <div className={`w-5 h-5 rounded border-2 ${emailUpdates ? "bg-[#E63946] border-[#E63946]" : "border-gray-300"} flex items-center justify-center transition-colors`}>
+                              {emailUpdates && <Check className="w-3 h-3 text-white" strokeWidth={3} />}
+                            </div>
+                            <span className="text-sm text-gray-600">Email me with news and offers</span>
+                          </label>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Product Info - Always Show */}
+                    <div className="space-y-4 pt-4 border-t border-gray-200">
+                      <div>
+                        <label className="block text-sm text-gray-600 mb-2">Product Name</label>
                         <input
                           type="text"
                           value={order.formData.productName}
                           onChange={(e) => updateFormData('productName', e.target.value)}
-                          className="w-full p-4 rounded-xl border-2 border-gray-200 bg-white focus:border-[#E63946] focus:ring-4 focus:ring-[#E63946]/10 outline-none font-medium transition-all hover:border-gray-300"
+                          className="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-[#E63946] transition-colors hover:border-gray-300"
                           placeholder="E.g. Wireless Headphones"
                         />
                       </div>
 
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Order Notes (Optional)</label>
+                      <div>
+                        <label className="block text-sm text-gray-600 mb-2">Order Notes (Optional)</label>
                         <textarea
                           value={order.formData.notes}
                           onChange={(e) => updateFormData('notes', e.target.value)}
-                          className="w-full p-4 rounded-xl border-2 border-gray-200 bg-white focus:border-[#E63946] focus:ring-4 focus:ring-[#E63946]/10 outline-none font-medium h-32 resize-none transition-all hover:border-gray-300"
+                          className="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-[#E63946] transition-colors hover:border-gray-300 h-24 resize-none"
                           placeholder="Tell us about special requests..."
                         />
                       </div>
