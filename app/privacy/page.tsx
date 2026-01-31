@@ -17,8 +17,8 @@ export default function PrivacyPage() {
       <header className="bg-white/80 backdrop-blur-md border-b border-rush-border sticky top-0 z-50">
         <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-[#E63946] rounded-lg flex items-center justify-center font-black text-white text-sm">R</div>
-            <span className="font-bold text-lg text-rush-dark">Rush Photo</span>
+            <img src="/rushlogo.png" alt="Rush" className="h-6 sm:h-7 w-auto object-contain" />
+            <span className="font-bold text-2xl sm:text-3xl text-rush-dark">photos</span>
           </Link>
           <Link href="/signup" className="bg-rush-dark text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-rush-dark/90 transition-all">Get Started</Link>
         </div>
@@ -102,7 +102,7 @@ export default function PrivacyPage() {
       </div>
 
       <footer className="py-12 text-center text-xs font-bold text-rush-gray/40 uppercase tracking-widest border-t border-rush-border bg-white mt-12">
-        &copy; 2024 Rush Photo. All Rights Reserved.
+        &copy; 2026 Rush Photo. All Rights Reserved.
       </footer>
     </main>
   );

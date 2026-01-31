@@ -18,8 +18,8 @@ export default function AboutPage() {
       <header className="bg-white/80 backdrop-blur-md border-b border-rush-border sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-[#E63946] rounded-xl flex items-center justify-center font-black text-white">R</div>
-            <span className="font-bold text-lg text-rush-dark">Rush Photo</span>
+            <img src="/rushlogo.png" alt="Rush" className="h-6 sm:h-7 w-auto object-contain" />
+            <span className="font-bold text-2xl sm:text-3xl text-rush-dark">photos</span>
           </Link>
           <Link href="/order" className="bg-[#E63946] text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-[#E63946]/20 hover:scale-105 transition-all">Start Your Shoot</Link>
         </div>

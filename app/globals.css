@@ -280,3 +280,66 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--rush-gray-light);
 }
+
+/* ============================================
+   HIDE SCROLLBAR
+   ============================================ */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ============================================
+   GRADIENT TEXT
+   ============================================ */
+.gradient-text {
+  background: linear-gradient(135deg, var(--rush-red) 0%, #FF6B6B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   PORTFOLIO BACKGROUNDS
+   ============================================ */
+.bg-ink {
+  background-color: #0d0d0d;
+}
+
+.bg-charcoal {
+  background-color: #1a1a1a;
+}
+
+.bg-honey {
+  background-color: #f5a623;
+}
+
+.text-ink {
+  color: #0d0d0d;
+}
+
+.text-mist {
+  color: #9CA3AF;
+}
+
+.text-honey {
+  color: #f5a623;
+}
+
+.bg-grid-subtle {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* ============================================
+   PERSPECTIVE
+   ============================================ */
+.perspective-1000 {
+  perspective: 1000px;
+}

@@ -88,8 +88,11 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
     ],
-    apple: "/favicon.svg",
+    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon.svg",
   },
 
   // Manifest
@@ -374,8 +377,8 @@ const jsonLd = {
   ],
 };
 
-import ScrollToTop from "@/components/ScrollToTop";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import Providers from "./providers";
 
 import { Outfit } from "next/font/google";
 
@@ -408,9 +411,10 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased font-sans">
-        {children}
-        <ScrollToTop />
-        <MobileBottomNav />
+        <Providers>
+          {children}
+          <MobileBottomNav />
+        </Providers>
       </body>
     </html>
   );

@@ -5,9 +5,9 @@ import { Camera, Sparkles, Package, ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
 
 const PACKAGE_IMAGES = {
-  ecommerce: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop&q=80",
-  lifestyle: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop&q=80",
-  fullpackage: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop&q=80",
+  ecommerce: "/images/portfolio/speakers.jpg",
+  lifestyle: "/images/portfolio/flowers-table.jpg",
+  fullpackage: "/images/portfolio/pink-bottle.jpg",
 };
 
 const packages = [
@@ -32,7 +32,7 @@ const packages = [
     unit: "flat rate",
     img: PACKAGE_IMAGES.lifestyle,
     icon: Sparkles,
-    color: "#3B82F6",
+    color: "#D62839",
     features: ["Custom concept", "Styled props", "Creative direction", "Client approval"],
   },
   {
@@ -44,7 +44,7 @@ const packages = [
     unit: "on bundle",
     img: PACKAGE_IMAGES.fullpackage,
     icon: Package,
-    color: "#F59E0B",
+    color: "#B91C1C",
     badge: "Best Value",
     features: ["All e-commerce styles", "Lifestyle session included", "10% bundle discount", "Priority delivery"],
   },
@@ -91,13 +91,13 @@ export default function PackageSelection() {
             >
               <Link
                 href={`/order?package=${pkg.id}`}
-                className={`group block bg-white rounded-2xl sm:rounded-3xl overflow-hidden border-2 transition-all duration-300 h-full ${pkg.badge
-                  ? "border-[#F59E0B] shadow-xl shadow-[#F59E0B]/10"
+                className={`group flex flex-col bg-white rounded-2xl sm:rounded-3xl overflow-hidden border-2 transition-all duration-300 h-full ${pkg.badge
+                  ? "border-[#B91C1C] shadow-xl shadow-[#B91C1C]/10"
                   : "border-rush-border hover:border-[#E63946]/50 hover:shadow-xl hover:shadow-black/5"
                   }`}
               >
                 {/* Image */}
-                <div className="h-40 sm:h-48 relative overflow-hidden">
+                <div className="h-40 sm:h-48 relative overflow-hidden flex-shrink-0">
                   <img
                     src={pkg.img}
                     alt={pkg.title}
@@ -106,7 +106,7 @@ export default function PackageSelection() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
                   {pkg.badge && (
-                    <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-[#F59E0B] text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                    <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-[#B91C1C] text-white text-[10px] sm:text-xs font-bold px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full uppercase tracking-widest shadow-lg">
                       {pkg.badge}
                     </div>
                   )}
@@ -122,7 +122,7 @@ export default function PackageSelection() {
                 </div>
 
                 {/* Content */}
-                <div className="p-5 sm:p-6 lg:p-8">
+                <div className="p-5 sm:p-6 lg:p-8 flex flex-col flex-1">
                   <div className="mb-4">
                     <p className="text-[10px] sm:text-xs font-bold text-rush-gray uppercase tracking-widest mb-1">
                       {pkg.subtitle}
@@ -134,19 +134,19 @@ export default function PackageSelection() {
                   </div>
 
                   {/* Features */}
-                  <div className="space-y-2 mb-6">
+                  <div className="space-y-2 mb-6 flex-1">
                     {pkg.features.slice(0, 3).map((feature, i) => (
                       <div key={i} className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-teal-500/10 flex items-center justify-center flex-shrink-0">
-                          <Check className="w-2.5 h-2.5 text-teal-600" strokeWidth={3} />
+                        <div className="w-4 h-4 rounded-full bg-[#E63946]/10 flex items-center justify-center flex-shrink-0">
+                          <Check className="w-2.5 h-2.5 text-[#E63946]" strokeWidth={3} />
                         </div>
                         <span className="text-xs sm:text-sm text-rush-gray font-medium">{feature}</span>
                       </div>
                     ))}
                   </div>
 
-                  {/* Price & CTA */}
-                  <div className="flex items-center justify-between pt-4 border-t border-rush-border">
+                  {/* Price & CTA - Always at bottom */}
+                  <div className="flex items-center justify-between pt-4 border-t border-rush-border mt-auto">
                     <div>
                       <span className="text-xl sm:text-2xl font-bold text-rush-dark">{pkg.price}</span>
                       <span className="text-xs sm:text-sm text-rush-gray font-medium ml-1">{pkg.unit}</span>

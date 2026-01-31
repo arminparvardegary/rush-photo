@@ -17,7 +17,7 @@ export default function Footer() {
     { name: "Process", href: "/#process" },
     { name: "Pricing", href: "/#packages" },
     { name: "Careers", href: "mailto:hello@rush.photos?subject=Careers" },
-    { name: "Contact", href: "mailto:hello@rush.photos" },
+    { name: "Contact", href: "/contact" },
   ];
 
   return (
@@ -28,10 +28,12 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="col-span-2 sm:col-span-2 md:col-span-4 lg:col-span-4 space-y-6 sm:space-y-8">
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#E63946] to-[#FF6B6B] flex items-center justify-center text-white shadow-lg shadow-[#E63946]/30">
-                <span className="font-black text-base sm:text-lg">R</span>
-              </div>
-              <span className="text-xl sm:text-2xl font-bold text-rush-dark tracking-tight">Rush Photo</span>
+              <img
+                src="/rushlogo.png"
+                alt="Rush"
+                className="h-8 sm:h-9 w-auto object-contain"
+              />
+              <span className="text-3xl sm:text-4xl font-bold text-rush-dark tracking-tight">photos</span>
             </Link>
             <p className="text-sm sm:text-base text-rush-gray leading-relaxed max-w-sm">
               Professional product photography for brands that refuse to blend in.
@@ -121,9 +123,6 @@ export default function Footer() {
             <Link href="/privacy" className="hover:text-rush-dark transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-rush-dark transition-colors">Terms of Service</Link>
           </div>
-          <p className="text-rush-gray text-xs sm:text-sm font-medium flex items-center gap-1 order-3">
-            Made with <Heart className="w-3 h-3 text-[#E63946] fill-[#E63946]" /> in NYC
-          </p>
         </div>
       </div>
     </footer>

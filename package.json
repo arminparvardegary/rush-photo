@@ -21,7 +21,8 @@
     "react-dom": "latest",
     "resend": "^6.6.0",
     "stripe": "^20.1.0",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "zustand": "^5.0.10"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",

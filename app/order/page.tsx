@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { useCartStore, CartItem as StoreCartItem } from "@/lib/store";
+import { useCartSync } from "@/hooks/useCartSync";
 import {
   ArrowLeft,
   ArrowRight,
@@ -76,9 +78,9 @@ const DEFAULT_PRICES = {
 
 // Package images
 const PACKAGE_IMAGES = {
-  ecommerce: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=400&fit=crop&q=80",
-  lifestyle: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop&q=80",
-  fullpackage: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop&q=80",
+  ecommerce: "/images/portfolio/speakers.jpg?v=3",
+  lifestyle: "/images/portfolio/flowers-table.jpg?v=3",
+  fullpackage: "/images/portfolio/pink-bottle.jpg?v=3",
 };
 
 const DEFAULT_ECOMMERCE_STYLES: { id: EcommerceStyle; name: string; description: string; image: string; pricePerAngle: number }[] = [
@@ -86,34 +88,37 @@ const DEFAULT_ECOMMERCE_STYLES: { id: EcommerceStyle; name: string; description:
     id: "straight-on",
     name: "Straight On",
     description: "Direct front-facing shots, perfect for showcasing product details",
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
+    image: "/images/portfolio/speakers.jpg?v=5",
     pricePerAngle: 25,
   },
   {
     id: "top-down",
     name: "Top Down",
     description: "Bird's eye view photography, ideal for flat-lay compositions",
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
+    image: "/images/portfolio/flowers-table.jpg?v=5",
     pricePerAngle: 25,
   },
   {
     id: "angled",
     name: "Angled",
     description: "Dynamic 45° angle shots that add depth and dimension",
-    image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&h=400&fit=crop",
+    image: "/images/portfolio/sneaker.jpg?v=5",
     pricePerAngle: 25,
   },
 ];
 
 const DEFAULT_ANGLES: { id: Angle; name: string; image: string; price: number }[] = [
-  { id: "front", name: "Front", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop&q=80", price: 25 },
-  { id: "back", name: "Back", image: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=300&h=300&fit=crop&q=80", price: 25 },
-  { id: "left", name: "Left Side", image: "https://images.unsplash.com/photo-1584735175315-9d5df23860e6?w=300&h=300&fit=crop&q=80", price: 25 },
-  { id: "right", name: "Right Side", image: "https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=300&h=300&fit=crop&q=80", price: 25 },
+  { id: "front", name: "Front", image: "/images/portfolio/speakers.jpg?v=5", price: 25 },
+  { id: "back", name: "Back", image: "/images/portfolio/pink-bottle.jpg?v=5", price: 25 },
+  { id: "left", name: "Left Side", image: "/images/portfolio/serum-bottle.jpg?v=5", price: 25 },
+  { id: "right", name: "Right Side", image: "/images/portfolio/black-sprayer.jpg?v=5", price: 25 },
 ];
 
 export default function OrderPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const { addItem } = useCartStore();
+
   const [step, setStep] = useState(1);
   const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>("information");
   const [order, setOrder] = useState<OrderState>({
@@ -142,6 +147,8 @@ export default function OrderPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showMiniCart, setShowMiniCart] = useState(false);
   const [showOrderSummary, setShowOrderSummary] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   const [user, setUser] = useState<any>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -310,6 +317,40 @@ export default function OrderPage() {
     }
   };
 
+  const handleAddToCart = async () => {
+    if (!currentStyle || selectedAngles.length === 0) return;
+
+    setIsAddingToCart(true);
+
+    const styleConfig = ECOMMERCE_STYLES.find(s => s.id === currentStyle);
+    const pricePerAngle = styleConfig?.pricePerAngle || PRICES.ecommerce.perAngle;
+    const totalPrice = selectedAngles.length * pricePerAngle;
+
+    const cartItem: StoreCartItem = {
+      id: `cart_${Date.now()}`,
+      orderId: `order_${Date.now()}`,
+      packageType: "ecommerce",
+      photoStyle: currentStyle,
+      selectedAngles: selectedAngles,
+      aspectRatios: ["16:9"], // Default aspect ratio
+      skuCount: 1,
+      productNotes: "",
+      price: totalPrice,
+      addedAt: new Date().toISOString(),
+    };
+
+    // Add to Zustand store and database
+    await addItem(cartItem);
+
+    // Show success animation
+    setAddedToCart(true);
+
+    // Navigate to cart after 1 second
+    setTimeout(() => {
+      router.push("/cart");
+    }, 1000);
+  };
+
   const removeFromCart = (style: EcommerceStyle) => {
     setOrder(prev => ({ ...prev, cart: prev.cart.filter(item => item.style !== style) }));
   };
@@ -411,6 +452,32 @@ export default function OrderPage() {
     return 6;
   };
 
+  // Success popup after adding to cart
+  if (addedToCart) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-rush-light">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: "spring" }}
+            className="w-20 h-20 bg-[#34C759] rounded-full flex items-center justify-center mx-auto mb-6"
+          >
+            <Check className="w-10 h-10 text-white" strokeWidth={3} />
+          </motion.div>
+          <h2 className="text-2xl font-bold text-rush-dark mb-2">
+            Added to Cart!
+          </h2>
+          <p className="text-rush-gray">Redirecting to your cart...</p>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-rush-light text-rush-dark font-sans">
       <StepProgress currentStep={getWizardProgress()} totalSteps={6} />
@@ -418,8 +485,8 @@ export default function OrderPage() {
       <header className="bg-white border-b border-rush-border sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-[#E63946] rounded-lg flex items-center justify-center font-black text-white">R</div>
-            <span className="font-bold text-lg">Rush Photo</span>
+            <img src="/rushlogo.png" alt="Rush" className="h-6 w-auto object-contain" />
+            <span className="font-bold text-2xl sm:text-3xl">photos</span>
           </Link>
           {getTotalItems() > 0 && step < 5 && (
             <button onClick={() => setShowMiniCart(!showMiniCart)} className="bg-rush-light border border-rush-border px-4 py-2 rounded-xl flex items-center gap-2 font-bold text-sm shadow-sm">
@@ -476,42 +543,72 @@ export default function OrderPage() {
               <h2 className="text-3xl font-extrabold mb-2">Build Your Order</h2>
               <p className="text-rush-gray font-medium mb-8">Select styles and angles to add to your shoot.</p>
 
-              <div className="space-y-4 mb-12">
+              <div className="space-y-6 mb-12">
                 {ECOMMERCE_STYLES.map(style => {
                   const inCart = order.cart.find(c => c.style === style.id);
                   const isEx = currentStyle === style.id;
                   return (
-                    <div key={style.id} className="bg-white rounded-2xl border border-rush-border overflow-hidden shadow-sm">
-                      <button onClick={() => selectStyle(style.id)} className="w-full p-4 flex items-center gap-4 text-left hover:bg-rush-light/50 transition-colors">
-                        <img src={style.image} className="w-20 h-20 rounded-xl object-cover" />
+                    <div key={style.id} className={`bg-white rounded-3xl border-2 overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 ${isEx ? 'border-[#E63946]/50 shadow-[#E63946]/10' : 'border-rush-border'}`}>
+                      <button onClick={() => selectStyle(style.id)} className="w-full p-6 flex items-center gap-6 text-left hover:bg-rush-light/30 transition-colors">
+                        <div className="relative">
+                          <img src={style.image} className="w-28 h-28 rounded-2xl object-cover shadow-md" />
+                          {inCart && (
+                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#34C759] rounded-full flex items-center justify-center shadow-lg">
+                              <Check className="w-4 h-4 text-white" strokeWidth={3} />
+                            </div>
+                          )}
+                        </div>
                         <div className="flex-1">
-                          <h4 className="font-bold">{style.name}</h4>
-                          <p className="text-xs text-rush-gray font-medium">{style.description}</p>
+                          <h4 className="font-black text-xl text-rush-dark mb-1">{style.name}</h4>
+                          <p className="text-sm text-rush-gray font-medium leading-relaxed">{style.description}</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-bold text-[#E63946]">${style.pricePerAngle || PRICES.ecommerce.perAngle}</p>
-                          <p className="text-[10px] font-bold text-rush-gray uppercase">per angle</p>
+                          <p className="font-black text-2xl text-[#E63946]">${style.pricePerAngle || PRICES.ecommerce.perAngle}</p>
+                          <p className="text-xs font-bold text-rush-gray uppercase tracking-wider">per angle</p>
                         </div>
-                        <ChevronDown className={`w-5 h-5 transition-transform ${isEx ? 'rotate-180' : 'opacity-30'}`} />
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isEx ? 'bg-[#E63946] text-white' : 'bg-rush-light text-rush-gray'}`}>
+                          <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${isEx ? 'rotate-180' : ''}`} />
+                        </div>
                       </button>
 
                       {isEx && (
-                        <div className="p-6 bg-rush-light/30 border-t border-rush-border">
-                          <p className="text-sm font-bold mb-4">Select Angles:</p>
-                          <div className="grid grid-cols-4 gap-4 mb-6">
+                        <div className="p-8 bg-gradient-to-b from-rush-light/50 to-white border-t border-rush-border">
+                          <p className="text-base font-bold mb-6 text-rush-dark">Select Angles:</p>
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 mb-8">
                             {ANGLES.map(a => (
-                              <button key={a.id} onClick={() => toggleAngle(a.id)} className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all ${selectedAngles.includes(a.id) ? 'border-[#E63946] shadow-lg shadow-[#E63946]/10' : 'border-transparent grayscale'}`}>
-                                <img src={a.image} className="w-full h-full object-cover" />
-                                <div className="absolute inset-0 bg-black/20" />
-                                <span className="absolute bottom-2 left-0 right-0 text-center text-white text-[10px] font-black uppercase tracking-wider">{a.name}</span>
-                                {selectedAngles.includes(a.id) && <div className="absolute top-2 right-2 w-5 h-5 bg-[#E63946] rounded-full flex items-center justify-center"><Check className="w-3 h-3 text-white" /></div>}
+                              <button key={a.id} onClick={() => toggleAngle(a.id)} className={`relative aspect-square rounded-2xl overflow-hidden border-3 transition-all duration-300 group ${selectedAngles.includes(a.id) ? 'border-[#E63946] shadow-xl shadow-[#E63946]/20 scale-[1.02]' : 'border-transparent grayscale hover:grayscale-0 hover:scale-[1.02]'}`}>
+                                <img src={a.image} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                                <div className={`absolute inset-0 transition-all duration-300 ${selectedAngles.includes(a.id) ? 'bg-[#E63946]/20' : 'bg-black/30 group-hover:bg-black/20'}`} />
+                                <span className="absolute bottom-3 left-0 right-0 text-center text-white text-sm font-black uppercase tracking-wider drop-shadow-lg">{a.name}</span>
+                                {selectedAngles.includes(a.id) && (
+                                  <div className="absolute top-3 right-3 w-7 h-7 bg-[#E63946] rounded-full flex items-center justify-center shadow-lg">
+                                    <Check className="w-4 h-4 text-white" strokeWidth={3} />
+                                  </div>
+                                )}
                               </button>
                             ))}
                           </div>
-                          <div className="flex items-center justify-between">
-                            <p className="text-sm font-bold text-rush-gray">{selectedAngles.length} selected: <span className="text-rush-dark font-black">${selectedAngles.length * (style.pricePerAngle || PRICES.ecommerce.perAngle)}</span></p>
-                            <button onClick={addToCart} disabled={selectedAngles.length === 0} className="bg-rush-dark text-white px-6 py-2 rounded-xl font-bold text-sm disabled:opacity-30">
-                              {inCart ? 'Update Selection' : 'Add to Order'}
+                          <div className="flex items-center justify-between bg-white rounded-2xl p-5 border border-rush-border shadow-sm">
+                            <div>
+                              <p className="text-sm text-rush-gray font-medium">{selectedAngles.length} angle{selectedAngles.length !== 1 ? 's' : ''} selected</p>
+                              <p className="text-2xl font-black text-rush-dark">${selectedAngles.length * (style.pricePerAngle || PRICES.ecommerce.perAngle)}</p>
+                            </div>
+                            <button
+                              onClick={handleAddToCart}
+                              disabled={selectedAngles.length === 0 || isAddingToCart}
+                              className="bg-[#E63946] text-white px-8 py-4 rounded-2xl font-bold text-base disabled:opacity-30 hover:bg-[#D62839] hover:scale-[1.02] transition-all flex items-center gap-3 shadow-lg shadow-[#E63946]/25"
+                            >
+                              {isAddingToCart ? (
+                                <>
+                                  <Loader2 className="w-5 h-5 animate-spin" />
+                                  Adding...
+                                </>
+                              ) : (
+                                <>
+                                  <ShoppingCart className="w-5 h-5" />
+                                  Add to Cart
+                                </>
+                              )}
                             </button>
                           </div>
                         </div>

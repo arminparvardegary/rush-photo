@@ -29,6 +29,7 @@ const config: Config = {
         sans: ['Outfit', 'system-ui', 'sans-serif'],
       },
       screens: {
+        "xs": "475px",
         "3xl": "1600px",
       },
     },

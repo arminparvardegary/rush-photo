@@ -62,11 +62,14 @@ export default function SignupPage() {
         >
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
-              <div className="w-12 h-12 bg-[#E63946] rounded-2xl flex items-center justify-center shadow-xl shadow-[#E63946]/20 group-hover:scale-105 transition-transform">
-                <Camera className="w-6 h-6 text-white" />
-              </div>
+              <img
+                src="/rushlogo.png"
+                alt="Rush"
+                className="h-10 w-auto object-contain group-hover:scale-105 transition-transform"
+              />
+              <span className="text-2xl sm:text-3xl font-bold text-rush-dark">photos</span>
             </Link>
-            <h1 className="text-3xl font-black text-rush-dark mb-2">Join Rush Photo</h1>
+            <h1 className="text-3xl font-black text-rush-dark mb-2">Join Rush</h1>
             <p className="text-rush-gray font-medium">Start your journey with premium photography</p>
           </div>
 

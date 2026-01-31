@@ -8,30 +8,30 @@ import { useRef } from "react";
 const STEPS = [
   {
     number: "01",
-    icon: Package,
+    icon: Send,
     title: "Ship Your Product",
-    description: "Send your product to our studio with prepaid shipping. We handle everything with care.",
+    description: "Send your products to our studio using your preferred shipping method. We'll notify you once they arrive safely.",
     time: "Day 1"
   },
   {
     number: "02",
     icon: Camera,
-    title: "Production Shoot",
-    description: "Our team captures your product in your chosen styles with professional studio lighting and Phase One cameras.",
+    title: "We Photograph",
+    description: "Our professional photographers capture your products in the styles you selected with studio-quality lighting and equipment.",
     time: "Day 2-3"
   },
   {
     number: "03",
     icon: Sparkles,
-    title: "Expert Retouching",
-    description: "Each photo is professionally edited and retouched to ensure magazine-quality results, removing dust and scratches.",
+    title: "Professional Editing",
+    description: "Your photos are expertly retouched and color-corrected to ensure magazine-quality results that make your products shine.",
     time: "Day 4"
   },
   {
     number: "04",
-    icon: Send,
-    title: "Final Delivery",
-    description: "Get your high-resolution photos delivered digitally, plus your product shipped back efficiently.",
+    icon: Package,
+    title: "Receive Photos",
+    description: "Download your high-resolution photos from our digital gallery. Your products are shipped back to you the same day.",
     time: "Day 5"
   },
 ];
@@ -47,7 +47,7 @@ export default function Process() {
     <section id="process" className="relative py-32 bg-ink overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0 bg-grid-subtle opacity-10 pointer-events-none" />
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[400px] h-[600px] bg-teal/5 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[400px] h-[600px] bg-[#E63946]/5 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="container relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
@@ -61,7 +61,7 @@ export default function Process() {
             >
               <h2 className="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tighter">
                 Simple <br />
-                <span className="text-transparent bg-clip-text bg-gradient-cool font-serif italic">Streamlined</span> <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#E63946] to-[#D62839] font-serif italic">Streamlined</span> <br />
                 Process
               </h2>
               From your doorstep to your dashboard in under a week.
@@ -93,7 +93,7 @@ export default function Process() {
             {/* Connecting Line */}
             <div className="absolute left-0 md:left-[27px] top-0 bottom-0 w-px bg-white/10 hidden md:block">
               <motion.div
-                className="w-full bg-gradient-cool"
+                className="w-full bg-gradient-to-r from-[#E63946] to-[#D62839]"
                 style={{ height: useTransform(scrollYProgress, [0, 0.8], ["0%", "100%"]) }}
               />
             </div>
@@ -109,16 +109,16 @@ export default function Process() {
                   className="relative md:pl-16 group"
                 >
                   {/* Timeline Node */}
-                  <div className="absolute left-[-4px] md:left-[19px] top-0 w-4 h-4 rounded-full border-2 border-ink bg-charcoal group-hover:border-teal group-hover:scale-125 transition-all duration-300 hidden md:block" />
+                  <div className="absolute left-[-4px] md:left-[19px] top-0 w-4 h-4 rounded-full border-2 border-ink bg-charcoal group-hover:border-[#E63946] group-hover:scale-125 transition-all duration-300 hidden md:block" />
 
                   {/* Mobile Timeline Line */}
                   <div className="absolute left-[-24px] top-0 bottom-[-64px] w-px bg-white/10 md:hidden block" />
-                  <div className="absolute left-[-28px] top-0 w-2 h-2 rounded-full bg-teal md:hidden block" />
+                  <div className="absolute left-[-28px] top-0 w-2 h-2 rounded-full bg-[#E63946] md:hidden block" />
 
                   {/* Card Content */}
-                  <div className="p-8 rounded-3xl bg-charcoal border border-white/5 hover:border-teal/30 hover:bg-white/[0.02] transition-colors duration-500 group-hover:shadow-2xl hover:shadow-teal/5">
+                  <div className="p-8 rounded-3xl bg-charcoal border border-white/5 hover:border-[#E63946]/30 hover:bg-white/[0.02] transition-colors duration-500 group-hover:shadow-2xl hover:shadow-[#E63946]/5">
                     <div className="flex justify-between items-start mb-6">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center text-white group-hover:bg-teal group-hover:text-ink transition-colors duration-300 shadow-lg">
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center text-white group-hover:bg-[#E63946] group-hover:text-ink transition-colors duration-300 shadow-lg">
                         <step.icon className="w-6 h-6" />
                       </div>
                       <span className="text-6xl font-bold text-white/5 font-serif group-hover:text-white/10 transition-colors">
@@ -130,7 +130,7 @@ export default function Process() {
                     <p className="text-mist leading-relaxed mb-6">{step.description}</p>
 
                     <div className="flex items-center justify-between pt-6 border-t border-white/5">
-                      <span className="text-xs font-bold uppercase tracking-wider text-teal bg-teal/10 px-3 py-1 rounded-full">
+                      <span className="text-xs font-bold uppercase tracking-wider text-[#E63946] bg-[#E63946]/10 px-3 py-1 rounded-full">
                         {step.time}
                       </span>
                       <button className="text-sm font-medium text-white flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-[-10px] group-hover:translate-x-0 duration-300">

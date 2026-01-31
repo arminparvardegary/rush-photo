@@ -1,50 +1,50 @@
 "use client";
 
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowUpRight, Eye, X, ChevronLeft, ChevronRight, Layers } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { ArrowUpRight, Eye, X, Layers } from "lucide-react";
+import { useState, useRef } from "react";
 
 const PORTFOLIO_ITEMS = [
   {
     id: 1,
-    title: "Noir Collection",
+    title: "Urban Steps",
     category: "E-commerce",
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=1000&fit=crop&q=90",
+    image: "/images/portfolio/sneaker.jpg",
     stats: "+45% AOV",
   },
   {
     id: 2,
-    title: "Sonic Pulse",
-    category: "Lifestyle",
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=600&fit=crop&q=90",
+    title: "Leather Comfort",
+    category: "E-commerce",
+    image: "/images/portfolio/sandal.jpg",
     stats: "Featured on Behance",
   },
   {
     id: 3,
-    title: "Urban Steps",
-    category: "E-commerce",
-    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&h=600&fit=crop&q=90",
+    title: "Pure Glow",
+    category: "Lifestyle",
+    image: "/images/portfolio/serum-bottle.jpg",
     stats: "2x Click-through",
   },
   {
     id: 4,
-    title: "Pure Glow",
-    category: "Lifestyle",
-    image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&h=600&fit=crop&q=90",
+    title: "Sonic Speakers",
+    category: "E-commerce",
+    image: "/images/portfolio/speakers.jpg",
     stats: "Social Viral",
   },
   {
     id: 5,
-    title: "Tech Minimal",
-    category: "E-commerce",
-    image: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=800&h=1000&fit=crop&q=90",
+    title: "Creative Tools",
+    category: "Lifestyle",
+    image: "/images/portfolio/photography-tools.jpg",
     stats: "+120% Sales",
   },
   {
     id: 6,
-    title: "Refresh",
+    title: "Floral Elegance",
     category: "Lifestyle",
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop&q=90",
+    image: "/images/portfolio/flowers-table.jpg",
     stats: "Award Winning",
   },
 ];
@@ -63,9 +63,9 @@ export default function Portfolio() {
     : PORTFOLIO_ITEMS.filter((item) => item.category === activeCategory);
 
   return (
-    <section id="portfolio" className="relative py-32 bg-ink overflow-hidden">
+    <section id="portfolio" className="relative py-32 bg-white overflow-hidden">
       {/* Dynamic Background */}
-      <div className="absolute inset-0 bg-grid-subtle opacity-20 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white pointer-events-none" />
 
       <div className="container relative z-10 mb-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
@@ -73,24 +73,24 @@ export default function Portfolio() {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="flex items-center gap-2 text-honey mb-4"
+              className="flex items-center gap-2 text-[#E63946] mb-4"
             >
               <Layers className="w-5 h-5" />
               <span className="text-sm font-bold tracking-widest uppercase">Selected Works</span>
             </motion.div>
-            <h2 className="text-5xl md:text-7xl font-bold text-white tracking-tighter">
-              Visual <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/40 font-serif italic">Inventory</span>
+            <h2 className="text-5xl md:text-7xl font-bold text-rush-dark tracking-tighter">
+              Visual <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#E63946] to-[#FF6B6B] font-serif italic">Inventory</span>
             </h2>
           </div>
 
-          <div className="flex gap-2 bg-white/5 p-1 rounded-full backdrop-blur-sm">
+          <div className="flex gap-2 bg-gray-100 p-1 rounded-full">
             {CATEGORIES.map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
                 className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${activeCategory === category
-                    ? "bg-white text-ink shadow-lg"
-                    : "text-mist hover:text-white hover:bg-white/10"
+                    ? "bg-white text-rush-dark shadow-lg"
+                    : "text-rush-gray hover:text-rush-dark hover:bg-white/50"
                   }`}
               >
                 {category}
@@ -111,42 +111,67 @@ export default function Portfolio() {
           {filteredItems.map((item, index) => (
             <motion.div
               key={item.id}
-              className="relative group w-[300px] md:w-[400px] aspect-[4/5] perspective-1000 cursor-pointer"
+              className="relative group w-[300px] md:w-[400px] aspect-[4/5] cursor-pointer"
               onClick={() => setSelectedItem(item)}
-              whileHover={{ y: -20 }}
-              transition={{ duration: 0.4 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              whileHover={{ y: -15, scale: 1.02 }}
             >
               <motion.div
-                className="w-full h-full rounded-2xl overflow-hidden relative shadow-2xl border border-white/10 bg-charcoal"
-                style={{ transformStyle: "preserve-3d" }}
-                whileHover={{ rotateY: 5 }}
+                className="w-full h-full rounded-2xl overflow-hidden relative shadow-lg border border-gray-200 bg-white"
+                whileHover={{
+                  boxShadow: "0 25px 60px -12px rgba(230,57,70,0.3), 0 15px 30px -10px rgba(0,0,0,0.2)"
+                }}
+                transition={{ duration: 0.3 }}
               >
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent opacity-60" />
+                <div className="relative w-full h-full overflow-hidden">
+                  <motion.img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
 
                 {/* Overlay Info */}
                 <div className="absolute inset-0 p-8 flex flex-col justify-end">
                   <motion.div
+                    className="transform transition-all duration-300"
                     initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    className="transform translate-z-20"
+                    animate={{ opacity: 1, y: 0 }}
                   >
                     <div className="flex justify-between items-end">
-                      <div>
-                        <span className="text-honey text-xs font-bold tracking-widest uppercase mb-2 block">{item.category}</span>
-                        <h3 className="text-3xl font-bold text-white mb-2">{item.title}</h3>
-                        <p className="text-white/60 text-sm flex items-center gap-2">
-                          <ArrowUpRight className="w-4 h-4" />
+                      <motion.div
+                        initial={{ opacity: 0.8, y: 0 }}
+                        whileHover={{ opacity: 1, y: -5 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <motion.span
+                          className="text-[#E63946] text-xs font-bold tracking-widest uppercase mb-2 block"
+                          initial={{ opacity: 0.9 }}
+                          whileHover={{ opacity: 1, scale: 1.05 }}
+                        >
+                          {item.category}
+                        </motion.span>
+                        <h3 className="text-3xl font-bold text-white mb-2 group-hover:text-[#E63946] transition-colors duration-300">{item.title}</h3>
+                        <p className="text-white/80 text-sm flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                          <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
                           {item.stats}
                         </p>
-                      </div>
-                      <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-hover:bg-honey group-hover:text-ink transition-colors">
-                        <Eye className="w-5 h-5" />
-                      </div>
+                      </motion.div>
+                      <motion.div
+                        className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center transition-all duration-300"
+                        whileHover={{
+                          scale: 1.1,
+                          backgroundColor: "rgb(230, 57, 70)",
+                          rotate: 15
+                        }}
+                      >
+                        <Eye className="w-5 h-5 text-white" />
+                      </motion.div>
                     </div>
                   </motion.div>
                 </div>
@@ -157,11 +182,11 @@ export default function Portfolio() {
           {/* CTA Card */}
           <div className="w-[300px] md:w-[400px] aspect-[4/5] flex items-center justify-center">
             <a href="/order" className="group text-center">
-              <div className="w-20 h-20 rounded-full border border-white/20 flex items-center justify-center mx-auto mb-6 group-hover:bg-honey group-hover:border-honey transition-all duration-500">
-                <ArrowUpRight className="w-8 h-8 text-white group-hover:text-ink transition-colors" />
+              <div className="w-20 h-20 rounded-full border-2 border-gray-300 flex items-center justify-center mx-auto mb-6 group-hover:bg-[#E63946] group-hover:border-[#E63946] transition-all duration-500">
+                <ArrowUpRight className="w-8 h-8 text-rush-dark group-hover:text-white transition-colors" />
               </div>
-              <h3 className="text-3xl font-bold text-white mb-2">View All Works</h3>
-              <p className="text-mist">Explore our full archive</p>
+              <h3 className="text-3xl font-bold text-rush-dark mb-2">View All Works</h3>
+              <p className="text-rush-gray">Explore our full archive</p>
             </a>
           </div>
         </motion.div>
@@ -174,14 +199,14 @@ export default function Portfolio() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-ink/95 backdrop-blur-2xl flex items-center justify-center p-4 md:p-10"
+            className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-2xl flex items-center justify-center p-4 md:p-10"
             onClick={() => setSelectedItem(null)}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="relative max-w-6xl w-full h-full max-h-[90vh] grid md:grid-cols-2 gap-8 bg-charcoal rounded-3xl overflow-hidden border border-white/10 shadow-2xl"
+              className="relative max-w-6xl w-full h-full max-h-[90vh] grid md:grid-cols-2 gap-8 bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="relative h-full min-h-[400px]">
@@ -194,32 +219,32 @@ export default function Portfolio() {
               <div className="p-8 md:p-12 flex flex-col justify-center">
                 <button
                   onClick={() => setSelectedItem(null)}
-                  className="absolute top-6 right-6 p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors"
+                  className="absolute top-6 right-6 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
                 >
-                  <X className="w-6 h-6 text-white" />
+                  <X className="w-6 h-6 text-rush-dark" />
                 </button>
 
-                <span className="text-honey text-sm font-bold tracking-widest uppercase mb-4">{selectedItem.category}</span>
-                <h3 className="text-4xl md:text-5xl font-bold text-white mb-6">{selectedItem.title}</h3>
-                <p className="text-lg text-mist mb-8 leading-relaxed">
+                <span className="text-[#E63946] text-sm font-bold tracking-widest uppercase mb-4">{selectedItem.category}</span>
+                <h3 className="text-4xl md:text-5xl font-bold text-rush-dark mb-6">{selectedItem.title}</h3>
+                <p className="text-lg text-rush-gray mb-8 leading-relaxed">
                   Shot in our premium studio using Phase One camera systems.
                   This project required specific attention to lighting to highlight the textures and materials.
                 </p>
 
                 <div className="grid grid-cols-2 gap-6 mb-10">
-                  <div className="p-4 rounded-xl bg-white/5 border border-white/5">
-                    <p className="text-xs text-mist mb-1">Impact</p>
-                    <p className="text-xl font-bold text-white">{selectedItem.stats}</p>
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+                    <p className="text-xs text-rush-gray mb-1">Impact</p>
+                    <p className="text-xl font-bold text-rush-dark">{selectedItem.stats}</p>
                   </div>
-                  <div className="p-4 rounded-xl bg-white/5 border border-white/5">
-                    <p className="text-xs text-mist mb-1">Deliverables</p>
-                    <p className="text-xl font-bold text-white">12 - 15 Photos</p>
+                  <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+                    <p className="text-xs text-rush-gray mb-1">Deliverables</p>
+                    <p className="text-xl font-bold text-rush-dark">12 - 15 Photos</p>
                   </div>
                 </div>
 
                 <a
                   href="/order"
-                  className="inline-flex items-center justify-center gap-2 py-4 px-8 bg-white text-ink font-bold rounded-full hover:bg-honey transition-colors"
+                  className="inline-flex items-center justify-center gap-2 py-4 px-8 bg-[#E63946] text-white font-bold rounded-full hover:bg-[#D62839] transition-colors shadow-lg shadow-[#E63946]/20"
                 >
                   Start Similar Project <ArrowUpRight className="w-4 h-4" />
                 </a>

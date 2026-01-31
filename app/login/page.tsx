@@ -58,10 +58,12 @@ export default function LoginPage() {
             className="hidden lg:flex flex-col justify-center space-y-8"
           >
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-[#E63946] rounded-2xl flex items-center justify-center shadow-xl shadow-[#E63946]/20">
-                <span className="text-white font-black text-xl">R</span>
-              </div>
-              <span className="text-3xl font-bold text-rush-dark tracking-tight">Rush Photo</span>
+              <img
+                src="/rushlogo.png"
+                alt="Rush"
+                className="h-10 w-auto object-contain"
+              />
+              <span className="text-2xl sm:text-3xl font-bold text-rush-dark tracking-tight">photos</span>
             </div>
 
             <h1 className="text-5xl font-black text-rush-dark leading-tight">

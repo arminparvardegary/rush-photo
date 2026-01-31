@@ -18,7 +18,7 @@ const NAV_LINKS = [
   { name: "Portfolio", href: "/#portfolio" },
   { name: "Process", href: "/#process" },
   { name: "Pricing", href: "/#packages" },
-  { name: "FAQ", href: "/#faq" },
+  { name: "FAQ", href: "/faq" },
 ];
 
 export default function Header() {
@@ -70,15 +70,14 @@ export default function Header() {
         <div className={`max-w-7xl mx-auto transition-all duration-300 bg-white/90 backdrop-blur-xl border border-rush-border shadow-sm rounded-2xl px-4 sm:px-6 py-3`}>
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <motion.div
-                whileHover={{ scale: 1.05, rotate: -5 }}
-                className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-br from-[#E63946] to-[#D62839] rounded-xl flex items-center justify-center shadow-lg shadow-[#E63946]/20"
-              >
-                <span className="text-white font-black text-base sm:text-lg">R</span>
-              </motion.div>
-              <span className="font-bold text-base sm:text-lg text-rush-dark">
-                Rush Photo
+            <Link href="/" className="flex items-center gap-2 group">
+              <img
+                src="/rushlogo.png"
+                alt="Rush"
+                className="h-6 sm:h-7 w-auto object-contain"
+              />
+              <span className="font-bold text-2xl sm:text-3xl text-rush-dark">
+                photos
               </span>
             </Link>
 
