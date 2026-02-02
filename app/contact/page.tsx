@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Send, CheckCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useCartStore } from "@/lib/store";
+import Footer from "@/components/Footer";
 
 export default function ContactPage() {
   const { items, getCartTotal } = useCartStore();
@@ -51,7 +52,7 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img src="/rushlogo.png" alt="Rush" className="h-6 sm:h-7 w-auto object-contain" />
-            <span className="font-bold text-2xl sm:text-3xl">photos</span>
+            <span className="font-bold text-xl sm:text-2xl">photos</span>
           </Link>
           <Link href="/cart" className="text-rush-gray hover:text-rush-dark font-medium flex items-center gap-2">
             <ArrowLeft className="w-4 h-4" />
@@ -276,6 +277,7 @@ export default function ContactPage() {
           </motion.div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

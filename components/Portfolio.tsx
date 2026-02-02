@@ -22,7 +22,7 @@ const PORTFOLIO_ITEMS = [
   {
     id: 3,
     title: "Pure Glow",
-    category: "Lifestyle",
+    category: "Top-Down",
     image: "/images/portfolio/serum-bottle.jpg",
     stats: "2x Click-through",
   },
@@ -49,7 +49,7 @@ const PORTFOLIO_ITEMS = [
   },
 ];
 
-const CATEGORIES = ["All", "E-commerce", "Lifestyle"];
+const CATEGORIES = ["All", "E-commerce", "Lifestyle", "Top-Down"];
 
 export default function Portfolio() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -63,11 +63,11 @@ export default function Portfolio() {
     : PORTFOLIO_ITEMS.filter((item) => item.category === activeCategory);
 
   return (
-    <section id="portfolio" className="relative py-32 bg-white overflow-hidden">
+    <section id="portfolio" className="relative py-24 md:py-32 bg-white overflow-hidden">
       {/* Dynamic Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white pointer-events-none" />
 
-      <div className="container relative z-10 mb-16">
+      <div className="container relative z-10 mb-12 md:mb-16 max-w-[1800px] mx-auto px-4 sm:px-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div>
             <motion.div
@@ -101,9 +101,9 @@ export default function Portfolio() {
       </div>
 
       {/* Cinematic Horizontal Scroll */}
-      <div ref={containerRef} className="h-[500px] md:h-[600px] relative w-full overflow-x-auto overflow-y-hidden hide-scrollbar">
+      <div ref={containerRef} className="h-[500px] md:h-[600px] 3xl:h-[700px] relative w-full overflow-x-auto overflow-y-hidden hide-scrollbar">
         <motion.div
-          className="flex gap-8 px-4 md:px-20 min-w-max"
+          className="flex gap-6 md:gap-8 px-4 md:px-20 3xl:px-32 min-w-max"
           initial={{ x: 100, opacity: 0 }}
           whileInView={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
@@ -111,7 +111,7 @@ export default function Portfolio() {
           {filteredItems.map((item, index) => (
             <motion.div
               key={item.id}
-              className="relative group w-[300px] md:w-[400px] aspect-[4/5] cursor-pointer"
+              className="relative group w-[280px] md:w-[380px] 3xl:w-[450px] aspect-[4/5] cursor-pointer"
               onClick={() => setSelectedItem(item)}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -180,7 +180,7 @@ export default function Portfolio() {
           ))}
 
           {/* CTA Card */}
-          <div className="w-[300px] md:w-[400px] aspect-[4/5] flex items-center justify-center">
+          <div className="w-[280px] md:w-[380px] 3xl:w-[450px] aspect-[4/5] flex items-center justify-center">
             <a href="/order" className="group text-center">
               <div className="w-20 h-20 rounded-full border-2 border-gray-300 flex items-center justify-center mx-auto mb-6 group-hover:bg-[#E63946] group-hover:border-[#E63946] transition-all duration-500">
                 <ArrowUpRight className="w-8 h-8 text-rush-dark group-hover:text-white transition-colors" />
@@ -206,7 +206,7 @@ export default function Portfolio() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="relative max-w-6xl w-full h-full max-h-[90vh] grid md:grid-cols-2 gap-8 bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-2xl"
+              className="relative max-w-6xl 3xl:max-w-7xl w-full h-full max-h-[90vh] grid md:grid-cols-2 gap-6 md:gap-8 bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="relative h-full min-h-[400px]">

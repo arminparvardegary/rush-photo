@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Save, Upload, ExternalLink, Loader2 } from "lucide-react";
+import { ArrowLeft, Save, Upload, ExternalLink, Loader2, Mail } from "lucide-react";
 import Link from "next/link";
 import { sendEmail } from "@/lib/resend";
 import { deliveryNotificationEmail } from "@/lib/email-templates";
+import ConfirmModal from "@/components/ConfirmModal";
+import Toast from "@/components/Toast";
 
 interface OrderDetail {
     id: string;
@@ -33,6 +35,14 @@ export default function OrderDetailPage() {
     const [status, setStatus] = useState("");
     const [shippingTracking, setShippingTracking] = useState("");
     const [deliveryUrl, setDeliveryUrl] = useState("");
+
+    // Modal/Toast State
+    const [showEmailConfirm, setShowEmailConfirm] = useState(false);
+    const [toast, setToast] = useState<{ show: boolean; message: string; variant: "success" | "error" }>({
+        show: false,
+        message: "",
+        variant: "success",
+    });
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -67,9 +77,9 @@ export default function OrderDetailPage() {
             });
             if (!res.ok) throw new Error("Failed to save");
             router.refresh();
-            alert("Saved successfully");
+            setToast({ show: true, message: "Saved successfully", variant: "success" });
         } catch (err) {
-            alert("Error saving");
+            setToast({ show: true, message: "Error saving", variant: "error" });
         } finally {
             setSaving(false);
         }
@@ -92,24 +102,22 @@ export default function OrderDetailPage() {
             if (!res.ok) throw new Error("Upload failed");
             const data = await res.json();
             setDeliveryUrl(data.url);
+            setToast({ show: true, message: "File uploaded successfully", variant: "success" });
         } catch (err) {
-            alert("Upload failed");
+            setToast({ show: true, message: "Upload failed", variant: "error" });
         } finally {
             setIsUploading(false);
         }
     };
 
-    const sendDeliveryEmail = async () => {
-        if (!confirm("Send delivery notification email to customer?")) return;
+    const handleSendEmail = async () => {
         try {
-            // Find a way to trigger server action or API call for this
-            // For now, simpler to just allow status Update to 'completed' trigger it?
-            // Or adding a specific endpoint for actions.
-            alert("Email sending logic to be implemented via API action");
+            // TODO: Implement actual email sending via API
+            setToast({ show: true, message: "Email sending to be implemented via API", variant: "success" });
         } catch (err) {
-            alert("Failed");
+            setToast({ show: true, message: "Failed to send email", variant: "error" });
         }
-    }
+    };
 
     if (loading) return <div className="p-12 text-center"><Loader2 className="w-8 h-8 animate-spin mx-auto text-gray-400" /></div>;
     if (!order) return <div className="p-12 text-center">Order not found</div>;
@@ -235,10 +243,39 @@ export default function OrderDetailPage() {
                                     <div className="text-gray-500">{order.email}</div>
                                 </div>
                             </div>
+                            {deliveryUrl && (
+                                <button
+                                    onClick={() => setShowEmailConfirm(true)}
+                                    className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors text-sm"
+                                >
+                                    <Mail className="w-4 h-4" />
+                                    Send Delivery Email
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/* Toast Notification */}
+            <Toast
+                isOpen={toast.show}
+                onClose={() => setToast({ ...toast, show: false })}
+                message={toast.message}
+                variant={toast.variant}
+            />
+
+            {/* Send Email Confirmation Modal */}
+            <ConfirmModal
+                isOpen={showEmailConfirm}
+                onClose={() => setShowEmailConfirm(false)}
+                onConfirm={handleSendEmail}
+                title="Send Delivery Email?"
+                message={`Send delivery notification email to ${order.email}?`}
+                confirmText="Send Email"
+                cancelText="Cancel"
+                variant="info"
+            />
         </div>
     );
 }

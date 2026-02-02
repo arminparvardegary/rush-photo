@@ -97,6 +97,20 @@ export async function findOrderById(orderId: string): Promise<OrderRecord | null
   return data ? mapOrder(data) : null;
 }
 
+export async function getOrdersByEmail(email: string): Promise<OrderRecord[]> {
+  const { data, error } = await supabase
+    .from("rush_orders")
+    .select("*")
+    .eq("customer_email", email)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Supabase Error (getOrdersByEmail):", error);
+    return [];
+  }
+  return (data || []).map(mapOrder);
+}
+
 export async function findOrderByStripeSessionId(sessionId: string): Promise<OrderRecord | null> {
   const { data } = await supabase.from("rush_orders").select("*").eq("payment_session_id", sessionId).single();
   return data ? mapOrder(data) : null;

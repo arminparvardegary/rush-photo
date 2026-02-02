@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Minus, Search, MessageCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import Footer from "@/components/Footer";
 
 const FAQ_DATA = [
   {
@@ -66,10 +67,10 @@ export default function FAQPage() {
     <div className="min-h-screen bg-white">
       {/* Header */}
       <header className="bg-white border-b border-rush-border sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img src="/rushlogo.png" alt="Rush" className="h-6 sm:h-7 w-auto object-contain" />
-            <span className="font-bold text-2xl sm:text-3xl">photos</span>
+            <span className="font-bold text-xl sm:text-2xl">photos</span>
           </Link>
           <Link href="/" className="flex items-center gap-2 text-rush-gray hover:text-rush-dark font-medium">
             <ArrowLeft className="w-4 h-4" />
@@ -80,7 +81,7 @@ export default function FAQPage() {
 
       {/* Hero */}
       <section className="py-16 sm:py-20 bg-gradient-to-b from-gray-50 to-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="max-w-4xl 3xl:max-w-5xl mx-auto px-4 sm:px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -112,7 +113,7 @@ export default function FAQPage() {
 
       {/* Categories */}
       <section className="py-8 border-b border-rush-border">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl 3xl:max-w-5xl mx-auto px-4 sm:px-6">
           <div className="flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
             {CATEGORIES.map((cat) => (
               <button
@@ -133,7 +134,7 @@ export default function FAQPage() {
 
       {/* FAQ Items */}
       <section className="py-12 sm:py-16">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-4xl 3xl:max-w-5xl mx-auto px-4 sm:px-6">
           <div className="space-y-4">
             {filteredFAQs.map((item, index) => (
               <motion.div
@@ -219,6 +220,8 @@ export default function FAQPage() {
           </div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 }

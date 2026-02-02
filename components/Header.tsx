@@ -16,7 +16,7 @@ interface UserInfo {
 
 const NAV_LINKS = [
   { name: "Portfolio", href: "/#portfolio" },
-  { name: "Process", href: "/#process" },
+  { name: "Process", href: "/process" },
   { name: "Pricing", href: "/#packages" },
   { name: "FAQ", href: "/faq" },
 ];
@@ -67,7 +67,7 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
       <div className="mx-4 sm:mx-6 mt-4">
-        <div className={`max-w-7xl mx-auto transition-all duration-300 bg-white/90 backdrop-blur-xl border border-rush-border shadow-sm rounded-2xl px-4 sm:px-6 py-3`}>
+        <div className={`max-w-7xl 3xl:max-w-[1600px] mx-auto transition-all duration-300 bg-white/90 backdrop-blur-xl border border-rush-border shadow-sm rounded-2xl px-4 sm:px-6 py-3`}>
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
@@ -76,7 +76,7 @@ export default function Header() {
                 alt="Rush"
                 className="h-6 sm:h-7 w-auto object-contain"
               />
-              <span className="font-bold text-2xl sm:text-3xl text-rush-dark">
+              <span className="font-bold text-xl sm:text-2xl text-rush-dark">
                 photos
               </span>
             </Link>
@@ -135,7 +135,7 @@ export default function Header() {
                                 <p className="text-xs text-rush-gray truncate">{user.email}</p>
                               </div>
                               <Link
-                                href="/admin"
+                                href={user.role === "admin" ? "/admin" : "/dashboard"}
                                 className="flex items-center gap-3 px-4 py-3 text-sm text-rush-gray hover:text-rush-dark hover:bg-rush-light rounded-xl transition-colors"
                               >
                                 <User className="w-4 h-4" />
@@ -225,7 +225,26 @@ export default function Header() {
               transition={{ delay: 0.5 }}
               className="flex flex-col items-center gap-6 w-full max-w-sm"
             >
-              {!user && (
+              {user ? (
+                <>
+                  <Link
+                    href={user.role === "admin" ? "/admin" : "/dashboard"}
+                    onClick={() => setMenuOpen(false)}
+                    className="text-lg font-medium text-rush-gray hover:text-rush-dark"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setMenuOpen(false);
+                      handleLogout();
+                    }}
+                    className="text-lg font-medium text-red-500 hover:text-red-600"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
                 <Link
                   href="/login"
                   onClick={() => setMenuOpen(false)}

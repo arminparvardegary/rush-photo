@@ -30,7 +30,8 @@ const config: Config = {
       },
       screens: {
         "xs": "475px",
-        "3xl": "1600px",
+        "3xl": "1800px",
+        "4xl": "2200px",
       },
     },
   },

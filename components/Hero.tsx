@@ -14,97 +14,100 @@ export default function Hero() {
 
       {/* Floating Product Images - Clean & Organized */}
       <div className="absolute inset-0 pointer-events-none hidden xl:block">
-        {/* Top Left - Sneaker */}
-        <motion.div
-          initial={{ opacity: 0, y: 60, rotate: -5 }}
-          animate={{
-            opacity: 1,
-            y: 0,
-            rotate: -4,
-          }}
-          whileHover={{ scale: 1.05, rotate: -2, y: -8 }}
-          transition={{
-            duration: 0.8,
-            delay: 0.2,
-            type: "spring",
-            stiffness: 120
-          }}
-          className="absolute top-24 left-[4%] w-56 h-56 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
-          style={{
-            boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
-          }}
-        >
-          <img src="/images/portfolio/sneaker.jpg" alt="Product Photography" className="w-full h-full object-cover" />
-        </motion.div>
+        {/* Container to limit image spread on ultra-wide screens */}
+        <div className="relative max-w-[2000px] mx-auto h-full">
+          {/* Top Left - Sneaker */}
+          <motion.div
+            initial={{ opacity: 0, y: 60, rotate: -5 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              rotate: -4,
+            }}
+            whileHover={{ scale: 1.05, rotate: -2, y: -8 }}
+            transition={{
+              duration: 0.8,
+              delay: 0.2,
+              type: "spring",
+              stiffness: 120
+            }}
+            className="absolute top-24 left-[2%] 3xl:left-[8%] w-48 xl:w-56 3xl:w-64 h-48 xl:h-56 3xl:h-64 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
+            style={{
+              boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
+            }}
+          >
+            <img src="/images/portfolio/sneaker.jpg" alt="Product Photography" className="w-full h-full object-cover" />
+          </motion.div>
 
-        {/* Top Right - Cosmetics */}
-        <motion.div
-          initial={{ opacity: 0, y: 60, rotate: 5 }}
-          animate={{
-            opacity: 1,
-            y: 0,
-            rotate: 4,
-          }}
-          whileHover={{ scale: 1.05, rotate: 2, y: -8 }}
-          transition={{
-            duration: 0.8,
-            delay: 0.35,
-            type: "spring",
-            stiffness: 120
-          }}
-          className="absolute top-20 right-[4%] w-64 h-64 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
-          style={{
-            boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
-          }}
-        >
-          <img src="/images/portfolio/pink-bottle.jpg" alt="Product Photography" className="w-full h-full object-cover" />
-        </motion.div>
+          {/* Top Right - Cosmetics */}
+          <motion.div
+            initial={{ opacity: 0, y: 60, rotate: 5 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              rotate: 4,
+            }}
+            whileHover={{ scale: 1.05, rotate: 2, y: -8 }}
+            transition={{
+              duration: 0.8,
+              delay: 0.35,
+              type: "spring",
+              stiffness: 120
+            }}
+            className="absolute top-20 right-[2%] 3xl:right-[8%] w-52 xl:w-64 3xl:w-72 h-52 xl:h-64 3xl:h-72 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
+            style={{
+              boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
+            }}
+          >
+            <img src="/images/portfolio/pink-bottle.jpg" alt="Product Photography" className="w-full h-full object-cover" />
+          </motion.div>
 
-        {/* Bottom Left - Serum Bottle */}
-        <motion.div
-          initial={{ opacity: 0, y: -60, rotate: 6 }}
-          animate={{
-            opacity: 1,
-            y: 0,
-            rotate: 5,
-          }}
-          whileHover={{ scale: 1.05, rotate: 3, y: -8 }}
-          transition={{
-            duration: 0.8,
-            delay: 0.5,
-            type: "spring",
-            stiffness: 120
-          }}
-          className="absolute bottom-20 left-[6%] w-52 h-52 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
-          style={{
-            boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
-          }}
-        >
-          <img src="/images/portfolio/serum-bottle.jpg" alt="Product Photography" className="w-full h-full object-cover" />
-        </motion.div>
+          {/* Bottom Left - Serum Bottle */}
+          <motion.div
+            initial={{ opacity: 0, y: -60, rotate: 6 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              rotate: 5,
+            }}
+            whileHover={{ scale: 1.05, rotate: 3, y: -8 }}
+            transition={{
+              duration: 0.8,
+              delay: 0.5,
+              type: "spring",
+              stiffness: 120
+            }}
+            className="absolute bottom-20 left-[3%] 3xl:left-[10%] w-44 xl:w-52 3xl:w-60 h-44 xl:h-52 3xl:h-60 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
+            style={{
+              boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
+            }}
+          >
+            <img src="/images/portfolio/serum-bottle.jpg" alt="Product Photography" className="w-full h-full object-cover" />
+          </motion.div>
 
-        {/* Bottom Right - Speakers */}
-        <motion.div
-          initial={{ opacity: 0, y: -60, rotate: -5 }}
-          animate={{
-            opacity: 1,
-            y: 0,
-            rotate: -4,
-          }}
-          whileHover={{ scale: 1.05, rotate: -2, y: -8 }}
-          transition={{
-            duration: 0.8,
-            delay: 0.65,
-            type: "spring",
-            stiffness: 120
-          }}
-          className="absolute bottom-24 right-[5%] w-60 h-60 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
-          style={{
-            boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
-          }}
-        >
-          <img src="/images/portfolio/speakers.jpg" alt="Product Photography" className="w-full h-full object-cover" />
-        </motion.div>
+          {/* Bottom Right - Speakers */}
+          <motion.div
+            initial={{ opacity: 0, y: -60, rotate: -5 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              rotate: -4,
+            }}
+            whileHover={{ scale: 1.05, rotate: -2, y: -8 }}
+            transition={{
+              duration: 0.8,
+              delay: 0.65,
+              type: "spring",
+              stiffness: 120
+            }}
+            className="absolute bottom-24 right-[3%] 3xl:right-[10%] w-48 xl:w-60 3xl:w-68 h-48 xl:h-60 3xl:h-68 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
+            style={{
+              boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
+            }}
+          >
+            <img src="/images/portfolio/speakers.jpg" alt="Product Photography" className="w-full h-full object-cover" />
+          </motion.div>
+        </div>
       </div>
 
       <div className="container relative z-10 text-center max-w-4xl mx-auto px-6">

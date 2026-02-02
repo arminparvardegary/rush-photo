@@ -58,7 +58,7 @@ export default function PackageSelection() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-b from-gray-50 to-transparent rounded-full blur-[120px]" />
       </div>
 
-      <div className="container relative z-10 px-4 sm:px-6">
+      <div className="container relative z-10 px-4 sm:px-6 max-w-[1800px] mx-auto">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16 md:mb-20">
           <motion.div
@@ -79,7 +79,7 @@ export default function PackageSelection() {
         </div>
 
         {/* Package Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 3xl:gap-10 max-w-7xl 3xl:max-w-[1600px] mx-auto">
           {packages.map((pkg, index) => (
             <motion.div
               key={pkg.id}
@@ -97,7 +97,7 @@ export default function PackageSelection() {
                   }`}
               >
                 {/* Image */}
-                <div className="h-40 sm:h-48 relative overflow-hidden flex-shrink-0">
+                <div className="h-40 sm:h-48 3xl:h-56 relative overflow-hidden flex-shrink-0">
                   <img
                     src={pkg.img}
                     alt={pkg.title}
@@ -173,12 +173,12 @@ export default function PackageSelection() {
         >
           <div className="inline-flex flex-col sm:flex-row items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl bg-rush-light border border-rush-border">
             <span className="text-sm text-rush-gray font-medium">Need a custom solution?</span>
-            <a
-              href="mailto:hello@rush.photos"
+            <Link
+              href="/contact"
               className="text-sm font-bold text-[#E63946] hover:text-[#D62839] transition-colors flex items-center gap-1"
             >
               Contact us <ArrowRight className="w-4 h-4" />
-            </a>
+            </Link>
           </div>
         </motion.div>
       </div>

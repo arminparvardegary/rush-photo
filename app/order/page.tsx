@@ -95,7 +95,7 @@ const DEFAULT_ECOMMERCE_STYLES: { id: EcommerceStyle; name: string; description:
     id: "top-down",
     name: "Top Down",
     description: "Bird's eye view photography, ideal for flat-lay compositions",
-    image: "/images/portfolio/flowers-table.jpg?v=5",
+    image: "/images/portfolio/serum-bottle.jpg?v=5",
     pricePerAngle: 25,
   },
   {
@@ -317,30 +317,82 @@ export default function OrderPage() {
     }
   };
 
-  const handleAddToCart = async () => {
-    if (!currentStyle || selectedAngles.length === 0) return;
+  const handleAddAllToCart = async () => {
+    if (order.cart.length === 0) return;
 
     setIsAddingToCart(true);
 
-    const styleConfig = ECOMMERCE_STYLES.find(s => s.id === currentStyle);
-    const pricePerAngle = styleConfig?.pricePerAngle || PRICES.ecommerce.perAngle;
-    const totalPrice = selectedAngles.length * pricePerAngle;
+    // Add each style as a separate cart item
+    for (const item of order.cart) {
+      const styleConfig = ECOMMERCE_STYLES.find(s => s.id === item.style);
+      const pricePerAngle = item.pricePerAngle || PRICES.ecommerce.perAngle;
+      const totalPrice = item.angles.length * pricePerAngle;
 
-    const cartItem: StoreCartItem = {
-      id: `cart_${Date.now()}`,
-      orderId: `order_${Date.now()}`,
-      packageType: "ecommerce",
-      photoStyle: currentStyle,
-      selectedAngles: selectedAngles,
-      aspectRatios: ["16:9"], // Default aspect ratio
-      skuCount: 1,
-      productNotes: "",
-      price: totalPrice,
-      addedAt: new Date().toISOString(),
-    };
+      const cartItem: StoreCartItem = {
+        id: `cart_${Date.now()}_${item.style}`,
+        orderId: `order_${Date.now()}`,
+        packageType: "ecommerce",
+        photoStyle: item.style,
+        selectedAngles: item.angles,
+        aspectRatios: ["16:9"],
+        skuCount: 1,
+        productNotes: "",
+        price: totalPrice,
+        addedAt: new Date().toISOString(),
+      };
 
-    // Add to Zustand store and database
-    await addItem(cartItem);
+      await addItem(cartItem);
+    }
+
+    // Show success animation
+    setAddedToCart(true);
+
+    // Navigate to cart after 1 second
+    setTimeout(() => {
+      router.push("/cart");
+    }, 1000);
+  };
+
+  // Add lifestyle/fullpackage to cart
+  const handleAddPackageToCart = async () => {
+    setIsAddingToCart(true);
+
+    if (order.packageType === "lifestyle") {
+      const cartItem: StoreCartItem = {
+        id: `cart_${Date.now()}`,
+        orderId: `order_${Date.now()}`,
+        packageType: "lifestyle",
+        photoStyle: undefined,
+        selectedAngles: [],
+        aspectRatios: ["16:9"],
+        skuCount: 1,
+        productNotes: "",
+        price: PRICES.lifestyle.flatRate,
+        addedAt: new Date().toISOString(),
+      };
+      await addItem(cartItem);
+    } else if (order.packageType === "fullpackage") {
+      // Add all ecommerce styles + lifestyle as one package
+      const totalEcommerce = order.cart.reduce((sum, item) => sum + (item.angles.length * item.pricePerAngle), 0);
+      const lifestylePrice = PRICES.lifestyle.flatRate;
+      const subtotal = totalEcommerce + lifestylePrice;
+      const discount = Math.round(subtotal * PRICES.fullPackageDiscount);
+      const totalPrice = subtotal - discount;
+
+      const cartItem: StoreCartItem = {
+        id: `cart_${Date.now()}`,
+        orderId: `order_${Date.now()}`,
+        packageType: "fullpackage",
+        photoStyle: undefined,
+        selectedAngles: ["front", "back", "left", "right"],
+        aspectRatios: ["16:9"],
+        skuCount: order.cart.length,
+        productNotes: `Includes ${order.cart.length} e-commerce styles + lifestyle session`,
+        price: totalPrice,
+        addedAt: new Date().toISOString(),
+      };
+      await addItem(cartItem);
+    }
 
     // Show success animation
     setAddedToCart(true);
@@ -483,10 +535,10 @@ export default function OrderPage() {
       <StepProgress currentStep={getWizardProgress()} totalSteps={6} />
 
       <header className="bg-white border-b border-rush-border sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img src="/rushlogo.png" alt="Rush" className="h-6 w-auto object-contain" />
-            <span className="font-bold text-2xl sm:text-3xl">photos</span>
+            <span className="font-bold text-xl sm:text-2xl">photos</span>
           </Link>
           {getTotalItems() > 0 && step < 5 && (
             <button onClick={() => setShowMiniCart(!showMiniCart)} className="bg-rush-light border border-rush-border px-4 py-2 rounded-xl flex items-center gap-2 font-bold text-sm shadow-sm">
@@ -497,7 +549,7 @@ export default function OrderPage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-12">
+      <main className="max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 sm:px-6 py-8 md:py-12">
         <AnimatePresence mode="wait">
 
           {/* STEP 1: PACKAGES */}
@@ -508,7 +560,7 @@ export default function OrderPage() {
                 <p className="text-rush-gray font-medium">Select the best fit for your brand imagery.</p>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              <div className="grid md:grid-cols-3 gap-6 md:gap-8 3xl:gap-10 max-w-5xl 3xl:max-w-6xl mx-auto">
                 {[
                   { id: "ecommerce", title: "E-Commerce", desc: "Clean, consistent studio shots.", price: "From $25/angle", img: PACKAGE_IMAGES.ecommerce, color: "text-[#E63946]" },
                   { id: "lifestyle", title: "Lifestyle", desc: "Creative scenes with depth.", price: "$149 flat rate", img: PACKAGE_IMAGES.lifestyle, color: "text-blue-600" },
@@ -535,7 +587,7 @@ export default function OrderPage() {
 
           {/* STEP 2: STYLES */}
           {step === 2 && (
-            <motion.div key="2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-4xl mx-auto">
+            <motion.div key="2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-4xl 3xl:max-w-5xl mx-auto pb-24">
               <button onClick={() => setStep(1)} className="flex items-center gap-2 text-rush-gray font-bold text-sm mb-8 hover:text-rush-dark transition-colors">
                 <ArrowLeft className="w-4 h-4" /> Back to packages
               </button>
@@ -594,21 +646,12 @@ export default function OrderPage() {
                               <p className="text-2xl font-black text-rush-dark">${selectedAngles.length * (style.pricePerAngle || PRICES.ecommerce.perAngle)}</p>
                             </div>
                             <button
-                              onClick={handleAddToCart}
-                              disabled={selectedAngles.length === 0 || isAddingToCart}
+                              onClick={addToCart}
+                              disabled={selectedAngles.length === 0}
                               className="bg-[#E63946] text-white px-8 py-4 rounded-2xl font-bold text-base disabled:opacity-30 hover:bg-[#D62839] hover:scale-[1.02] transition-all flex items-center gap-3 shadow-lg shadow-[#E63946]/25"
                             >
-                              {isAddingToCart ? (
-                                <>
-                                  <Loader2 className="w-5 h-5 animate-spin" />
-                                  Adding...
-                                </>
-                              ) : (
-                                <>
-                                  <ShoppingCart className="w-5 h-5" />
-                                  Add to Cart
-                                </>
-                              )}
+                              <Check className="w-5 h-5" />
+                              Save Selection
                             </button>
                           </div>
                         </div>
@@ -624,7 +667,7 @@ export default function OrderPage() {
 
           {/* STEP 3: LIFESTYLE INFO PAGE */}
           {step === 3 && (
-            <motion.div key="3" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="max-w-3xl mx-auto">
+            <motion.div key="3" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="max-w-3xl mx-auto pb-24">
               <button onClick={() => setStep(1)} className="flex items-center gap-2 text-rush-gray font-bold text-sm mb-8 hover:text-rush-dark transition-colors">
                 <ArrowLeft className="w-4 h-4" /> Back to packages
               </button>
@@ -935,39 +978,65 @@ export default function OrderPage() {
         </AnimatePresence>
       </main>
 
-      {/* Bottom Bar - Sticky (Show in step 2 and 3 when there are items) */}
-      {(step === 2 || step === 3) && getTotalItems() > 0 && (
-        <div className="sticky bottom-0 z-40">
-          <div className="mx-3 sm:mx-6 mb-2 sm:mb-3">
-            <div className="max-w-5xl mx-auto bg-white border border-rush-border rounded-xl sm:rounded-2xl px-3 sm:px-6 py-2.5 sm:py-3 shadow-2xl">
-              <div className="flex items-center justify-between gap-3">
-                {/* Back Button */}
-                <button
-                  onClick={() => setStep(1)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-rush-dark hover:bg-rush-light transition-colors font-medium border border-rush-border text-sm"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  <span className="hidden sm:inline">Back</span>
-                </button>
-
-                {/* Price */}
-                <div className="text-center flex-1">
-                  <p className="text-[10px] sm:text-xs text-rush-gray font-bold uppercase tracking-wider">Estimated Total</p>
-                  <p className="text-lg sm:text-2xl font-black text-rush-dark">
-                    ${calculateTotal()}
-                  </p>
-                </div>
-
-                {/* Add to Cart Button */}
-                <motion.button
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => { setStep(4); setCheckoutStep('information'); }}
-                  className="flex items-center gap-1.5 px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-bold transition-all text-sm bg-[#E63946] text-white shadow-lg shadow-[#E63946]/25 hover:shadow-[#E63946]/40"
-                >
-                  <span>Add to Cart</span>
-                  <ArrowRight className="w-4 h-4" />
-                </motion.button>
+      {/* Bottom Bar - Sticky for E-commerce (step 2) */}
+      {step === 2 && order.cart.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-rush-border shadow-2xl">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+            <div className="flex items-center justify-between gap-4">
+              {/* Cart Summary */}
+              <div className="flex-1">
+                <p className="text-xs text-rush-gray font-medium mb-0.5">{order.cart.length} style{order.cart.length !== 1 ? 's' : ''} • {getTotalAngles()} angle{getTotalAngles() !== 1 ? 's' : ''}</p>
+                <p className="text-xl sm:text-2xl font-black text-rush-dark">${calculateTotal()}</p>
               </div>
+
+              {/* Add to Cart Button */}
+              <motion.button
+                whileTap={{ scale: 0.98 }}
+                onClick={handleAddAllToCart}
+                disabled={isAddingToCart}
+                className="flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-bold transition-all text-base bg-[#E63946] text-white shadow-lg shadow-[#E63946]/25 hover:bg-[#D62839] disabled:opacity-50"
+              >
+                {isAddingToCart ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>
+                    <ShoppingCart className="w-5 h-5" />
+                    <span>Add to Cart</span>
+                  </>
+                )}
+              </motion.button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom Bar - Sticky for Lifestyle/Full Package (step 3) */}
+      {step === 3 && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-rush-border shadow-2xl">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+            <div className="flex items-center justify-between gap-4">
+              {/* Price */}
+              <div className="flex-1">
+                <p className="text-xs text-rush-gray font-medium mb-0.5">Lifestyle Photography</p>
+                <p className="text-xl sm:text-2xl font-black text-rush-dark">${PRICES.lifestyle.flatRate}</p>
+              </div>
+
+              {/* Add to Cart Button */}
+              <motion.button
+                whileTap={{ scale: 0.98 }}
+                onClick={handleAddPackageToCart}
+                disabled={isAddingToCart}
+                className="flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-bold transition-all text-base bg-[#E63946] text-white shadow-lg shadow-[#E63946]/25 hover:bg-[#D62839] disabled:opacity-50"
+              >
+                {isAddingToCart ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>
+                    <ShoppingCart className="w-5 h-5" />
+                    <span>Add to Cart</span>
+                  </>
+                )}
+              </motion.button>
             </div>
           </div>
         </div>

@@ -82,7 +82,7 @@ export default function Testimonials() {
         <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-rush-gray/5 rounded-full blur-[120px]" />
       </div>
 
-      <div className="container relative z-10 px-4 sm:px-6 max-w-7xl mx-auto">
+      <div className="container relative z-10 px-4 sm:px-6 max-w-7xl 3xl:max-w-[1600px] mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 md:mb-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -122,7 +122,7 @@ export default function Testimonials() {
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 3xl:gap-10 mb-12">
           {TESTIMONIALS.map((item, i) => (
             <motion.div
               key={item.id}

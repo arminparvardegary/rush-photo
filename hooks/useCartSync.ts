@@ -4,8 +4,7 @@ import { useCartStore } from "@/lib/store";
 
 export function useCartSync() {
   const session = useSession();
-  const loadFromDB = useCartStore((s) => s.loadFromDB);
-  const clearCart = useCartStore((s) => s.clearCart);
+  const mergeAndSync = useCartStore((s) => s.mergeAndSync);
   const hasLoadedRef = useRef(false);
 
   // Safe access to session data
@@ -13,20 +12,19 @@ export function useCartSync() {
   const userEmail = session?.data?.user?.email;
 
   useEffect(() => {
-    // Only load once when user first logs in
+    // When user logs in, merge local cart with DB cart
     if (status === "authenticated" && userEmail && !hasLoadedRef.current) {
-      console.log("[useCartSync] User authenticated, loading cart from DB");
+      console.log("[useCartSync] User authenticated, merging cart with DB");
       hasLoadedRef.current = true;
-      loadFromDB();
+      mergeAndSync();
     }
 
-    // Reset cart when user logs out
+    // Reset flag when user logs out (but don't clear local cart - keep it for next login)
     if (status === "unauthenticated" && hasLoadedRef.current) {
-      console.log("[useCartSync] User logged out, clearing cart");
+      console.log("[useCartSync] User logged out");
       hasLoadedRef.current = false;
-      clearCart();
     }
-  }, [status, userEmail, loadFromDB, clearCart]);
+  }, [status, userEmail, mergeAndSync]);
 
   // Reload cart when tab becomes visible or window gains focus
   useEffect(() => {
@@ -34,14 +32,14 @@ export function useCartSync() {
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
-        console.log("[useCartSync] Tab visible, reloading cart");
-        loadFromDB();
+        console.log("[useCartSync] Tab visible, syncing cart");
+        mergeAndSync();
       }
     };
 
     const handleFocus = () => {
-      console.log("[useCartSync] Window focused, reloading cart");
-      loadFromDB();
+      console.log("[useCartSync] Window focused, syncing cart");
+      mergeAndSync();
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -51,5 +49,5 @@ export function useCartSync() {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("focus", handleFocus);
     };
-  }, [status, loadFromDB]);
+  }, [status, mergeAndSync]);
 }
