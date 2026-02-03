@@ -15,7 +15,7 @@ export default function Hero() {
       {/* Floating Product Images - Clean & Organized */}
       <div className="absolute inset-0 pointer-events-none hidden xl:block">
         {/* Container to limit image spread on ultra-wide screens */}
-        <div className="relative max-w-[2000px] mx-auto h-full">
+        <div className="relative max-w-[1800px] mx-auto h-full px-8">
           {/* Top Left - Sneaker */}
           <motion.div
             initial={{ opacity: 0, y: 60, rotate: -5 }}
@@ -31,7 +31,7 @@ export default function Hero() {
               type: "spring",
               stiffness: 120
             }}
-            className="absolute top-24 left-[2%] 3xl:left-[8%] w-48 xl:w-56 3xl:w-64 h-48 xl:h-56 3xl:h-64 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
+            className="absolute top-24 left-8 xl:left-16 2xl:left-24 w-48 xl:w-56 2xl:w-60 h-48 xl:h-56 2xl:h-60 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
             style={{
               boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
             }}
@@ -54,7 +54,7 @@ export default function Hero() {
               type: "spring",
               stiffness: 120
             }}
-            className="absolute top-20 right-[2%] 3xl:right-[8%] w-52 xl:w-64 3xl:w-72 h-52 xl:h-64 3xl:h-72 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
+            className="absolute top-20 right-8 xl:right-16 2xl:right-24 w-52 xl:w-60 2xl:w-64 h-52 xl:h-60 2xl:h-64 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
             style={{
               boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
             }}
@@ -77,7 +77,7 @@ export default function Hero() {
               type: "spring",
               stiffness: 120
             }}
-            className="absolute bottom-20 left-[3%] 3xl:left-[10%] w-44 xl:w-52 3xl:w-60 h-44 xl:h-52 3xl:h-60 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
+            className="absolute bottom-20 left-12 xl:left-20 2xl:left-28 w-44 xl:w-52 2xl:w-56 h-44 xl:h-52 2xl:h-56 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
             style={{
               boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
             }}
@@ -100,7 +100,7 @@ export default function Hero() {
               type: "spring",
               stiffness: 120
             }}
-            className="absolute bottom-24 right-[3%] 3xl:right-[10%] w-48 xl:w-60 3xl:w-68 h-48 xl:h-60 3xl:h-68 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
+            className="absolute bottom-24 right-12 xl:right-20 2xl:right-28 w-48 xl:w-56 2xl:w-60 h-48 xl:h-56 2xl:h-60 rounded-2xl overflow-hidden border-4 border-white shadow-2xl"
             style={{
               boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
             }}
