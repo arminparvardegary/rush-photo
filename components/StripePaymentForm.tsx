@@ -8,7 +8,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { Loader2, Lock, Shield, CheckCircle, AlertTriangle } from "lucide-react";
+import { Loader2, Lock, Shield, CheckCircle, AlertTriangle, CreditCard } from "lucide-react";
 
 // Only load Stripe if key is available
 const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
@@ -114,10 +114,56 @@ function CheckoutForm({
 
         <PaymentElement
           options={{
-            layout: "tabs",
-            paymentMethodOrder: ["card", "link", "cashapp", "amazon_pay"],
+            layout: "accordion",
+            defaultCollapsed: false,
+            radios: true,
+            spacedAccordionItems: true,
+            paymentMethodOrder: ["card", "apple_pay", "google_pay", "link", "cashapp", "us_bank_account"],
+            wallets: {
+              applePay: "auto",
+              googlePay: "auto",
+            },
+            fields: {
+              billingDetails: {
+                address: {
+                  country: "auto",
+                  postalCode: "auto",
+                },
+              },
+            },
           }}
         />
+      </div>
+
+      {/* Accepted Payment Methods */}
+      <div className="flex flex-wrap items-center justify-center gap-3 py-3">
+        <span className="text-xs text-gray-500 font-medium">Accepted:</span>
+        <div className="flex items-center gap-2">
+          {/* Visa */}
+          <div className="h-6 px-2 bg-white border border-gray-200 rounded flex items-center justify-center">
+            <span className="text-[10px] font-bold text-[#1A1F71]">VISA</span>
+          </div>
+          {/* Mastercard */}
+          <div className="h-6 px-2 bg-white border border-gray-200 rounded flex items-center justify-center">
+            <span className="text-[10px] font-bold text-[#EB001B]">MC</span>
+          </div>
+          {/* Amex */}
+          <div className="h-6 px-2 bg-white border border-gray-200 rounded flex items-center justify-center">
+            <span className="text-[10px] font-bold text-[#006FCF]">AMEX</span>
+          </div>
+          {/* Apple Pay */}
+          <div className="h-6 px-2 bg-black rounded flex items-center justify-center">
+            <span className="text-[10px] font-bold text-white">Pay</span>
+          </div>
+          {/* Google Pay */}
+          <div className="h-6 px-2 bg-white border border-gray-200 rounded flex items-center justify-center">
+            <span className="text-[10px] font-bold text-gray-700">GPay</span>
+          </div>
+          {/* Link */}
+          <div className="h-6 px-2 bg-[#00D66F] rounded flex items-center justify-center">
+            <span className="text-[10px] font-bold text-white">Link</span>
+          </div>
+        </div>
       </div>
 
       {/* Security Badge */}
@@ -332,17 +378,36 @@ export default function StripePaymentForm({
               boxShadow: "0 0 0 1px #E63946",
             },
             ".Label": {
-              fontWeight: "500",
+              fontWeight: "600",
               color: "#374151",
               marginBottom: "8px",
             },
             ".Tab": {
               border: "2px solid #e5e7eb",
               borderRadius: "12px",
+              padding: "12px 16px",
+            },
+            ".Tab:hover": {
+              border: "2px solid #d1d5db",
             },
             ".Tab--selected": {
               border: "2px solid #E63946",
               backgroundColor: "#FEF2F2",
+            },
+            ".AccordionItem": {
+              border: "2px solid #e5e7eb",
+              borderRadius: "12px",
+              marginBottom: "8px",
+            },
+            ".AccordionItem--selected": {
+              border: "2px solid #E63946",
+              backgroundColor: "#FAFAFA",
+            },
+            ".RadioIcon": {
+              fill: "#E63946",
+            },
+            ".RadioIcon--checked": {
+              fill: "#E63946",
             },
           },
         },

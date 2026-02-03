@@ -113,9 +113,15 @@ export async function POST(req: Request) {
     success_url: successUrl,
     cancel_url: cancelUrl,
     customer_email: email,
-    // Use payment_method_types for broader compatibility
+    // Enable multiple payment methods for better conversion
     "payment_method_types[0]": "card",
     "payment_method_types[1]": "link",
+    "payment_method_types[2]": "cashapp",
+    "payment_method_types[3]": "us_bank_account",
+    // Billing address collection for fraud prevention
+    billing_address_collection: "auto",
+    // Phone number collection (optional)
+    phone_number_collection_enabled: "true",
     "metadata[orderId]": order.id,
     "metadata[orderNumber]": order.trackingNumber,
     "line_items[0][price_data][currency]": "usd",

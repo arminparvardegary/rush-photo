@@ -86,11 +86,13 @@ export async function POST(req: Request) {
       payment: { provider: "stripe", status: "created" },
     });
 
-    // Create Payment Intent
+    // Create Payment Intent with comprehensive payment method support
     const params = new URLSearchParams({
       amount: String(amountCents),
       currency: "usd",
+      // Enable automatic payment methods for maximum compatibility
       "automatic_payment_methods[enabled]": "true",
+      "automatic_payment_methods[allow_redirects]": "always",
       "metadata[orderId]": order.id,
       "metadata[orderNumber]": order.trackingNumber,
       "metadata[email]": email,
