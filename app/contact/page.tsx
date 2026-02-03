@@ -6,9 +6,11 @@ import { Mail, Phone, MapPin, Send, CheckCircle, ArrowLeft } from "lucide-react"
 import Link from "next/link";
 import { useCartStore } from "@/lib/store";
 import Footer from "@/components/Footer";
+import { useModal } from "@/hooks/useModal";
 
 export default function ContactPage() {
   const { items, getCartTotal } = useCartStore();
+  const { showModal, ModalComponent } = useModal();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -53,12 +55,12 @@ export default function ContactPage() {
       }, 3000);
     } catch (error) {
       console.error("Contact form error:", error);
-      // Better error handling with user-friendly message
       const errorMessage = error instanceof Error ? error.message : "Failed to send message. Please try again.";
-      if (typeof window !== 'undefined') {
-        // You could replace this with a toast notification
-        alert(errorMessage);
-      }
+      showModal({
+        title: "Message Failed",
+        message: errorMessage,
+        type: "error",
+      });
     } finally {
       setIsSubmitting(false);
     }

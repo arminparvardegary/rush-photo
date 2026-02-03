@@ -7,6 +7,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useCartStore } from "@/lib/store";
 import { useCartSync } from "@/hooks/useCartSync";
+import { useModal } from "@/hooks/useModal";
 import {
   ArrowLeft,
   Mail,
@@ -27,6 +28,7 @@ export default function CheckoutPage() {
   useCartSync();
   const router = useRouter();
   const { items, getCartTotal, clearCart } = useCartStore();
+  const { showModal, ModalComponent } = useModal();
 
   const [step, setStep] = useState<CheckoutStep>("information");
   const [completedSteps, setCompletedSteps] = useState<Set<CheckoutStep>>(new Set());
@@ -121,7 +123,11 @@ export default function CheckoutPage() {
     if (step === "information") {
       // Validate product name
       if (!formData.productName.trim()) {
-        alert("Please enter a product name");
+        showModal({
+          title: "Product Name Required",
+          message: "Please enter a product name to continue with your order.",
+          type: "warning",
+        });
         return;
       }
       setCompletedSteps(prev => new Set(prev).add("information"));
@@ -129,11 +135,19 @@ export default function CheckoutPage() {
     } else if (step === "shipping") {
       // Validate shipping information
       if (!formData.firstName.trim() || !formData.lastName.trim()) {
-        alert("Please enter your full name");
+        showModal({
+          title: "Name Required",
+          message: "Please enter your full name for shipping.",
+          type: "warning",
+        });
         return;
       }
       if (!formData.address.trim()) {
-        alert("Please enter your shipping address");
+        showModal({
+          title: "Address Required",
+          message: "Please enter your shipping address to continue.",
+          type: "warning",
+        });
         return;
       }
       setCompletedSteps(prev => new Set(prev).add("shipping"));
@@ -192,7 +206,9 @@ export default function CheckoutPage() {
   const currentStepIndex = steps.findIndex((s) => s.id === step);
 
   return (
-    <div className="min-h-screen bg-rush-light">
+    <>
+      <ModalComponent />
+      <div className="min-h-screen bg-rush-light">
       {/* Header */}
       <header className="bg-white border-b border-rush-border sticky top-0 z-50">
         <div className="max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
@@ -618,5 +634,6 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

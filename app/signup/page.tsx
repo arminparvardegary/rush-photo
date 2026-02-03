@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Mail, Lock, User, Loader2 } from "lucide-react";
+import { useModal } from "@/hooks/useModal";
 
 const PORTFOLIO_IMAGES = [
   "/images/portfolio/pink-bottle.jpg",
@@ -20,6 +21,7 @@ export default function SignupPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/admin";
+  const { showModal, ModalComponent } = useModal();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -40,17 +42,29 @@ export default function SignupPage() {
 
     // Client-side validation
     if (!form.name.trim()) {
-      setError("Please enter your name");
+      showModal({
+        title: "Name Required",
+        message: "Please enter your name to create an account.",
+        type: "warning",
+      });
       setLoading(false);
       return;
     }
     if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) {
-      setError("Please enter a valid email address");
+      showModal({
+        title: "Invalid Email",
+        message: "Please enter a valid email address.",
+        type: "warning",
+      });
       setLoading(false);
       return;
     }
     if (form.password.length < 8) {
-      setError("Password must be at least 8 characters");
+      showModal({
+        title: "Password Too Short",
+        message: "Your password must be at least 8 characters long for security.",
+        type: "warning",
+      });
       setLoading(false);
       return;
     }
@@ -77,7 +91,11 @@ export default function SignupPage() {
       });
 
     } catch (err: any) {
-      setError(err.message);
+      showModal({
+        title: "Signup Failed",
+        message: err.message || "Something went wrong. Please try again.",
+        type: "error",
+      });
       setLoading(false);
     }
   };

@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Mail, Lock, Loader2 } from "lucide-react";
+import { useModal } from "@/hooks/useModal";
 
 const PORTFOLIO_IMAGES = [
   "/images/portfolio/speakers.jpg",
@@ -20,6 +21,7 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
+  const { showModal, ModalComponent } = useModal();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -39,11 +41,19 @@ export default function LoginPage() {
 
     // Client-side validation
     if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) {
-      alert("Please enter a valid email address");
+      showModal({
+        title: "Invalid Email",
+        message: "Please enter a valid email address.",
+        type: "warning",
+      });
       return;
     }
     if (!form.password) {
-      alert("Please enter your password");
+      showModal({
+        title: "Password Required",
+        message: "Please enter your password to continue.",
+        type: "warning",
+      });
       return;
     }
 
@@ -57,7 +67,11 @@ export default function LoginPage() {
       });
 
       if (res?.error) {
-        alert("Invalid email or password. Please try again.");
+        showModal({
+          title: "Login Failed",
+          message: "Invalid email or password. Please check your credentials and try again.",
+          type: "error",
+        });
       } else {
         router.push(redirectUrl);
       }
@@ -71,7 +85,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
+    <>
+      <ModalComponent />
+      <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Left Side: Product Photography Showcase */}
       <div className="relative lg:w-1/2 3xl:w-[45%] h-64 lg:h-screen overflow-hidden bg-gray-900">
         <AnimatePresence mode="wait">
