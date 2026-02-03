@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getServerSession } from "next-auth";
 import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { LayoutDashboard, ShoppingBag, Settings, LogOut, Users, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,6 +14,7 @@ export default function AdminLayout({
 }) {
     const { data: session, status } = useSession();
     const router = useRouter();
+    const pathname = usePathname();
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     // @ts-ignore
@@ -46,7 +46,7 @@ export default function AdminLayout({
     ];
 
     const handleLogout = async () => {
-        await signOut({ callbackUrl: "/" });
+        await signOut({ callbackUrl: "/", redirect: true });
     };
 
     return (
@@ -87,7 +87,6 @@ export default function AdminLayout({
 
                     <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
                         {navItems.map((item) => {
-                            const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
                             const isActive = item.href === '/admin'
                                 ? pathname === '/admin'
                                 : pathname.startsWith(item.href);
