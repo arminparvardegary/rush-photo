@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, Eye, X, Layers } from "lucide-react";
 import { useState, useRef } from "react";
+import Image from "next/image";
 
 const PORTFOLIO_ITEMS = [
   {
@@ -126,12 +127,12 @@ export default function Portfolio() {
                 transition={{ duration: 0.3 }}
               >
                 <div className="relative w-full h-full overflow-hidden">
-                  <motion.img
+                  <Image
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-full object-cover"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    sizes="(max-width: 768px) 280px, (max-width: 1920px) 380px, 450px"
                   />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
@@ -210,10 +211,13 @@ export default function Portfolio() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="relative h-full min-h-[400px]">
-                <img
+                <Image
                   src={selectedItem.image}
                   alt={selectedItem.title}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
                 />
               </div>
               <div className="p-8 md:p-12 flex flex-col justify-center">

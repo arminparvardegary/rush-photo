@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Star, Quote, ArrowRight, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const TESTIMONIALS = [
   {
@@ -162,11 +163,15 @@ export default function Testimonials() {
 
                 {/* Author */}
                 <div className="flex items-center gap-3 mt-auto">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-12 h-12 rounded-full object-cover ring-2 ring-white/10"
-                  />
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-white/10">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      className="object-cover"
+                      sizes="48px"
+                    />
+                  </div>
                   <div>
                     <h4 className={`font-bold text-sm text-gray-900`}>
                       {item.name}

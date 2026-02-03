@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Camera, Sparkles, Package, ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const PACKAGE_IMAGES = {
   ecommerce: "/images/portfolio/speakers.jpg",
@@ -98,10 +99,12 @@ export default function PackageSelection() {
               >
                 {/* Image */}
                 <div className="h-40 sm:h-48 3xl:h-56 relative overflow-hidden flex-shrink-0">
-                  <img
+                  <Image
                     src={pkg.img}
                     alt={pkg.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Star } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Hero() {
   return (
@@ -36,7 +37,7 @@ export default function Hero() {
               boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
             }}
           >
-            <img src="/images/portfolio/sneaker.jpg" alt="Product Photography" className="w-full h-full object-cover" />
+            <Image src="/images/portfolio/sneaker.jpg" alt="Product Photography" fill className="object-cover" sizes="(max-width: 1280px) 192px, (max-width: 1536px) 224px, 240px" priority />
           </motion.div>
 
           {/* Top Right - Cosmetics */}
@@ -59,7 +60,7 @@ export default function Hero() {
               boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
             }}
           >
-            <img src="/images/portfolio/pink-bottle.jpg" alt="Product Photography" className="w-full h-full object-cover" />
+            <Image src="/images/portfolio/pink-bottle.jpg" alt="Product Photography" fill className="object-cover" sizes="(max-width: 1280px) 208px, (max-width: 1536px) 240px, 256px" priority />
           </motion.div>
 
           {/* Bottom Left - Serum Bottle */}
@@ -82,7 +83,7 @@ export default function Hero() {
               boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
             }}
           >
-            <img src="/images/portfolio/serum-bottle.jpg" alt="Product Photography" className="w-full h-full object-cover" />
+            <Image src="/images/portfolio/serum-bottle.jpg" alt="Product Photography" fill className="object-cover" sizes="(max-width: 1280px) 176px, (max-width: 1536px) 208px, 224px" />
           </motion.div>
 
           {/* Bottom Right - Speakers */}
@@ -105,7 +106,7 @@ export default function Hero() {
               boxShadow: '0 20px 50px -12px rgba(0,0,0,0.25), 0 8px 20px -6px rgba(230,57,70,0.12)',
             }}
           >
-            <img src="/images/portfolio/speakers.jpg" alt="Product Photography" className="w-full h-full object-cover" />
+            <Image src="/images/portfolio/speakers.jpg" alt="Product Photography" fill className="object-cover" sizes="(max-width: 1280px) 192px, (max-width: 1536px) 224px, 240px" />
           </motion.div>
         </div>
       </div>

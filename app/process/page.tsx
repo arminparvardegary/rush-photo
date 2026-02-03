@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ShoppingCart,
   Package,
@@ -173,11 +174,13 @@ export default function ProcessPage() {
                 {/* Image Side */}
                 <div className={`w-full lg:w-[calc(50%-4rem)] ${index % 2 === 1 ? "lg:pl-8" : "lg:pr-8"}`}>
                   <div className="relative group">
-                    <div className="aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-hidden bg-gray-100">
-                      <img
+                    <div className="aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-hidden bg-gray-100 relative">
+                      <Image
                         src={step.image}
                         alt={step.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        sizes="(max-width: 1024px) 100vw, 50vw"
                       />
                     </div>
                     {/* Mobile Step Badge */}
