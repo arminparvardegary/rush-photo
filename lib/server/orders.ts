@@ -7,7 +7,7 @@ export type PackageType = "ecommerce" | "lifestyle" | "fullpackage";
 export type EcommerceStyle = string;
 export type Angle = string;
 
-export type OrderStatus = "pending" | "pending_payment" | "processing" | "completed" | "shipped";
+export type OrderStatus = "pending" | "pending_payment" | "paid" | "processing" | "completed" | "shipped" | "payment_failed";
 
 export interface OrderCartItem {
   style: EcommerceStyle;
@@ -46,6 +46,7 @@ export interface OrderRecord {
     provider: "stripe";
     sessionId?: string;
     status?: "created" | "paid" | "failed";
+    error?: string;
   };
 }
 

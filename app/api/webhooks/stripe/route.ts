@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
           status: "paid",
           payment: {
             provider: "stripe",
-            status: "succeeded",
+            status: "paid",
             sessionId,
           },
         });

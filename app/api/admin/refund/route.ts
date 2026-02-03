@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@/lib/server/auth";
 import { findOrderById } from "@/lib/server/orders";
 import { createStripeRefund, getTransactionsByOrderId } from "@/lib/server/payments";
 
@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
       chargeId,
       amountCents: refundAmount,
       reason,
-      userId: session.user.id as string,
+      userId: (session.user as any).id,
     });
 
     if (!result.success) {
