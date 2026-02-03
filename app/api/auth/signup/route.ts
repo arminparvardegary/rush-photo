@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createUser, findUserByEmail, isAdminEmail } from "@/lib/server/users";
 import { hashPassword } from "@/lib/server/auth-utils";
+import { sendEmail } from "@/lib/resend";
+import { welcomeEmail } from "@/lib/email-templates";
 
 export async function POST(req: Request) {
     try {
@@ -31,6 +33,32 @@ export async function POST(req: Request) {
             passwordHash,
             role,
             authProvider: "email",
+        });
+
+        // Send welcome email (don't await - send in background)
+        setImmediate(async () => {
+            try {
+                const welcomeEmailContent = welcomeEmail({
+                    customerName: name,
+                    email: email,
+                });
+
+                console.log(`Attempting to send welcome email to: ${email}`);
+                const emailId = await sendEmail({
+                    to: email,
+                    subject: welcomeEmailContent.subject,
+                    html: welcomeEmailContent.html,
+                    text: welcomeEmailContent.text,
+                });
+
+                if (emailId) {
+                    console.log(`Welcome email sent successfully to ${email}, ID: ${emailId}`);
+                } else {
+                    console.error(`Failed to send welcome email to ${email} - no email ID returned`);
+                }
+            } catch (emailError) {
+                console.error("Welcome email error:", emailError);
+            }
         });
 
         return NextResponse.json({

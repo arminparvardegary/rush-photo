@@ -199,7 +199,7 @@ const jsonLd = {
       provider: {
         "@id": "https://rush.photos/#organization",
       },
-      description: "Professional product photography service with 4 unique styles: Top Down, Product, Diagonal, and Lifestyle. Perfect for ecommerce, Amazon, Shopify, and social media.",
+      description: "Professional product photography service with 3 unique styles: Product, Diagonal, and Lifestyle. Perfect for ecommerce, Amazon, Shopify, and social media.",
       offers: [
         {
           "@type": "Offer",

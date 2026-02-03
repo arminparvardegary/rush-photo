@@ -38,6 +38,23 @@ export default function SignupPage() {
     setLoading(true);
     setError("");
 
+    // Client-side validation
+    if (!form.name.trim()) {
+      setError("Please enter your name");
+      setLoading(false);
+      return;
+    }
+    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) {
+      setError("Please enter a valid email address");
+      setLoading(false);
+      return;
+    }
+    if (form.password.length < 8) {
+      setError("Password must be at least 8 characters");
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch("/api/auth/signup", {
         method: "POST",

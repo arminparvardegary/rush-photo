@@ -77,7 +77,6 @@ export default function CartPage() {
     if (item.packageType === "lifestyle") return "/images/portfolio/flowers-table.jpg";
     if (item.packageType === "fullpackage") return "/images/portfolio/pink-bottle.jpg";
     if (item.photoStyle === "straight-on") return "/images/portfolio/speakers.jpg";
-    if (item.photoStyle === "top-down") return "/images/portfolio/flowers-table.jpg";
     if (item.photoStyle === "angled") return "/images/portfolio/sneaker.jpg";
     return "/images/portfolio/speakers.jpg";
   };

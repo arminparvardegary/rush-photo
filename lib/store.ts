@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type PhotoStyle = "straight-on" | "top-down" | "angled";
+export type PhotoStyle = "straight-on" | "angled";
 export type PhotoPackage = "ecommerce" | "lifestyle" | "fullpackage";
 
 // Cart Item interface

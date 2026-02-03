@@ -124,10 +124,9 @@ export function generateLocalBusinessSchema() {
 // SEO-friendly image alt text generator
 export function generateImageAlt(
   productName: string,
-  style: "topdown" | "product" | "diagonal" | "lifestyle"
+  style: "product" | "diagonal" | "lifestyle"
 ): string {
   const styleDescriptions = {
-    topdown: "flat-lay top-down view",
     product: "professional studio shot",
     diagonal: "dynamic angled perspective",
     lifestyle: "lifestyle context shot",

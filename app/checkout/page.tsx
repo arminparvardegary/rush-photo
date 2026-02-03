@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useCartStore } from "@/lib/store";
 import { useCartSync } from "@/hooks/useCartSync";
@@ -28,6 +29,7 @@ export default function CheckoutPage() {
   const { items, getCartTotal, clearCart } = useCartStore();
 
   const [step, setStep] = useState<CheckoutStep>("information");
+  const [completedSteps, setCompletedSteps] = useState<Set<CheckoutStep>>(new Set());
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -116,8 +118,27 @@ export default function CheckoutPage() {
   };
 
   const handleContinue = () => {
-    if (step === "information") setStep("shipping");
-    else if (step === "shipping") setStep("payment");
+    if (step === "information") {
+      // Validate product name
+      if (!formData.productName.trim()) {
+        alert("Please enter a product name");
+        return;
+      }
+      setCompletedSteps(prev => new Set(prev).add("information"));
+      setStep("shipping");
+    } else if (step === "shipping") {
+      // Validate shipping information
+      if (!formData.firstName.trim() || !formData.lastName.trim()) {
+        alert("Please enter your full name");
+        return;
+      }
+      if (!formData.address.trim()) {
+        alert("Please enter your shipping address");
+        return;
+      }
+      setCompletedSteps(prev => new Set(prev).add("shipping"));
+      setStep("payment");
+    }
   };
 
   const handleBack = () => {
@@ -176,7 +197,16 @@ export default function CheckoutPage() {
       <header className="bg-white border-b border-rush-border sticky top-0 z-50">
         <div className="max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/rushlogo.png" alt="Rush" className="h-6 sm:h-7 w-auto object-contain" />
+            <div className="relative h-6 sm:h-7 w-auto">
+              <Image
+                src="/rushlogo.png"
+                alt="Rush"
+                width={120}
+                height={28}
+                className="h-6 sm:h-7 w-auto object-contain"
+                priority
+              />
+            </div>
             <span className="font-bold text-xl sm:text-2xl">photos</span>
           </Link>
           <div className="flex items-center gap-2 text-rush-gray text-sm font-medium">
@@ -198,30 +228,41 @@ export default function CheckoutPage() {
 
         {/* Steps */}
         <div className="flex items-center gap-2 mb-8">
-          {steps.map((s, idx) => (
-            <div key={s.id} className="flex items-center">
-              <button
-                onClick={() => {
-                  if (idx < currentStepIndex) {
-                    setStep(s.id as CheckoutStep);
-                  }
-                }}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-colors ${
-                  s.id === step
-                    ? "bg-[#E63946] text-white"
-                    : idx < currentStepIndex
-                    ? "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    : "bg-gray-100 text-gray-400"
-                }`}
-              >
-                <s.icon className="w-4 h-4" />
-                {s.label}
-              </button>
-              {idx < steps.length - 1 && (
-                <div className="w-8 h-px bg-gray-200 mx-2" />
-              )}
-            </div>
-          ))}
+          {steps.map((s, idx) => {
+            const isCompleted = completedSteps.has(s.id as CheckoutStep);
+            const isActive = s.id === step;
+
+            return (
+              <div key={s.id} className="flex items-center">
+                <button
+                  onClick={() => {
+                    if (idx <= currentStepIndex) {
+                      setStep(s.id as CheckoutStep);
+                    }
+                  }}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-colors ${
+                    isCompleted
+                      ? "bg-emerald-500 text-white hover:bg-emerald-600"
+                      : isActive
+                      ? "bg-[#E63946] text-white"
+                      : idx < currentStepIndex
+                      ? "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      : "bg-gray-100 text-gray-400"
+                  }`}
+                >
+                  {isCompleted ? (
+                    <Check className="w-4 h-4" />
+                  ) : (
+                    <s.icon className="w-4 h-4" />
+                  )}
+                  {s.label}
+                </button>
+                {idx < steps.length - 1 && (
+                  <div className="w-8 h-px bg-gray-200 mx-2" />
+                )}
+              </div>
+            );
+          })}
         </div>
 
         <div className="grid lg:grid-cols-5 gap-6 md:gap-8">
@@ -277,15 +318,26 @@ export default function CheckoutPage() {
                         </div>
                         <button
                           onClick={async () => {
-                            await fetch("/api/auth/logout", { method: "POST" });
-                            setUser(null);
-                            setIsLoggedIn(false);
-                            setFormData((prev) => ({
-                              ...prev,
-                              email: "",
-                              firstName: "",
-                              lastName: "",
-                            }));
+                            try {
+                              // Clear local state first
+                              setUser(null);
+                              setIsLoggedIn(false);
+                              setFormData((prev) => ({
+                                ...prev,
+                                email: "",
+                                firstName: "",
+                                lastName: "",
+                              }));
+
+                              // Call logout endpoint
+                              await fetch("/api/auth/logout", { method: "POST" });
+
+                              // Redirect to home
+                              window.location.href = "/";
+                            } catch (error) {
+                              console.error("Logout error:", error);
+                              window.location.href = "/";
+                            }
                           }}
                           className="text-sm text-[#E63946] hover:text-[#D62839] font-medium"
                         >
@@ -481,7 +533,6 @@ export default function CheckoutPage() {
                     if (item.packageType === "lifestyle") return "/images/portfolio/flowers-table.jpg";
                     if (item.packageType === "fullpackage") return "/images/portfolio/pink-bottle.jpg";
                     if (item.photoStyle === "straight-on") return "/images/portfolio/speakers.jpg";
-                    if (item.photoStyle === "top-down") return "/images/portfolio/flowers-table.jpg";
                     if (item.photoStyle === "angled") return "/images/portfolio/sneaker.jpg";
                     return "/images/portfolio/speakers.jpg";
                   };

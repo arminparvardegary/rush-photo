@@ -7,15 +7,6 @@ import { Reveal, Magnetic } from "./Motion";
 const styles = [
   {
     id: 1,
-    name: "Top Down",
-    tagline: "Perfect flat-lays",
-    description: "Bird's-eye view shots perfect for flat-lay compositions and showcasing product design from above.",
-    image: "/images/portfolio/serum-bottle.jpg",
-    color: "#E54A4A",
-    icon: "↓",
-  },
-  {
-    id: 2,
     name: "Product",
     tagline: "Clean & crisp",
     description: "Clean, professional studio shots with perfect lighting that highlight every detail.",
@@ -24,7 +15,7 @@ const styles = [
     icon: "◆",
   },
   {
-    id: 3,
+    id: 2,
     name: "Diagonal",
     tagline: "Dynamic angles",
     description: "Dynamic angled perspectives that add depth and visual interest to your products.",
@@ -33,7 +24,7 @@ const styles = [
     icon: "◇",
   },
   {
-    id: 4,
+    id: 3,
     name: "Lifestyle",
     tagline: "In context",
     description: "In-context shots showing your product in real-world scenarios that connect with customers.",
@@ -235,7 +226,7 @@ export default function PhotoStyles() {
             Our Styles
             </motion.span>
             <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-6">
-              Four ways to{" "}
+              Three ways to{" "}
               <span className="relative">
                 <span className="gradient-text">shine</span>
                 <motion.svg
@@ -257,13 +248,13 @@ export default function PhotoStyles() {
           </span>
           </h2>
           <p className="text-[#1a1a1a]/60 text-lg">
-            Each style crafted to perfection. Choose your favorite or get all four!
+            Each style crafted to perfection. Choose your favorite or get them all!
           </p>
         </div>
         </Reveal>
 
         {/* Styles Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {styles.map((style, index) => (
             <Card3D
               key={style.id}
@@ -313,7 +304,7 @@ export default function PhotoStyles() {
                   whileHover={{ x: 0 }}
                   transition={{ duration: 0.3 }}
                 />
-                <span className="relative">Get All 4 Styles</span>
+                <span className="relative">Get All 3 Styles</span>
                 <motion.svg 
                   className="w-5 h-5 relative" 
                   fill="none" 

@@ -40,13 +40,6 @@ export const DEFAULT_PRICING: PricingSettings = {
         pricePerAngle: 25,
       },
       {
-        id: "top-down",
-        name: "Top Down",
-        description: "Bird's eye view photography, ideal for flat-lay compositions",
-        image: "/images/portfolio/flowers-table.jpg",
-        pricePerAngle: 25,
-      },
-      {
         id: "angled",
         name: "Angled",
         description: "Dynamic 45° angle shots that add depth and dimension",

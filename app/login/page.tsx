@@ -36,6 +36,17 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Client-side validation
+    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+    if (!form.password) {
+      alert("Please enter your password");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -46,7 +57,7 @@ export default function LoginPage() {
       });
 
       if (res?.error) {
-        console.error("Login failed");
+        alert("Invalid email or password. Please try again.");
       } else {
         router.push(redirectUrl);
       }

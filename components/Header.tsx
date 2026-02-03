@@ -57,11 +57,20 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST" });
+      // Clear local state first
       setUser(null);
       setShowUserMenu(false);
+
+      // Call logout endpoint to clear cookies
+      await fetch("/api/auth/logout", { method: "POST" });
+
+      // Redirect to home page with a full reload to clear any cached state
       window.location.href = "/";
-    } catch { }
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Still redirect even if the logout call fails
+      window.location.href = "/";
+    }
   };
 
   return (

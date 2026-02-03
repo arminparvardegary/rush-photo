@@ -23,9 +23,15 @@ export async function sendEmail({
     from?: string;
 }): Promise<string | null> {
     try {
+        console.log(`Sending email to: ${to}, subject: ${subject}`);
+
         const resend = getResendClient();
+        const fromEmail = from || `Rush Photos <${process.env.EMAIL_FROM || 'hello@rush.photos'}>`;
+
+        console.log(`Using from address: ${fromEmail}`);
+
         const { data, error } = await resend.emails.send({
-            from: from || `Rush Photo <${process.env.EMAIL_FROM || 'hello@rush.photos'}>`,
+            from: fromEmail,
             to: [to],
             subject,
             html,
@@ -33,13 +39,17 @@ export async function sendEmail({
         });
 
         if (error) {
-            console.error('Resend error:', error);
+            console.error('Resend API error:', JSON.stringify(error, null, 2));
             return null;
         }
 
+        console.log(`Email sent successfully. ID: ${data?.id}`);
         return data?.id || null;
     } catch (error) {
         console.error('Error sending email via Resend:', error);
+        if (error instanceof Error) {
+            console.error('Error details:', error.message, error.stack);
+        }
         return null;
     }
 }

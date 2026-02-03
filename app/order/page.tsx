@@ -38,7 +38,7 @@ import { StepProgress } from "@/components/ui/ProgressBar";
 
 // Types
 type PackageType = "ecommerce" | "lifestyle" | "fullpackage" | null;
-type EcommerceStyle = "straight-on" | "top-down" | "angled";
+type EcommerceStyle = "straight-on" | "angled";
 type Angle = "front" | "back" | "left" | "right";
 type CheckoutStep = "information" | "shipping" | "payment";
 
@@ -89,13 +89,6 @@ const DEFAULT_ECOMMERCE_STYLES: { id: EcommerceStyle; name: string; description:
     name: "Straight On",
     description: "Direct front-facing shots, perfect for showcasing product details",
     image: "/images/portfolio/speakers.jpg?v=5",
-    pricePerAngle: 25,
-  },
-  {
-    id: "top-down",
-    name: "Top Down",
-    description: "Bird's eye view photography, ideal for flat-lay compositions",
-    image: "/images/portfolio/serum-bottle.jpg?v=5",
     pricePerAngle: 25,
   },
   {
@@ -762,14 +755,23 @@ export default function OrderPage() {
                           <button
                             onClick={async () => {
                               try {
-                                await fetch('/api/auth/logout', { method: 'POST' });
+                                // Clear local state first
                                 setUser(null);
                                 setIsLoggedIn(false);
                                 setOrder(prev => ({
                                   ...prev,
                                   formData: { ...prev.formData, email: '', firstName: '', lastName: '' }
                                 }));
-                              } catch (e) { console.error(e); }
+
+                                // Call logout endpoint
+                                await fetch('/api/auth/logout', { method: 'POST' });
+
+                                // Redirect to home
+                                window.location.href = "/";
+                              } catch (error) {
+                                console.error("Logout error:", error);
+                                window.location.href = "/";
+                              }
                             }}
                             className="text-sm text-[#E63946] hover:text-[#D62839] transition-colors font-medium"
                           >

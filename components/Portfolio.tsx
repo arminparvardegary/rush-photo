@@ -22,7 +22,7 @@ const PORTFOLIO_ITEMS = [
   {
     id: 3,
     title: "Pure Glow",
-    category: "Top-Down",
+    category: "E-commerce",
     image: "/images/portfolio/serum-bottle.jpg",
     stats: "2x Click-through",
   },
@@ -49,7 +49,7 @@ const PORTFOLIO_ITEMS = [
   },
 ];
 
-const CATEGORIES = ["All", "E-commerce", "Lifestyle", "Top-Down"];
+const CATEGORIES = ["All", "E-commerce", "Lifestyle"];
 
 export default function Portfolio() {
   const [activeCategory, setActiveCategory] = useState("All");

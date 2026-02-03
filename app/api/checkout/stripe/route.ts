@@ -38,11 +38,7 @@ export async function POST(req: Request) {
   }
 
   const body = await req.json().catch(() => null);
-  const packageType = body?.packageType as PackageType | undefined;
-  const cart = (body?.cart ?? []) as OrderCartItem[];
-  const lifestyleIncluded = Boolean(body?.lifestyleIncluded);
-  const discountCode = normalizeDiscountCode((body?.discountCode ?? "").toString());
-
+  const items = body?.items ?? [];
   const email = (body?.email ?? "").toString().trim();
   const name = (body?.name ?? "").toString().trim();
   const phone = (body?.phone ?? "").toString().trim();
@@ -50,37 +46,55 @@ export async function POST(req: Request) {
   const productName = (body?.productName ?? "").toString().trim();
   const notes = (body?.notes ?? "").toString().trim();
 
-  if (!packageType) return NextResponse.json({ error: "Missing packageType" }, { status: 400 });
   if (!email || !isValidEmail(email)) return NextResponse.json({ error: "Valid email is required" }, { status: 400 });
-  if (!productName) return NextResponse.json({ error: "Missing productName" }, { status: 400 });
+  if (items.length === 0) return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
 
-  const [pricing, codes] = await Promise.all([getPricing(), getDiscountCodes()]);
-  const promo = discountCode ? codes.find((c) => normalizeDiscountCode(c.code) === discountCode && c.active) : null;
-  const totals = computeOrderTotals({ pricing, packageType, cart, lifestyleIncluded, promo });
+  // Calculate total from items
+  const total = items.reduce((sum: number, item: any) => sum + (item.price || 0), 0);
+
+  // Convert items to cart format for order creation
+  const cart: OrderCartItem[] = items.map((item: any) => ({
+    packageType: item.packageType || "ecommerce",
+    photoStyle: item.photoStyle,
+    selectedAngles: item.selectedAngles || [],
+    price: item.price || 0
+  }));
+
+  const packageType = items[0]?.packageType || "ecommerce";
+  const lifestyleIncluded = items.some((item: any) => item.packageType === "lifestyle");
 
   // Create a pending_payment order before redirecting to Stripe
+  const [pricing, codes] = await Promise.all([getPricing(), getDiscountCodes()]);
+  const totals = computeOrderTotals({
+    pricing,
+    packageType: packageType as PackageType,
+    cart,
+    lifestyleIncluded,
+    promo: null
+  });
+
   const order = await createOrder({
     userId: null,
     email,
     name: name || undefined,
     phone: phone || undefined,
     company: company || undefined,
-    productName,
+    productName: productName || "Product Photography",
     notes: notes || undefined,
-    packageType,
+    packageType: packageType as PackageType,
     cart,
     lifestyleIncluded,
     totals,
     status: "pending_payment",
-    discountCode: promo?.code,
+    discountCode: undefined,
     payment: { provider: "stripe", status: "created" },
   });
 
   const origin = getOriginFromRequest(req);
   const successUrl = `${origin}/order/success?session_id={CHECKOUT_SESSION_ID}`;
-  const cancelUrl = `${origin}/order?cancelled=1`;
+  const cancelUrl = `${origin}/cart`;
 
-  const amountCents = Math.max(0, Math.round(totals.total * 100));
+  const amountCents = Math.max(0, Math.round(total * 100));
 
   const params: Record<string, string> = {
     mode: "payment",
@@ -91,8 +105,8 @@ export async function POST(req: Request) {
     "metadata[orderId]": order.id,
     "metadata[orderNumber]": order.trackingNumber,
     "line_items[0][price_data][currency]": "usd",
-    "line_items[0][price_data][product_data][name]": "Rush Photo Order",
-    "line_items[0][price_data][product_data][description]": `Product: ${productName}`,
+    "line_items[0][price_data][product_data][name]": `Product Photography - ${productName || 'Order'}`,
+    "line_items[0][price_data][product_data][description]": `${items.length} photo style${items.length > 1 ? 's' : ''}`,
     "line_items[0][price_data][unit_amount]": String(amountCents),
     "line_items[0][quantity]": "1",
   };

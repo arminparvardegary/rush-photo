@@ -25,17 +25,43 @@ export default function ContactPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: hasCartItems ? `Order Inquiry - Cart Total: $${cartTotal}` : "General Inquiry",
+          message: hasCartItems
+            ? `${formData.message}\n\n[Cart Items: ${items.length} | Total: $${cartTotal}]`
+            : formData.message,
+        }),
+      });
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+      if (!response.ok) {
+        throw new Error("Failed to send message");
+      }
 
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setFormData({ name: "", email: "", phone: "", message: "" });
-      setIsSubmitted(false);
-    }, 3000);
+      setIsSubmitted(true);
+
+      // Reset form after 3 seconds
+      setTimeout(() => {
+        setFormData({ name: "", email: "", phone: "", message: "" });
+        setIsSubmitted(false);
+      }, 3000);
+    } catch (error) {
+      console.error("Contact form error:", error);
+      // Better error handling with user-friendly message
+      const errorMessage = error instanceof Error ? error.message : "Failed to send message. Please try again.";
+      if (typeof window !== 'undefined') {
+        // You could replace this with a toast notification
+        alert(errorMessage);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
