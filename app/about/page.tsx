@@ -16,7 +16,7 @@ export default function AboutPage() {
 
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md border-b border-rush-border sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-6xl 3xl:max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img src="/rushlogo.png" alt="Rush" className="h-6 sm:h-7 w-auto object-contain" />
             <span className="font-bold text-xl sm:text-2xl text-rush-dark">photos</span>
@@ -27,7 +27,7 @@ export default function AboutPage() {
 
       {/* Hero */}
       <section className="py-20 sm:py-32 relative z-10">
-        <div className="max-w-4xl mx-auto px-6 text-center">
+        <div className="max-w-4xl 3xl:max-w-5xl mx-auto px-6 text-center">
           <p className="text-xs font-black text-[#E63946] uppercase tracking-[0.2em] mb-4">Born in the Studio</p>
           <h1 className="text-5xl sm:text-7xl font-black text-rush-dark mb-6 leading-[1.1]">
             We Make Products Look <span className="text-[#E63946]">Irresistible.</span>
@@ -40,7 +40,7 @@ export default function AboutPage() {
 
       {/* Stats */}
       <section className="py-16 bg-white border-y border-rush-border relative z-10">
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-6xl 3xl:max-w-[1600px] mx-auto px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
             {[
               { value: "500+", label: "Happy Brands" },
@@ -60,7 +60,7 @@ export default function AboutPage() {
 
       {/* What We Do */}
       <section className="py-24 relative z-10 px-6">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl 3xl:max-w-[1600px] mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-black text-rush-dark mb-4">Crafting Visual Excellence</h2>
             <div className="w-20 h-1.5 bg-rush-border mx-auto rounded-full" />
@@ -97,7 +97,7 @@ export default function AboutPage() {
 
       {/* How It Works */}
       <section className="py-24 bg-rush-dark relative z-10 px-6">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl 3xl:max-w-[1600px] mx-auto">
           <h2 className="text-3xl sm:text-4xl font-black text-white text-center mb-16">The Rush Workflow</h2>
           <div className="grid md:grid-cols-4 gap-6">
             {[
@@ -120,7 +120,7 @@ export default function AboutPage() {
 
       {/* Contact Information */}
       <section className="py-24 relative z-10 px-6">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl 3xl:max-w-5xl mx-auto">
           <div className="bg-white rounded-[3rem] p-8 sm:p-16 border border-rush-border shadow-2xl shadow-black/5 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#E63946]/5 rounded-full -mr-32 -mt-32 blur-[60px]" />
 

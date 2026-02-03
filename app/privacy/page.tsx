@@ -15,7 +15,7 @@ export default function PrivacyPage() {
 
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md border-b border-rush-border sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-4xl 3xl:max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img src="/rushlogo.png" alt="Rush" className="h-6 sm:h-7 w-auto object-contain" />
             <span className="font-bold text-xl sm:text-2xl text-rush-dark">photos</span>
@@ -24,7 +24,7 @@ export default function PrivacyPage() {
         </div>
       </header>
 
-      <div className="max-w-3xl mx-auto px-6 py-16 relative z-10">
+      <div className="max-w-3xl 3xl:max-w-4xl mx-auto px-6 py-16 relative z-10">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-rush-gray hover:text-rush-dark font-bold transition-colors text-sm mb-12 group"

@@ -89,7 +89,7 @@ export default function LoginPage() {
       <ModalComponent />
       <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Left Side: Product Photography Showcase */}
-      <div className="relative lg:w-1/2 3xl:w-[45%] h-64 lg:h-screen overflow-hidden bg-gray-900">
+      <div className="relative lg:w-1/2 3xl:w-[45%] h-64 lg:h-screen 3xl:min-h-screen overflow-hidden bg-gray-900">
         <AnimatePresence mode="wait">
           <motion.img
             key={currentImageIndex}

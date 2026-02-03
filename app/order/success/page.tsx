@@ -60,7 +60,7 @@ export default function OrderSuccessPage() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(45,212,191,0.1),transparent_50%)]" />
       <div className="absolute inset-0 bg-grid opacity-30" />
       
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 relative z-10">
+      <div className="max-w-3xl 3xl:max-w-4xl mx-auto px-4 sm:px-6 py-10 relative z-10">
         <Link href="/order" className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors">
           <ArrowLeft className="w-4 h-4" />
           Back to order

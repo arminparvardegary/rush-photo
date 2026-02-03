@@ -85,7 +85,7 @@ export default function CartPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <div className="max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
               <img src="/rushlogo.png" alt="Rush" className="h-6 sm:h-7 w-auto object-contain" />
               <span className="font-bold text-xl sm:text-2xl text-gray-900">photos</span>
@@ -119,7 +119,7 @@ export default function CartPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <div className="max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img src="/rushlogo.png" alt="Rush" className="h-6 sm:h-7 w-auto object-contain" />
             <span className="font-bold text-xl sm:text-2xl text-gray-900">photos</span>
@@ -133,10 +133,10 @@ export default function CartPage() {
 
       {/* Main Content */}
       <div className="flex-1 py-8 sm:py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mb-6">Shopping Cart</h1>
+        <div className="max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 sm:px-6">
+          <h1 className="text-2xl sm:text-3xl 3xl:text-4xl font-black text-gray-900 mb-6">Shopping Cart</h1>
 
-          <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
+          <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 3xl:gap-10">
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
               <AnimatePresence mode="popLayout">

@@ -79,7 +79,7 @@ export default function ContactPage() {
       <div className="min-h-screen bg-rush-light">
       {/* Header */}
       <header className="bg-white border-b border-rush-border sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img src="/rushlogo.png" alt="Rush" className="h-6 sm:h-7 w-auto object-contain" />
             <span className="font-bold text-xl sm:text-2xl">photos</span>
@@ -91,7 +91,7 @@ export default function ContactPage() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 py-12">
         {/* Cart Summary Banner */}
         {hasCartItems && (
           <motion.div

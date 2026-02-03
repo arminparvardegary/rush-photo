@@ -108,7 +108,7 @@ export default function ProcessPage() {
         <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-[#E63946]/5 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gray-100 rounded-full blur-[80px] pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        <div className="max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 sm:px-6 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -149,7 +149,7 @@ export default function ProcessPage() {
 
       {/* Timeline Steps Section */}
       <section className="py-16 sm:py-24">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="max-w-6xl 3xl:max-w-[1400px] mx-auto px-4 sm:px-6">
           <div className="relative">
             {/* Vertical Line */}
             <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-[#E63946] via-gray-200 to-gray-200" />
@@ -222,7 +222,7 @@ export default function ProcessPage() {
 
       {/* Benefits Section */}
       <section className="py-16 sm:py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -260,7 +260,7 @@ export default function ProcessPage() {
 
       {/* Testimonial/Trust Section */}
       <section className="py-16 sm:py-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        <div className="max-w-4xl 3xl:max-w-5xl mx-auto px-4 sm:px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -289,7 +289,7 @@ export default function ProcessPage() {
 
       {/* CTA Section */}
       <section className="py-16 sm:py-24 bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
