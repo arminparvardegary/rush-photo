@@ -113,7 +113,9 @@ export async function POST(req: Request) {
     success_url: successUrl,
     cancel_url: cancelUrl,
     customer_email: email,
-    "automatic_payment_methods[enabled]": "true",
+    // Use payment_method_types for broader compatibility
+    "payment_method_types[0]": "card",
+    "payment_method_types[1]": "link",
     "metadata[orderId]": order.id,
     "metadata[orderNumber]": order.trackingNumber,
     "line_items[0][price_data][currency]": "usd",
