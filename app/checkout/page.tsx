@@ -385,7 +385,7 @@ export default function CheckoutPage() {
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Product Name
+                          Product Name <span className="text-[#E63946]">*</span>
                         </label>
                         <input
                           type="text"
@@ -393,12 +393,14 @@ export default function CheckoutPage() {
                           onChange={(e) => updateFormData("productName", e.target.value)}
                           className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#E63946] focus:outline-none transition-colors"
                           placeholder="E.g. Wireless Headphones"
+                          required
                         />
+                        <p className="text-xs text-gray-500 mt-1">What product will you be sending for photography?</p>
                       </div>
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Order Notes (Optional)
+                          Order Notes <span className="text-gray-400">(Optional)</span>
                         </label>
                         <textarea
                           value={formData.notes}
@@ -438,49 +440,54 @@ export default function CheckoutPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        First Name
+                        First Name <span className="text-[#E63946]">*</span>
                       </label>
                       <input
                         type="text"
                         value={formData.firstName}
                         onChange={(e) => updateFormData("firstName", e.target.value)}
                         className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#E63946] focus:outline-none transition-colors"
+                        required
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Last Name
+                        Last Name <span className="text-[#E63946]">*</span>
                       </label>
                       <input
                         type="text"
                         value={formData.lastName}
                         onChange={(e) => updateFormData("lastName", e.target.value)}
                         className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#E63946] focus:outline-none transition-colors"
+                        required
                       />
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Address
+                      Address <span className="text-[#E63946]">*</span>
                     </label>
                     <input
                       type="text"
                       value={formData.address}
                       onChange={(e) => updateFormData("address", e.target.value)}
                       className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#E63946] focus:outline-none transition-colors"
+                      placeholder="Street address"
+                      required
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone (Optional)
+                      Phone <span className="text-gray-400">(Optional)</span>
                     </label>
                     <input
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => updateFormData("phone", e.target.value)}
                       className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#E63946] focus:outline-none transition-colors"
+                      placeholder="+1 (555) 000-0000"
                     />
                   </div>
                 </div>
@@ -516,16 +523,56 @@ export default function CheckoutPage() {
                   <h2 className="text-xl font-bold text-gray-900">Payment</h2>
                 </div>
 
-                <div className="bg-gray-50 rounded-xl p-6 border border-gray-200 mb-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center border border-gray-200">
-                      <CreditCard className="w-6 h-6 text-gray-600" />
+                <div className="space-y-4 mb-6">
+                  {/* Payment Options */}
+                  <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-5 border border-purple-100">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
+                          <path d="M3 8.5L12 3L21 8.5V15.5L12 21L3 15.5V8.5Z" stroke="#635BFF" strokeWidth="2"/>
+                          <path d="M12 12L21 8.5" stroke="#635BFF" strokeWidth="2"/>
+                          <path d="M12 12L3 8.5" stroke="#635BFF" strokeWidth="2"/>
+                          <path d="M12 12V21" stroke="#635BFF" strokeWidth="2"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-bold text-gray-900">Stripe Secure Checkout</p>
+                        <p className="text-xs text-gray-500">Multiple payment options available</p>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="font-bold text-gray-900 mb-1">Secure Credit Card</p>
-                      <p className="text-sm text-gray-500">
-                        You will be redirected to Stripe for safe payment.
-                      </p>
+                    <div className="flex flex-wrap gap-2">
+                      <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-lg text-xs font-medium text-gray-700 shadow-sm">
+                        <CreditCard className="w-3.5 h-3.5" />
+                        Credit Card
+                      </div>
+                      <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-lg text-xs font-medium text-gray-700 shadow-sm">
+                        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none">
+                          <rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" strokeWidth="2"/>
+                          <path d="M7 15H10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                        </svg>
+                        Stripe Link
+                      </div>
+                      <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-lg text-xs font-medium text-gray-700 shadow-sm">
+                        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                        </svg>
+                        Apple Pay
+                      </div>
+                      <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-lg text-xs font-medium text-gray-700 shadow-sm">
+                        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12.545 10.239v3.821h5.445c-.712 2.315-2.647 3.972-5.445 3.972a6.033 6.033 0 110-12.064c1.498 0 2.866.549 3.921 1.453l2.814-2.814A9.969 9.969 0 0012.545 2C7.021 2 2.543 6.477 2.543 12s4.478 10 10.002 10c8.396 0 10.249-7.85 9.426-11.748l-9.426-.013z"/>
+                        </svg>
+                        Google Pay
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Security Badge */}
+                  <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-100 rounded-xl">
+                    <Shield className="w-5 h-5 text-green-600" />
+                    <div>
+                      <p className="text-sm font-medium text-green-800">Secure & Encrypted</p>
+                      <p className="text-xs text-green-600">Your payment info is protected with 256-bit SSL encryption</p>
                     </div>
                   </div>
                 </div>

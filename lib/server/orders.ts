@@ -10,8 +10,12 @@ export type Angle = string;
 export type OrderStatus = "pending" | "pending_payment" | "paid" | "processing" | "completed" | "shipped" | "payment_failed";
 
 export interface OrderCartItem {
-  style: EcommerceStyle;
-  angles: Angle[];
+  style?: EcommerceStyle;
+  angles?: Angle[];
+  packageType?: string;
+  photoStyle?: string;
+  selectedAngles?: string[];
+  price?: number;
 }
 
 export interface OrderTotals {
@@ -128,9 +132,15 @@ export function computeOrderTotals(input: {
 
   let itemsSubtotal = 0;
   for (const item of cart) {
-    const style = pricing.ecommerce.styles.find((s) => s.id === item.style);
-    const pricePerAngle = style?.pricePerAngle || pricing.ecommerce.perAngle;
-    itemsSubtotal += item.angles.length * pricePerAngle;
+    // Support both old format (style, angles) and new format (photoStyle, selectedAngles, price)
+    if (item.price) {
+      itemsSubtotal += item.price;
+    } else {
+      const style = pricing.ecommerce.styles.find((s) => s.id === (item.style || item.photoStyle));
+      const pricePerAngle = style?.pricePerAngle || pricing.ecommerce.perAngle;
+      const angleCount = item.angles?.length || item.selectedAngles?.length || 0;
+      itemsSubtotal += angleCount * pricePerAngle;
+    }
   }
   if (lifestyleIncluded) {
     itemsSubtotal += pricing.lifestyle.flatRate;

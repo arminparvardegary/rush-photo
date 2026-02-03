@@ -68,7 +68,7 @@ export async function PATCH(
           orderNumber: updatedOrder.trackingNumber,
           productName: updatedOrder.productName,
           deliveryUrl: updatedOrder.deliveryUrl || body.deliveryUrl,
-          photoCount: updatedOrder.cart.reduce((acc, item) => acc + item.angles.length, 0)
+          photoCount: updatedOrder.cart.reduce((acc, item) => acc + (item.angles?.length || item.selectedAngles?.length || 0), 0)
         });
 
         await sendEmail({

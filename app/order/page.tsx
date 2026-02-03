@@ -783,13 +783,14 @@ export default function OrderPage() {
                       // Guest Checkout - Email + Sign In Button
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-sm text-gray-600 mb-2">Email</label>
+                          <label className="block text-sm text-gray-600 mb-2">Email <span className="text-[#E63946]">*</span></label>
                           <input
                             type="email"
                             value={order.formData.email}
                             onChange={(e) => updateFormData('email', e.target.value)}
                             className="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-[#E63946] transition-colors hover:border-gray-300"
                             placeholder="your@email.com"
+                            required
                           />
                           {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                         </div>
@@ -826,18 +827,20 @@ export default function OrderPage() {
                     {/* Product Info - Always Show */}
                     <div className="space-y-4 pt-4 border-t border-gray-200">
                       <div>
-                        <label className="block text-sm text-gray-600 mb-2">Product Name</label>
+                        <label className="block text-sm text-gray-600 mb-2">Product Name <span className="text-[#E63946]">*</span></label>
                         <input
                           type="text"
                           value={order.formData.productName}
                           onChange={(e) => updateFormData('productName', e.target.value)}
                           className="w-full bg-white border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-[#E63946] transition-colors hover:border-gray-300"
                           placeholder="E.g. Wireless Headphones"
+                          required
                         />
+                        <p className="text-xs text-gray-500 mt-1">What product will you be sending for photography?</p>
                       </div>
 
                       <div>
-                        <label className="block text-sm text-gray-600 mb-2">Order Notes (Optional)</label>
+                        <label className="block text-sm text-gray-600 mb-2">Order Notes <span className="text-gray-400">(Optional)</span></label>
                         <textarea
                           value={order.formData.notes}
                           onChange={(e) => updateFormData('notes', e.target.value)}
@@ -863,20 +866,20 @@ export default function OrderPage() {
                     <h2 className="text-3xl font-black">Shipping Details</h2>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5 col-span-1">
-                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">First Name</label>
-                        <input type="text" value={order.formData.firstName} onChange={(e) => updateFormData('firstName', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" />
+                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">First Name <span className="text-[#E63946]">*</span></label>
+                        <input type="text" value={order.formData.firstName} onChange={(e) => updateFormData('firstName', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" required />
                       </div>
                       <div className="space-y-1.5 col-span-1">
-                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Last Name</label>
-                        <input type="text" value={order.formData.lastName} onChange={(e) => updateFormData('lastName', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" />
+                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Last Name <span className="text-[#E63946]">*</span></label>
+                        <input type="text" value={order.formData.lastName} onChange={(e) => updateFormData('lastName', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" required />
                       </div>
                       <div className="space-y-1.5 col-span-2">
-                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Address</label>
-                        <input type="text" value={order.formData.address} onChange={(e) => updateFormData('address', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" />
+                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Address <span className="text-[#E63946]">*</span></label>
+                        <input type="text" value={order.formData.address} onChange={(e) => updateFormData('address', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" placeholder="Street address" required />
                       </div>
                       <div className="space-y-1.5 col-span-2">
-                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Phone (Optional)</label>
-                        <input type="tel" value={order.formData.phone} onChange={(e) => updateFormData('phone', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" />
+                        <label className="text-xs font-bold uppercase tracking-wider text-rush-gray">Phone <span className="text-gray-400 normal-case">(Optional)</span></label>
+                        <input type="tel" value={order.formData.phone} onChange={(e) => updateFormData('phone', e.target.value)} className="w-full p-4 rounded-xl border border-rush-border bg-white focus:border-[#E63946] outline-none font-medium" placeholder="+1 (555) 000-0000" />
                       </div>
                     </div>
                     <div className="flex gap-4">
@@ -889,12 +892,34 @@ export default function OrderPage() {
                 {checkoutStep === 'payment' && (
                   <div className="space-y-8">
                     <h2 className="text-3xl font-black">Complete Payment</h2>
-                    <div className="bg-white p-6 rounded-3xl border-2 border-rush-dark shadow-xl">
-                      <div className="flex items-start gap-4 mb-6">
-                        <div className="w-12 h-12 bg-rush-light rounded-2xl flex items-center justify-center"><CreditCard className="w-6 h-6 text-rush-dark" /></div>
+                    <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-3xl border border-purple-100 shadow-lg">
+                      <div className="flex items-start gap-4 mb-5">
+                        <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+                          <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 8.5L12 3L21 8.5V15.5L12 21L3 15.5V8.5Z" stroke="#635BFF" strokeWidth="2"/>
+                            <path d="M12 12L21 8.5" stroke="#635BFF" strokeWidth="2"/>
+                            <path d="M12 12L3 8.5" stroke="#635BFF" strokeWidth="2"/>
+                            <path d="M12 12V21" stroke="#635BFF" strokeWidth="2"/>
+                          </svg>
+                        </div>
                         <div className="flex-1">
-                          <p className="font-bold text-lg">Secure Credit Card</p>
-                          <p className="text-sm text-rush-gray font-medium">You will be redirected to Stripe for safe payment.</p>
+                          <p className="font-bold text-lg">Stripe Secure Checkout</p>
+                          <p className="text-sm text-gray-600">Multiple payment options available</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-lg text-xs font-medium text-gray-700 shadow-sm">
+                          <CreditCard className="w-3.5 h-3.5" />
+                          Credit Card
+                        </div>
+                        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-lg text-xs font-medium text-gray-700 shadow-sm">
+                          Stripe Link
+                        </div>
+                        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-lg text-xs font-medium text-gray-700 shadow-sm">
+                          Apple Pay
+                        </div>
+                        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-lg text-xs font-medium text-gray-700 shadow-sm">
+                          Google Pay
                         </div>
                       </div>
                       <button onClick={startStripeCheckout} disabled={isSubmitting} className="w-full bg-[#E63946] text-white py-4 rounded-2xl font-black text-lg flex items-center justify-center gap-3 shadow-lg shadow-[#E63946]/20">

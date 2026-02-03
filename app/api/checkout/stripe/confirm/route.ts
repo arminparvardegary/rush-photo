@@ -53,9 +53,9 @@ export async function GET(req: Request) {
   if (updated && order.email) {
     try {
       const cartItems = order.cart.map(item => ({
-        style: item.style.charAt(0).toUpperCase() + item.style.slice(1),
-        angles: item.angles,
-        price: item.angles.length * 25, // Default price, should calculate from pricing
+        style: (item.style || item.photoStyle || 'product').charAt(0).toUpperCase() + (item.style || item.photoStyle || 'product').slice(1),
+        angles: item.angles || item.selectedAngles || [],
+        price: item.price || (item.angles?.length || item.selectedAngles?.length || 1) * 25,
       }));
 
       const emailData = orderConfirmationEmail({

@@ -29,25 +29,37 @@ function stripeForm(params: Record<string, string>): string {
 }
 
 export async function POST(req: Request) {
-  const stripeKey = getStripeSecretKey();
-  if (!stripeKey) {
-    return NextResponse.json(
-      { error: "Payments are not configured. Set STRIPE_SECRET_KEY to enable card payments." },
-      { status: 501 }
-    );
-  }
+  try {
+    const stripeKey = getStripeSecretKey();
+    if (!stripeKey) {
+      return NextResponse.json(
+        { error: "Payments are not configured. Set STRIPE_SECRET_KEY to enable card payments." },
+        { status: 501 }
+      );
+    }
 
-  const body = await req.json().catch(() => null);
-  const items = body?.items ?? [];
-  const email = (body?.email ?? "").toString().trim();
-  const name = (body?.name ?? "").toString().trim();
-  const phone = (body?.phone ?? "").toString().trim();
-  const company = (body?.company ?? "").toString().trim();
-  const productName = (body?.productName ?? "").toString().trim();
-  const notes = (body?.notes ?? "").toString().trim();
+    const body = await req.json().catch(() => null);
 
-  if (!email || !isValidEmail(email)) return NextResponse.json({ error: "Valid email is required" }, { status: 400 });
-  if (items.length === 0) return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
+    if (!body) {
+      return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    }
+
+    const items = body?.items ?? [];
+    const email = (body?.email ?? "").toString().trim();
+    const name = (body?.name ?? "").toString().trim();
+    const phone = (body?.phone ?? "").toString().trim();
+    const company = (body?.company ?? "").toString().trim();
+    const productName = (body?.productName ?? "").toString().trim();
+    const notes = (body?.notes ?? "").toString().trim();
+
+    console.log("Checkout request received:", { email, itemCount: items.length, productName });
+
+    if (!email || !isValidEmail(email)) {
+      return NextResponse.json({ error: "Valid email is required" }, { status: 400 });
+    }
+    if (items.length === 0) {
+      return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
+    }
 
   // Calculate total from items
   const total = items.reduce((sum: number, item: any) => sum + (item.price || 0), 0);
@@ -159,6 +171,14 @@ export async function POST(req: Request) {
 
   console.log("Stripe checkout session created successfully:", { sessionId, url });
   return NextResponse.json({ url });
+
+  } catch (error: any) {
+    console.error("Checkout error:", error);
+    return NextResponse.json(
+      { error: error.message || "An unexpected error occurred during checkout" },
+      { status: 500 }
+    );
+  }
 }
 
 
