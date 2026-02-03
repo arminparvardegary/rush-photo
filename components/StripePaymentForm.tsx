@@ -8,11 +8,11 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { Loader2, Lock, Shield, CheckCircle } from "lucide-react";
+import { Loader2, Lock, Shield, CheckCircle, AlertTriangle } from "lucide-react";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
-);
+// Only load Stripe if key is available
+const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 
 interface PaymentFormProps {
   clientSecret: string;
@@ -243,6 +243,27 @@ export default function StripePaymentForm({
       createPaymentIntent();
     }
   }, [items, email, name, phone, company, productName, notes]);
+
+  // Check if Stripe is configured
+  if (!stripePromise) {
+    return (
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
+        <AlertTriangle className="w-10 h-10 text-amber-500 mx-auto mb-3" />
+        <p className="text-amber-800 font-medium mb-2">Payment System Not Configured</p>
+        <p className="text-amber-600 text-sm mb-4">
+          The payment system is currently unavailable. Please contact support or try again later.
+        </p>
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="px-6 py-2 bg-amber-600 text-white rounded-lg font-medium hover:bg-amber-700 transition-colors"
+          >
+            Go Back
+          </button>
+        )}
+      </div>
+    );
+  }
 
   if (loading) {
     return (

@@ -111,7 +111,7 @@ export default function LoginPage() {
           <Link href="/" className="flex items-center gap-2 mb-6">
             <div className="relative w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg">
               <img
-                src="/rushlogo.PNG"
+                src="/rushlogo.png"
                 alt="Rush"
                 className="w-10 h-10 object-contain"
               />
