@@ -111,6 +111,14 @@ export async function POST(req: Request) {
     "line_items[0][quantity]": "1",
   };
 
+  console.log("Creating Stripe checkout session with params:", {
+    email,
+    productName,
+    itemCount: items.length,
+    amountCents,
+    orderId: order.id,
+  });
+
   const stripeRes = await fetch("https://api.stripe.com/v1/checkout/sessions", {
     method: "POST",
     headers: {
@@ -121,7 +129,12 @@ export async function POST(req: Request) {
   });
 
   const stripeJson = await stripeRes.json().catch(() => null);
+
   if (!stripeRes.ok) {
+    console.error("Stripe API error:", {
+      status: stripeRes.status,
+      error: stripeJson?.error,
+    });
     await updateOrder(order.id, { payment: { provider: "stripe", status: "failed" } });
     return NextResponse.json(
       { error: stripeJson?.error?.message || "Stripe error creating session" },
@@ -131,10 +144,20 @@ export async function POST(req: Request) {
 
   const sessionId = stripeJson?.id as string | undefined;
   const url = stripeJson?.url as string | undefined;
+
+  if (!url) {
+    console.error("Stripe session created but no URL returned:", stripeJson);
+    return NextResponse.json(
+      { error: "Payment session created but redirect URL missing" },
+      { status: 500 }
+    );
+  }
+
   if (sessionId) {
     await updateOrder(order.id, { payment: { provider: "stripe", status: "created", sessionId } });
   }
 
+  console.log("Stripe checkout session created successfully:", { sessionId, url });
   return NextResponse.json({ url });
 }
 

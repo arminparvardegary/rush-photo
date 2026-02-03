@@ -176,11 +176,31 @@ export default function CheckoutPage() {
           notes: formData.notes,
         }),
       });
+
+      // Check if response has content
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Invalid response from payment server");
+      }
+
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed");
+
+      if (!res.ok) {
+        throw new Error(data.error || "Payment processing failed");
+      }
+
+      if (!data.url) {
+        throw new Error("No payment URL received");
+      }
+
       window.location.href = data.url;
     } catch (e: any) {
       console.error("Checkout error:", e);
+      showModal({
+        title: "Checkout Failed",
+        message: e.message || "Unable to process payment. Please try again or contact support.",
+        type: "error",
+      });
       setIsSubmitting(false);
     }
   };
