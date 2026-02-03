@@ -114,22 +114,10 @@ function CheckoutForm({
 
         <PaymentElement
           options={{
-            layout: "accordion",
-            defaultCollapsed: false,
-            radios: true,
-            spacedAccordionItems: true,
-            paymentMethodOrder: ["card", "apple_pay", "google_pay", "link", "cashapp", "us_bank_account"],
+            layout: "tabs",
             wallets: {
               applePay: "auto",
               googlePay: "auto",
-            },
-            fields: {
-              billingDetails: {
-                address: {
-                  country: "auto",
-                  postalCode: "auto",
-                },
-              },
             },
           }}
         />
