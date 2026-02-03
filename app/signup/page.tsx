@@ -101,7 +101,9 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
+    <>
+      <ModalComponent />
+      <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Left Side: Product Photography Showcase */}
       <div className="relative lg:w-1/2 3xl:w-[45%] h-64 lg:h-screen overflow-hidden bg-gray-900">
         <AnimatePresence mode="wait">
@@ -282,5 +284,6 @@ export default function SignupPage() {
         </motion.div>
       </div>
     </div>
+    </>
   );
 }

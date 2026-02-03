@@ -74,7 +74,9 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-rush-light">
+    <>
+      <ModalComponent />
+      <div className="min-h-screen bg-rush-light">
       {/* Header */}
       <header className="bg-white border-b border-rush-border sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -306,6 +308,7 @@ export default function ContactPage() {
         </div>
       </div>
       <Footer />
-    </div>
+      </div>
+    </>
   );
 }
