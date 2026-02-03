@@ -8,6 +8,7 @@ import { sendEmail } from "@/lib/resend";
 import { deliveryNotificationEmail } from "@/lib/email-templates";
 import ConfirmModal from "@/components/ConfirmModal";
 import Toast from "@/components/Toast";
+import PaymentSection from "@/components/admin/PaymentSection";
 
 interface OrderDetail {
     id: string;
@@ -254,6 +255,9 @@ export default function OrderDetailPage() {
                             )}
                         </div>
                     </div>
+
+                    {/* Payment & Refunds Section */}
+                    <PaymentSection orderId={params.id as string} orderNumber={order.trackingNumber} />
                 </div>
             </div>
 
