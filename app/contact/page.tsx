@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Send, CheckCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useCartStore } from "@/lib/store";
 import Footer from "@/components/Footer";
 import { useModal } from "@/hooks/useModal";
@@ -81,12 +82,19 @@ export default function ContactPage() {
       <header className="bg-white border-b border-rush-border sticky top-0 z-50">
         <div className="max-w-7xl 3xl:max-w-[1600px] mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/rushlogo.png" alt="Rush" className="h-6 sm:h-7 w-auto object-contain" />
+            <Image
+              src="/rushlogo.png"
+              alt="Rush"
+              width={100}
+              height={28}
+              className="h-7 sm:h-8 w-auto object-contain"
+              priority
+            />
             <span className="font-bold text-xl sm:text-2xl">photos</span>
           </Link>
-          <Link href="/cart" className="text-rush-gray hover:text-rush-dark font-medium flex items-center gap-2">
+          <Link href="/" className="text-rush-gray hover:text-rush-dark font-medium flex items-center gap-2">
             <ArrowLeft className="w-4 h-4" />
-            Back to Cart
+            Back to Home
           </Link>
         </div>
       </header>

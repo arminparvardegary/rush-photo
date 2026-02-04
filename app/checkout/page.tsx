@@ -11,7 +11,6 @@ import { useModal } from "@/hooks/useModal";
 import {
   ArrowLeft,
   Mail,
-  Package as PackageIcon,
   CreditCard,
   Lock,
   Truck,
@@ -23,7 +22,7 @@ import {
 } from "lucide-react";
 import StripePaymentForm from "@/components/StripePaymentForm";
 
-type CheckoutStep = "information" | "shipping" | "payment";
+type CheckoutStep = "information" | "payment";
 
 export default function CheckoutPage() {
   useCartSync();
@@ -131,33 +130,12 @@ export default function CheckoutPage() {
         return;
       }
       setCompletedSteps(prev => new Set(prev).add("information"));
-      setStep("shipping");
-    } else if (step === "shipping") {
-      // Validate shipping information
-      if (!formData.firstName.trim() || !formData.lastName.trim()) {
-        showModal({
-          title: "Name Required",
-          message: "Please enter your full name for shipping.",
-          type: "warning",
-        });
-        return;
-      }
-      if (!formData.address.trim()) {
-        showModal({
-          title: "Address Required",
-          message: "Please enter your shipping address to continue.",
-          type: "warning",
-        });
-        return;
-      }
-      setCompletedSteps(prev => new Set(prev).add("shipping"));
       setStep("payment");
     }
   };
 
   const handleBack = () => {
-    if (step === "shipping") setStep("information");
-    else if (step === "payment") setStep("shipping");
+    if (step === "payment") setStep("information");
   };
 
   if (isLoading) {
@@ -174,7 +152,6 @@ export default function CheckoutPage() {
 
   const steps = [
     { id: "information", label: "Information", icon: Mail },
-    { id: "shipping", label: "Shipping", icon: PackageIcon },
     { id: "payment", label: "Payment", icon: CreditCard },
   ];
 
@@ -355,6 +332,19 @@ export default function CheckoutPage() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Phone Number <span className="text-gray-400">(Optional)</span>
+                        </label>
+                        <input
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) => updateFormData("phone", e.target.value)}
+                          className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#E63946] focus:outline-none transition-colors"
+                          placeholder="+1 (555) 000-0000"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
                           Order Notes <span className="text-gray-400">(Optional)</span>
                         </label>
                         <textarea
@@ -370,97 +360,10 @@ export default function CheckoutPage() {
                       onClick={handleContinue}
                       className="w-full bg-[#E63946] hover:bg-[#D62839] text-white py-4 rounded-xl font-bold transition-colors"
                     >
-                      Continue to Shipping
+                      Continue to Payment
                     </button>
                   </div>
                 )}
-              </motion.div>
-            )}
-
-            {/* Shipping Step */}
-            {step === "shipping" && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-2xl border border-rush-border p-6 sm:p-8"
-              >
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 bg-[#E63946]/10 rounded-xl flex items-center justify-center">
-                    <PackageIcon className="w-5 h-5 text-[#E63946]" />
-                  </div>
-                  <h2 className="text-xl font-bold text-gray-900">Shipping Details</h2>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        First Name <span className="text-[#E63946]">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.firstName}
-                        onChange={(e) => updateFormData("firstName", e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#E63946] focus:outline-none transition-colors"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Last Name <span className="text-[#E63946]">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.lastName}
-                        onChange={(e) => updateFormData("lastName", e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#E63946] focus:outline-none transition-colors"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Address <span className="text-[#E63946]">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.address}
-                      onChange={(e) => updateFormData("address", e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#E63946] focus:outline-none transition-colors"
-                      placeholder="Street address"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone <span className="text-gray-400">(Optional)</span>
-                    </label>
-                    <input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => updateFormData("phone", e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#E63946] focus:outline-none transition-colors"
-                      placeholder="+1 (555) 000-0000"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex gap-4 mt-8">
-                  <button
-                    onClick={handleBack}
-                    className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-900 py-4 rounded-xl font-bold transition-colors"
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={handleContinue}
-                    className="flex-[2] bg-[#E63946] hover:bg-[#D62839] text-white py-4 rounded-xl font-bold transition-colors"
-                  >
-                    Continue to Payment
-                  </button>
-                </div>
               </motion.div>
             )}
 
@@ -532,14 +435,29 @@ export default function CheckoutPage() {
                     return "E-Commerce";
                   };
 
-                  // Get subtitle
+                  // Get subtitle with angle names
                   const getSubtitle = () => {
                     if (item.selectedAngles && item.selectedAngles.length > 0) {
-                      return `${item.selectedAngles.length} angles`;
+                      return `${item.selectedAngles.length} angle${item.selectedAngles.length > 1 ? 's' : ''}`;
                     }
                     if (item.packageType === "lifestyle") return "Styled photography";
                     if (item.packageType === "fullpackage") return "Complete package";
                     return "";
+                  };
+
+                  // Get angle names
+                  const getAngleNames = () => {
+                    if (!item.selectedAngles || item.selectedAngles.length === 0) return null;
+                    const angleLabels: Record<string, string> = {
+                      front: "Front",
+                      back: "Back",
+                      left: "Left",
+                      right: "Right",
+                      top: "Top",
+                      "45-left": "45° Left",
+                      "45-right": "45° Right",
+                    };
+                    return item.selectedAngles.map(a => angleLabels[a] || a).join(", ");
                   };
 
                   return (
@@ -557,6 +475,9 @@ export default function CheckoutPage() {
                         </p>
                         {getSubtitle() && (
                           <p className="text-xs text-gray-500">{getSubtitle()}</p>
+                        )}
+                        {getAngleNames() && (
+                          <p className="text-xs text-gray-400 mt-0.5 truncate">{getAngleNames()}</p>
                         )}
                       </div>
                       <p className="font-bold text-gray-900">${item.price}</p>
