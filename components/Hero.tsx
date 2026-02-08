@@ -112,11 +112,7 @@ export default function Hero() {
       </div>
 
       <div className="container relative z-10 text-center max-w-4xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
+        <div>
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 text-gray-600 text-sm font-medium mb-8">
             <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
@@ -170,7 +166,7 @@ export default function Hero() {
               <span>Free return shipping</span>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -1,10 +1,13 @@
+import dynamic from "next/dynamic";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import Portfolio from "@/components/Portfolio";
-import PackageSelection from "@/components/PackageSelection";
-import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 import GlobalEffects from "@/components/GlobalEffects";
+
+// Lazy load below-the-fold components
+const Portfolio = dynamic(() => import("@/components/Portfolio"), { ssr: true });
+const PackageSelection = dynamic(() => import("@/components/PackageSelection"), { ssr: true });
+const Testimonials = dynamic(() => import("@/components/Testimonials"), { ssr: true });
 
 export default function Home() {
   return (
