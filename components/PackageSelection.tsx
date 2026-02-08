@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Camera, Sparkles, Package, ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useState, useEffect } from "react";
 
 const PACKAGE_IMAGES = {
   ecommerce: "/images/portfolio/speakers.jpg",
@@ -11,47 +12,64 @@ const PACKAGE_IMAGES = {
   fullpackage: "/images/portfolio/pink-bottle.jpg",
 };
 
-const packages = [
-  {
-    id: "ecommerce",
-    title: "E-Commerce",
-    subtitle: "Studio Shots",
-    description: "Clean, consistent product shots on white background. Perfect for Amazon, Shopify, and marketplaces.",
-    price: "From $25",
-    unit: "per angle",
-    img: PACKAGE_IMAGES.ecommerce,
-    icon: Camera,
-    color: "#E63946",
-    features: ["3 styles available", "4 angles per style", "White background", "Fast turnaround"],
-  },
-  {
-    id: "lifestyle",
-    title: "Lifestyle",
-    subtitle: "Styled Scenes",
-    description: "Tabletop styled photography with props, creative direction, and custom concept designed for your brand.",
-    price: "$149",
-    unit: "flat rate",
-    img: PACKAGE_IMAGES.lifestyle,
-    icon: Sparkles,
-    color: "#D62839",
-    features: ["Custom concept", "Styled props", "Creative direction", "Client approval"],
-  },
-  {
-    id: "fullpackage",
-    title: "Full Package",
-    subtitle: "E-Commerce + Lifestyle",
-    description: "The complete solution. Get both studio e-commerce shots and lifestyle imagery at a bundled discount.",
-    price: "Save 10%",
-    unit: "on bundle",
-    img: PACKAGE_IMAGES.fullpackage,
-    icon: Package,
-    color: "#B91C1C",
-    badge: "Best Value",
-    features: ["All e-commerce styles", "Lifestyle session included", "10% bundle discount", "Priority delivery"],
-  },
-];
-
 export default function PackageSelection() {
+  const [prices, setPrices] = useState({ ecommerce: 25, lifestyle: 149, discount: 10 });
+
+  useEffect(() => {
+    fetch("/api/pricing", { cache: "no-store" })
+      .then(r => r.json())
+      .then(data => {
+        if (data?.pricing) {
+          setPrices({
+            ecommerce: data.pricing.ecommerce?.perAngle || 25,
+            lifestyle: data.pricing.lifestyle?.flatRate || 149,
+            discount: data.pricing.fullPackageDiscount || 10,
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const packages = [
+    {
+      id: "ecommerce",
+      title: "E-Commerce",
+      subtitle: "Studio Shots",
+      description: "Clean, consistent product shots on white background. Perfect for Amazon, Shopify, and marketplaces.",
+      price: `From $${prices.ecommerce}`,
+      unit: "per angle",
+      img: PACKAGE_IMAGES.ecommerce,
+      icon: Camera,
+      color: "#E63946",
+      features: ["3 styles available", "4 angles per style", "White background", "Fast turnaround"],
+    },
+    {
+      id: "lifestyle",
+      title: "Lifestyle",
+      subtitle: "Styled Scenes",
+      description: "Tabletop styled photography with props, creative direction, and custom concept designed for your brand.",
+      price: `$${prices.lifestyle}`,
+      unit: "flat rate",
+      img: PACKAGE_IMAGES.lifestyle,
+      icon: Sparkles,
+      color: "#D62839",
+      features: ["Custom concept", "Styled props", "Creative direction", "Client approval"],
+    },
+    {
+      id: "fullpackage",
+      title: "Full Package",
+      subtitle: "E-Commerce + Lifestyle",
+      description: "The complete solution. Get both studio e-commerce shots and lifestyle imagery at a bundled discount.",
+      price: `Save ${prices.discount}%`,
+      unit: "on bundle",
+      img: PACKAGE_IMAGES.fullpackage,
+      icon: Package,
+      color: "#B91C1C",
+      badge: "Best Value",
+      features: ["All e-commerce styles", "Lifestyle session included", `${prices.discount}% bundle discount`, "Priority delivery"],
+    },
+  ];
+
   return (
     <section id="packages" className="relative py-16 sm:py-24 md:py-32 bg-white overflow-hidden">
       {/* Background - Subtle */}
