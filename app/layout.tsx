@@ -396,6 +396,9 @@ export default function RootLayout({
   return (
     <html lang="en" dir="ltr" className={outfit.variable}>
       <head>
+        {/* Preload Critical Assets */}
+        <link rel="preload" as="image" href="/images/portfolio/sneaker.jpg" fetchPriority="high" />
+
         {/* Preconnect to important domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -403,6 +406,7 @@ export default function RootLayout({
 
         {/* DNS Prefetch */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        <link rel="dns-prefetch" href="https://js.stripe.com" />
 
         {/* JSON-LD Structured Data */}
         <script
