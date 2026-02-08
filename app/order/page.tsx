@@ -159,12 +159,22 @@ export default function OrderPage() {
         const data = await res.json();
         const pricing = data?.pricing;
         if (!pricing) return;
+        const perAngle = pricing.ecommerce?.perAngle || 25;
+        const flatRate = pricing.lifestyle?.flatRate || 149;
         setPRICES({
-          ecommerce: { perAngle: pricing.ecommerce?.perAngle || 25 },
-          lifestyle: { flatRate: pricing.lifestyle?.flatRate || 149 },
+          ecommerce: { perAngle },
+          lifestyle: { flatRate },
           fullPackageDiscount: (pricing.fullPackageDiscount || 10) / 100,
         });
-        if (pricing.ecommerce?.styles) setECOMMERCE_STYLES(pricing.ecommerce.styles);
+        // Sync styles with current perAngle
+        if (pricing.ecommerce?.styles) {
+          setECOMMERCE_STYLES(pricing.ecommerce.styles.map((s: any) => ({
+            ...s,
+            pricePerAngle: s.pricePerAngle || perAngle,
+          })));
+        } else {
+          setECOMMERCE_STYLES(prev => prev.map(s => ({ ...s, pricePerAngle: perAngle })));
+        }
         if (pricing.angles) setANGLES(pricing.angles);
       } catch (e) { console.error("Error loading pricing:", e); }
     };

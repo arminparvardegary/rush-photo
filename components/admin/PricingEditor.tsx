@@ -28,7 +28,14 @@ export default function PricingEditor({ initialPricing }: { initialPricing: Pric
     };
 
     const updateEcommerce = (field: keyof PricingSettings['ecommerce'], val: any) => {
-        setPricing(p => ({ ...p, ecommerce: { ...p.ecommerce, [field]: val } }));
+        setPricing(p => {
+            const updated = { ...p, ecommerce: { ...p.ecommerce, [field]: val } };
+            // Sync all styles' pricePerAngle when base perAngle changes
+            if (field === 'perAngle') {
+                updated.ecommerce.styles = p.ecommerce.styles.map(s => ({ ...s, pricePerAngle: Number(val) }));
+            }
+            return updated;
+        });
     };
 
     const updateStyle = (idx: number, field: keyof PricingStyle, val: any) => {
