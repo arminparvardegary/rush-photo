@@ -85,9 +85,11 @@ function mapOrder(row: any): OrderRecord {
 }
 
 export async function getAllOrders(): Promise<OrderRecord[]> {
+  // Exclude draft/pending_payment orders - only show real paid/active orders
   const { data, error } = await supabase
     .from("rush_orders")
     .select("*")
+    .not("status", "in", '("pending_payment","payment_failed")')
     .order("created_at", { ascending: false });
 
   if (error) {
