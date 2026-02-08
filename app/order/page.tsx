@@ -154,7 +154,7 @@ export default function OrderPage() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch("/api/pricing");
+        const res = await fetch("/api/pricing", { cache: "no-store" });
         if (!res.ok) return;
         const data = await res.json();
         const pricing = data?.pricing;
