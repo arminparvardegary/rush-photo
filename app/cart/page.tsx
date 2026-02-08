@@ -11,7 +11,6 @@ import ConfirmModal from "@/components/ConfirmModal";
 
 export const dynamic = "force-dynamic";
 
-const ASPECT_RATIO_OPTIONS = ["1:1", "4:5", "9:16", "16:9", "3:4", "Custom"];
 
 export default function CartPage() {
   useCartSync();
@@ -27,8 +26,6 @@ export default function CartPage() {
   const startEditing = (item: CartItem) => {
     setEditingItem(item);
     setEditForm({
-      skuCount: item.skuCount,
-      aspectRatios: [...item.aspectRatios],
       productNotes: item.productNotes,
     });
   };
@@ -40,28 +37,9 @@ export default function CartPage() {
 
   const saveEditing = async () => {
     if (!editingItem) return;
-
-    let basePrice = 29;
-    if (editingItem.packageType === "lifestyle") basePrice = 49;
-    if (editingItem.packageType === "fullpackage") basePrice = 99;
-
-    const newPrice = basePrice * (editForm.skuCount || editingItem.skuCount);
-
-    await updateItem(editingItem.id, {
-      ...editForm,
-      price: newPrice,
-    });
+    await updateItem(editingItem.id, { ...editForm });
     setEditingItem(null);
     setEditForm({});
-  };
-
-  const toggleAspectRatio = (ratio: string) => {
-    const current = editForm.aspectRatios || [];
-    if (current.includes(ratio)) {
-      setEditForm({ ...editForm, aspectRatios: current.filter(r => r !== ratio) });
-    } else {
-      setEditForm({ ...editForm, aspectRatios: [...current, ratio] });
-    }
   };
 
   const getPackageName = (packageType: string | null) => {
@@ -170,8 +148,9 @@ export default function CartPage() {
                               {item.photoStyle && (
                                 <p>Style: <span className="text-gray-700 capitalize">{item.photoStyle.replace("-", " ")}</span></p>
                               )}
-                              <p>SKUs: <span className="text-gray-700">{item.skuCount}</span></p>
-                              <p>Ratios: <span className="text-gray-700">{item.aspectRatios.join(", ")}</span></p>
+                              {item.selectedAngles && item.selectedAngles.length > 0 && (
+                                <p>Angles: <span className="text-gray-700">{item.selectedAngles.join(", ")}</span></p>
+                              )}
                             </div>
                             {item.productNotes && (
                               <p className="text-xs text-gray-400 mt-1 italic truncate max-w-[200px]">"{item.productNotes}"</p>
@@ -320,46 +299,6 @@ export default function CartPage() {
                     {editingItem.photoStyle && (
                       <p className="text-xs text-gray-500 capitalize">{editingItem.photoStyle.replace("-", " ")} Style</p>
                     )}
-                  </div>
-                </div>
-
-                {/* SKU Count */}
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Number of Products (SKUs)</label>
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => setEditForm({ ...editForm, skuCount: Math.max(1, (editForm.skuCount || 1) - 1) })}
-                      className="w-11 h-11 rounded-xl border border-gray-200 flex items-center justify-center text-xl font-bold hover:bg-gray-50 transition-colors"
-                    >
-                      -
-                    </button>
-                    <span className="text-xl font-bold w-16 text-center">{editForm.skuCount || 1}</span>
-                    <button
-                      onClick={() => setEditForm({ ...editForm, skuCount: (editForm.skuCount || 1) + 1 })}
-                      className="w-11 h-11 rounded-xl border border-gray-200 flex items-center justify-center text-xl font-bold hover:bg-gray-50 transition-colors"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-
-                {/* Aspect Ratios */}
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Aspect Ratios</label>
-                  <div className="flex flex-wrap gap-2">
-                    {ASPECT_RATIO_OPTIONS.map((ratio) => (
-                      <button
-                        key={ratio}
-                        onClick={() => toggleAspectRatio(ratio)}
-                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                          (editForm.aspectRatios || []).includes(ratio)
-                            ? "bg-[#E63946] text-white"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        }`}
-                      >
-                        {ratio}
-                      </button>
-                    ))}
                   </div>
                 </div>
 

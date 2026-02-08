@@ -120,11 +120,18 @@ export default function CheckoutPage() {
 
   const handleContinue = () => {
     if (step === "information") {
-      // Validate product name
       if (!formData.productName.trim()) {
         showModal({
           title: "Product Name Required",
           message: "Please enter a product name to continue with your order.",
+          type: "warning",
+        });
+        return;
+      }
+      if (!formData.phone.trim()) {
+        showModal({
+          title: "Phone Number Required",
+          message: "Please enter your phone number to continue.",
           type: "warning",
         });
         return;
@@ -332,7 +339,7 @@ export default function CheckoutPage() {
 
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Phone Number <span className="text-gray-400">(Optional)</span>
+                          Phone Number <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="tel"
@@ -340,6 +347,7 @@ export default function CheckoutPage() {
                           onChange={(e) => updateFormData("phone", e.target.value)}
                           className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#E63946] focus:outline-none transition-colors"
                           placeholder="+1 (555) 000-0000"
+                          required
                         />
                       </div>
 
