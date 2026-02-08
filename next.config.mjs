@@ -22,18 +22,6 @@ const nextConfig = {
   // Compression
   compress: true,
 
-  // Optimize package imports
-  modularizeImports: {
-    'lucide-react': {
-      transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
-    },
-  },
-
-  // Experimental optimizations
-  experimental: {
-    optimizePackageImports: ['framer-motion', 'lucide-react'],
-  },
-
   // Power optimizations
   poweredByHeader: false,
 
