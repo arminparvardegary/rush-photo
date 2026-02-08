@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight, Menu, User, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 interface UserInfo {
   id: string;
@@ -56,21 +57,9 @@ export default function Header() {
   }, []);
 
   const handleLogout = async () => {
-    try {
-      // Clear local state first
-      setUser(null);
-      setShowUserMenu(false);
-
-      // Call logout endpoint to clear cookies
-      await fetch("/api/auth/logout", { method: "POST" });
-
-      // Redirect to home page with a full reload to clear any cached state
-      window.location.href = "/";
-    } catch (error) {
-      console.error("Logout error:", error);
-      // Still redirect even if the logout call fails
-      window.location.href = "/";
-    }
+    setUser(null);
+    setShowUserMenu(false);
+    await signOut({ callbackUrl: "/", redirect: true });
   };
 
   return (
