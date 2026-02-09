@@ -16,10 +16,11 @@ interface UserInfo {
 }
 
 const NAV_LINKS = [
+  { name: "Services", href: "/services" },
+  { name: "Pricing", href: "/pricing" },
   { name: "Portfolio", href: "/#portfolio" },
   { name: "Process", href: "/process" },
-  { name: "Pricing", href: "/#packages" },
-  { name: "FAQ", href: "/faq" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export default function Header() {

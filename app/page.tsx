@@ -3,6 +3,10 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import GlobalEffects from "@/components/GlobalEffects";
+import WhyChooseUs from "@/components/WhyChooseUs";
+import GrowthSeparator from "@/components/GrowthSeparator";
+import ConsultationFlow from "@/components/ConsultationFlow";
+import StatsChart from "@/components/StatsChart";
 
 // Lazy load below-the-fold components
 const Portfolio = dynamic(() => import("@/components/Portfolio"), { ssr: true });
@@ -16,6 +20,10 @@ export default function Home() {
       <Header />
       <Hero />
       <Portfolio />
+      <WhyChooseUs />
+      <StatsChart />
+      <ConsultationFlow />
+      <GrowthSeparator />
       <PackageSelection />
       <Testimonials />
       <Footer />

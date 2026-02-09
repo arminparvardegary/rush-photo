@@ -27,6 +27,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['Outfit', 'system-ui', 'sans-serif'],
+        handwriting: ['Caveat', 'Comic Sans MS', 'cursive'],
       },
       screens: {
         "xs": "475px",
